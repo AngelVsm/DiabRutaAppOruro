@@ -754,7 +754,7 @@ abstract class HomeScreenLocalizations {
   /// Description for online routing engine
   ///
   /// In en, this message translates to:
-  /// **'OpenTripPlanner 2.8. Real-time routing with detailed walking directions.'**
+  /// **'The libraries can call a route server. DiabRuta does not: the trip is calculated on the phone.'**
   String get engineOnlineDescription;
 
   /// Name for offline routing engine

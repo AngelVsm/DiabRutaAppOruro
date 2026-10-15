@@ -15,7 +15,8 @@ class FaresLocalizationsEn extends FaresLocalizations {
   String get faresTitle => 'Fare Information';
 
   @override
-  String get faresSubtitle => 'Current prices for public transportation';
+  String get faresSubtitle =>
+      'Municipal Decree No. 408, 26 December 2025. Transitory fares for 6 months.';
 
   @override
   String faresLastUpdated(String date) {

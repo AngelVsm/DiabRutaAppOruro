@@ -77,19 +77,19 @@ class RoutingLocalizationsEn extends RoutingLocalizations {
       'Finds routes through our own service. Needs a connection.';
 
   @override
-  String get trufiPlannerInfoTitle => 'About Trufi Planner';
+  String get trufiPlannerInfoTitle => 'How routes are calculated';
 
   @override
   String get trufiPlannerInfoIntro =>
-      'Trufi Planner is our own routing engine (not OTP).';
+      'DiabRuta plans the trip with the Oruro lines stored in the app.';
 
   @override
   String get trufiPlannerInfoLocalBody =>
-      'On mobile it runs 100% offline, using the GTFS data bundled with the app — results may differ from online engines.';
+      'It does not call a route server. The map and place search do need internet. The trip comes from the file shipped inside the app.';
 
   @override
   String get trufiPlannerInfoRemoteBody =>
-      'This web version queries our server; results may differ from OTP because it uses a different algorithm and data.';
+      'This variant would call a server. DiabRuta does not use it.';
 
   @override
   String get otpOnlineDescription =>

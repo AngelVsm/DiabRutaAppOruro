@@ -121,14 +121,14 @@ class SettingsLocalizationsEs extends SettingsLocalizations {
 
   @override
   String get engineOnlineDescription =>
-      'OpenTripPlanner 2.8. Rutas en tiempo real con indicaciones detalladas de caminata.';
+      'Las librerías pueden consultar un servidor de rutas. DiabRuta no lo hace: el viaje se calcula en el teléfono.';
 
   @override
   String get engineOfflineName => 'Sin conexión';
 
   @override
   String get engineOfflineDescription =>
-      'Enrutamiento basado en GTFS. Funciona sin internet.';
+      'Usa las rutas de Oruro guardadas en la app. Funciona sin internet.';
 
   @override
   String get limitationRequiresInternet => 'Requiere internet';

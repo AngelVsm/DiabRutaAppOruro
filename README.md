@@ -1,38 +1,20 @@
 # DiabRuta
 
-App de transporte público para Oruro, Bolivia. La desarrolla [Angel Vargas](https://github.com/AngelVsm), estudiante de Ingeniería de Sistemas en la UDABOL, como proyecto de Desarrollo de Aplicaciones Móviles II. Es código abierto: [AngelVsm/DiabRutaAppOruro](https://github.com/AngelVsm/DiabRutaAppOruro).
-
-DiabRuta está hecha con Flutter. El mapa, la búsqueda y el cálculo de rutas usan librerías libres de [Trufi Core](https://github.com/trufi-association/trufi-core) (GPL-3.0). Esas librerías conservan su licencia y su autoría. La app, las rutas de Oruro y esta adaptación son de Angel Vargas.
+App de transporte público para Oruro, Bolivia. La desarrolla [Angel Vargas](https://github.com/AngelVsm), estudiante de Ingeniería de Sistemas en la UDABOL, como proyecto de Desarrollo de Aplicaciones Móviles II con el Ing. Kevin Arroyo. Es código abierto: [AngelVsm/DiabRutaAppOruro](https://github.com/AngelVsm/DiabRutaAppOruro).
 
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 
-## Table of Contents
+## Qué hace esta app
 
-- [Features](#features)
-- [Esta app](#esta-app)
-- [Architecture](#architecture)
-- [Packages](#packages)
-- [Getting started](#getting-started)
-- [Contributing](#contributing)
-- [Translations](#translations)
-- [Complementary projects](#complementary-projects)
-- [License](#license)
+- Muestra el mapa de Oruro. Las teselas llegan por internet y solo se descargan del sector que se está viendo.
+- Busca lugares con Photon, también por internet, centrada en Oruro.
+- Calcula el viaje **en el teléfono**, con las líneas guardadas en `apps/example/assets/routing/oruro.gtfs.zip`. No consulta un servidor de rutas.
+- Los comentarios abren WhatsApp con un mensaje listo.
+- Las tarifas son las del Decreto Municipal N.° 408, publicadas el 26 de diciembre de 2025: transitorias, por 6 meses.
 
-## Features
+DiabRuta **no usa OpenTripPlanner (OTP)**. Las librerías traen un cliente OTP para otras ciudades. Esos servidores de ejemplo planifican otra ciudad, por eso esta app no los conecta. Si más adelante se quiere un OTP de Oruro, hay que levantar un servidor propio con las rutas de Oruro y las calles. Hoy el viaje sale del archivo que va dentro de la app.
 
-- **Multi-modal route planning** — bus, walking, biking and combinations, powered by [OpenTripPlanner](https://github.com/opentripplanner/OpenTripPlanner) (OTP 1.5, 2.4 and 2.8 supported).
-- **Live GTFS-RT vehicle positions** — optional real-time bus markers tinted by route color, with live indicators on itinerary cards.
-- **Turn-by-turn navigation** for transit and walking legs.
-- **Origin/destination search** — online (Photon, Nominatim) and offline (asset-based POI search via [osm-search-data-export](https://github.com/trufi-association/osm-search-data-export)).
-- **POI map layers** — render points of interest from GeoJSON or asset bundles.
-- **Saved places, fares, feedback, settings, about** — drop-in screens for the most common app sections.
-- **Pluggable map engine** via the `ITrufiMapEngine` abstraction — ships with MapLibre GL; the example shows a drop-in `flutter_map` alternative.
-- **Push and in-app notifications** for service alerts.
-- **Localization-ready** with per-package Flutter `.arb` translations (English, Spanish and German included).
-
-## Esta app
-
-DiabRuta cubre Oruro. Las rutas van dentro de la app, en `apps/example/assets/routing/oruro.gtfs.zip`. Para correrla:
+## Cómo correrla
 
 ```bash
 cd apps/example
@@ -40,113 +22,26 @@ flutter pub get
 flutter run
 ```
 
-## Architecture
+La app que se instala está en `apps/example`. El nombre en el teléfono es DiabRuta. Los idiomas de la interfaz son español e inglés.
 
-Trufi Core is a Dart/Flutter monorepo split into focused packages so each app only depends on what it actually uses. Three layers:
+## De dónde sale el código
 
-- **Core packages** — interfaces, models, routing engines, map rendering, search, notifications, base widgets and design system.
-- **Screen packages** — drop-in screens for home, saved places, transport list, fares, feedback, settings and about.
-- **Apps** — `apps/example` ties everything together as a runnable reference implementation. Real city apps (e.g. [trufi-app](https://github.com/trufi-association/trufi-app)) follow the same shape.
+El mapa, la búsqueda y el cálculo de rutas usan librerías libres de [Trufi Core](https://github.com/trufi-association/trufi-core) (GPL-3.0). Esas librerías conservan su licencia y su autoría. Por eso varias carpetas se llaman `trufi_core_*` y parte de su documentación interna sigue en inglés: es el código original, no otra app escondida.
 
-The example in [apps/example](apps/example) is the canonical place to see how packages compose.
+La app, las rutas de Oruro, el nombre, los colores y los textos de presentación son de Angel Vargas.
 
-## Packages
-
-### Core
-
-| Package | Description |
+| Carpeta | Para qué está |
 | --- | --- |
-| [`trufi_core_interfaces`](packages/trufi_core_interfaces) | Shared interfaces and models. |
-| [`trufi_core_utils`](packages/trufi_core_utils) | Shared utilities (storage, device id, helpers). |
-| [`trufi_core_base_widgets`](packages/trufi_core_base_widgets) | Reusable low-level widgets. |
-| [`trufi_core_custom_material`](packages/trufi_core_custom_material) | Theming and Material customizations. |
-| [`trufi_core_ui`](packages/trufi_core_ui) | Core UI components and app shell. |
-| [`trufi_core_maps`](packages/trufi_core_maps) | Map rendering with a pluggable engine abstraction (ships with MapLibre GL). |
-| [`trufi_core_planner`](packages/trufi_core_planner) | GTFS parsing and routing algorithms (Dart only, no Flutter deps). |
-| [`trufi_core_routing`](packages/trufi_core_routing) | Route planning with OpenTripPlanner integration (OTP 1.5/2.4/2.8). |
-| [`trufi_core_routing_ui`](packages/trufi_core_routing_ui) | Colors, icons and translations for transport modes. |
-| [`trufi_core_search_locations`](packages/trufi_core_search_locations) | Origin/destination search bar widgets. |
-| [`trufi_core_poi_layers`](packages/trufi_core_poi_layers) | Points-of-interest map layers. |
-| [`trufi_core_notifications`](packages/trufi_core_notifications) | Push and in-app notifications. |
-| [`trufi_core_navigation`](packages/trufi_core_navigation) | Turn-by-turn navigation for transit and walking legs. |
+| `apps/example` | DiabRuta, la app que se corre |
+| `packages/trufi_core_maps` | Mapa |
+| `packages/trufi_core_planner` | Lectura del GTFS y cálculo en el teléfono |
+| `packages/trufi_core_routing` | Conexión de ese cálculo con la pantalla. También trae el cliente OTP, que esta app no activa |
+| `packages/screens` | Pantallas: inicio, rutas, tarifas, comentarios, ajustes y sobre nosotros |
 
-### Screens
-
-| Package | Description |
-| --- | --- |
-| [`trufi_core_home_screen`](packages/screens/trufi_core_home_screen) | Home screen with route planning, search and itinerary view. |
-| [`trufi_core_saved_places`](packages/screens/trufi_core_saved_places) | Manage favorites, history and custom places. |
-| [`trufi_core_transport_list`](packages/screens/trufi_core_transport_list) | Routes list with route details. |
-| [`trufi_core_fares`](packages/screens/trufi_core_fares) | Fares / pricing information. |
-| [`trufi_core_feedback`](packages/screens/trufi_core_feedback) | External feedback flow with app context. |
-| [`trufi_core_settings`](packages/screens/trufi_core_settings) | Settings screen module. |
-| [`trufi_core_about`](packages/screens/trufi_core_about) | About / credits screen. |
-
-## Getting started
-
-### Requirements
-
-- Flutter SDK `^3.10.0` (Dart `^3.10.0`)
-- iOS deployment target: 13.0+
-- An OpenTripPlanner instance for your city (see [Complementary projects](#complementary-projects))
-
-### Run the example
-
-```bash
-flutter pub get
-cd apps/example
-flutter run
-```
-
-### Use Trufi Core in your own app
-
-1. **Bootstrap from the example.** The simplest path is to fork [trufi-app](https://github.com/trufi-association/trufi-app) or copy [apps/example](apps/example) into a new repository — it shows how the packages compose and how to wire your city configuration.
-
-2. **Depend on the packages from git.** In your app's `pubspec.yaml`, replace any local `path:` references with git refs:
-
-   ```yaml
-   dependencies:
-     trufi_core_home_screen:
-       git:
-         url: https://github.com/trufi-association/trufi-core.git
-         path: packages/screens/trufi_core_home_screen
-         ref: main
-     trufi_core_routing:
-       git:
-         url: https://github.com/trufi-association/trufi-core.git
-         path: packages/trufi_core_routing
-         ref: main
-     # ...add the other trufi_core_* packages your app needs
-   ```
-
-3. **Configure your city.** Edit your equivalent of [`apps/example/lib/main.dart`](apps/example/lib/main.dart):
-   - Set your OpenTripPlanner endpoint (`Otp15RoutingProvider`, `Otp24RoutingProvider` or `Otp28RoutingProvider`).
-   - Configure search via `SearchLocationsCubit` — online providers (Photon, Nominatim) and/or offline using a `search.json` generated with [osm-search-data-export](https://github.com/trufi-association/osm-search-data-export).
-   - Configure POI layers, saved places, map style, theme, locales and any feature flags (live vehicles, wheelchair toggle, etc.).
-   - Replace brand assets in your app's `assets/` folder.
-
-## Contributing
-
-See [CONTRIBUTING](./CONTRIBUTING.md) and our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
-
-## Translations
-
-Translations live next to each package as Flutter `.arb` files under `<package>/lib/l10n/` (e.g. [`trufi_core_ui/lib/l10n`](packages/trufi_core_ui/lib/l10n)). To add or update a string, edit the matching `*_en.arb`, `*_es.arb` or `*_de.arb` and run `flutter gen-l10n` (or rebuild — code generation is wired into the package's `l10n.yaml`).
-
-To add a new locale, copy an existing `.arb`, translate it, and reference it in the package's `l10n.yaml`. To override translations from a host app, see the [Custom Translations](https://github.com/trufi-association/trufi-core/wiki/Custom-Translations) guide.
-
-## Complementary projects
-
-- [osm-search-data-export](https://github.com/trufi-association/osm-search-data-export) — Generates offline search data (POIs, streets, junctions). The app uses the json-compact format.
-- [osm-public-transport-export](https://github.com/trufi-association/osm-public-transport-export) — Fetches OSM data and generates GeoJSON and additional files.
-- [geojson-to-gtfs](https://github.com/trufi-association/geojson-to-gtfs) — Turns generated GeoJSON and additional data into GTFS.
-- [gtfs-bolivia-cochabamba](https://github.com/trufi-association/gtfs-bolivia-cochabamba) — Config package that uses *osm-public-transport-export* and *geojson-to-gtfs* to generate a GTFS file for OTP. Use as a template for your city.
-- [OpenTripPlanner](https://github.com/opentripplanner/OpenTripPlanner) — Trip planning server that uses GTFS feeds for routing.
-
-## License
+## Licencia
 
 DiabRuta, adaptación para Oruro — Angel Vargas.
 
 El código base es Trufi Core. Copyright 2020-present — [Trufi Association](https://www.trufi-association.org/).
 
-This program is free software: you can redistribute it and/or modify it under the terms of the [GNU General Public License version 3](./LICENSE) as published by the Free Software Foundation. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+El programa se puede copiar y modificar bajo la [Licencia Pública General de GNU, versión 3](./LICENSE). Se entrega tal cual, sin garantía. El texto legal completo está en `LICENSE`.

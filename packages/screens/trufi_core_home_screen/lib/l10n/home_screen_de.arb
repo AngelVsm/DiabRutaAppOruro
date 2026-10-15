@@ -108,7 +108,7 @@
   "autoFallback": "Automatischer Fallback",
   "autoFallbackDescription": "Versucht zuerst online, nutzt offline bei Fehler",
   "engineOnlineName": "Online",
-  "engineOnlineDescription": "OpenTripPlanner 2.8. Echtzeit-Routing mit detaillierten Fußweganweisungen.",
+  "engineOnlineDescription": "Die Bibliotheken können einen Routenserver fragen. DiabRuta tut das nicht: die Fahrt wird auf dem Telefon berechnet.",
   "engineOfflineName": "Offline",
   "engineOfflineDescription": "GTFS-basiertes Routing. Funktioniert ohne Internet.",
   "limitationRequiresInternet": "Erfordert Internet",

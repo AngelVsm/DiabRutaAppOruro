@@ -566,7 +566,7 @@
   "@engineOnlineName": {
     "description": "Name for online routing engine"
   },
-  "engineOnlineDescription": "OpenTripPlanner 2.8. Real-time routing with detailed walking directions.",
+  "engineOnlineDescription": "The libraries can call a route server. DiabRuta does not: the trip is calculated on the phone.",
   "@engineOnlineDescription": {
     "description": "Description for online routing engine"
   },

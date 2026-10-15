@@ -397,7 +397,7 @@ class HomeScreenLocalizationsDe extends HomeScreenLocalizations {
 
   @override
   String get engineOnlineDescription =>
-      'OpenTripPlanner 2.8. Echtzeit-Routing mit detaillierten Fußweganweisungen.';
+      'Die Bibliotheken können einen Routenserver fragen. DiabRuta tut das nicht: die Fahrt wird auf dem Telefon berechnet.';
 
   @override
   String get engineOfflineName => 'Offline';

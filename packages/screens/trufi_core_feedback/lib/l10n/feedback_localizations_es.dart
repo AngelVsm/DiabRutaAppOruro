@@ -12,14 +12,14 @@ class FeedbackLocalizationsEs extends FeedbackLocalizations {
   String get menuFeedback => 'Comentarios';
 
   @override
-  String get feedbackTitle => '¡Nos encantaría saber de ti!';
+  String get feedbackTitle => 'Quiero saber cómo te fue';
 
   @override
   String get feedbackContent =>
       'Escríbeme por WhatsApp si falta una ruta, una parada está mal o tienes una idea para DiabRuta.';
 
   @override
-  String get feedbackWhatWeWant => 'Qué nos gustaría saber';
+  String get feedbackWhatWeWant => 'Qué me sirve que me cuentes';
 
   @override
   String get feedbackBugs => 'Errores o problemas que hayas encontrado';
@@ -34,5 +34,5 @@ class FeedbackLocalizationsEs extends FeedbackLocalizations {
   String get feedbackSend => 'Escribir por WhatsApp';
 
   @override
-  String get feedbackSubtitle => 'Tu opinión nos importa';
+  String get feedbackSubtitle => 'Si algo no cuadra, escríbeme';
 }

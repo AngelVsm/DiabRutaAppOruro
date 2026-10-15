@@ -15,7 +15,8 @@ class FaresLocalizationsEs extends FaresLocalizations {
   String get faresTitle => 'Información de Tarifas';
 
   @override
-  String get faresSubtitle => 'Precios actuales del transporte público';
+  String get faresSubtitle =>
+      'Decreto Municipal N.° 408, del 26 de diciembre de 2025. Tarifas transitorias por 6 meses.';
 
   @override
   String faresLastUpdated(String date) {

@@ -54,9 +54,8 @@ flutter:
   assets:
     - assets/branding/
     - assets/pois/
-    # Offline street/junction search data (regenerate with
-    # tools/search-bolivia-cochabamba; a central-Cochabamba sample is
-    # committed so the demo works out of the box).
+    # Muestra de calles que no usa DiabRuta. Las rutas de Oruro
+    # están en assets/routing/oruro.gtfs.zip.
     - assets/search/
     # Offline maps assets
     - assets/offline/

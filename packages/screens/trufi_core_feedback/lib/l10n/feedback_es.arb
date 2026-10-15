@@ -4,7 +4,7 @@
   "@menuFeedback": {
     "description": "Menu item for feedback screen"
   },
-  "feedbackTitle": "¡Nos encantaría saber de ti!",
+  "feedbackTitle": "Quiero saber cómo te fue",
   "@feedbackTitle": {
     "description": "Title on feedback screen"
   },
@@ -12,7 +12,7 @@
   "@feedbackContent": {
     "description": "Main content explaining feedback importance"
   },
-  "feedbackWhatWeWant": "Qué nos gustaría saber",
+  "feedbackWhatWeWant": "Qué me sirve que me cuentes",
   "@feedbackWhatWeWant": {
     "description": "Section title for feedback types"
   },
@@ -32,7 +32,7 @@
   "@feedbackSend": {
     "description": "Button to open feedback form"
   },
-  "feedbackSubtitle": "Tu opinión nos importa",
+  "feedbackSubtitle": "Si algo no cuadra, escríbeme",
   "@feedbackSubtitle": {
     "description": "Subtitle on feedback hero card"
   }

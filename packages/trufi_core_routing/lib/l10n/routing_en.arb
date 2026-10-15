@@ -98,19 +98,19 @@
   "@trufiPlannerRemoteDescription": {
     "description": "Description of the server-backed Trufi Planner engine in selectors"
   },
-  "trufiPlannerInfoTitle": "About Trufi Planner",
+  "trufiPlannerInfoTitle": "How routes are calculated",
   "@trufiPlannerInfoTitle": {
     "description": "Title of the Trufi Planner info card in routing preferences"
   },
-  "trufiPlannerInfoIntro": "Trufi Planner is our own routing engine (not OTP).",
+  "trufiPlannerInfoIntro": "DiabRuta plans the trip with the Oruro lines stored in the app.",
   "@trufiPlannerInfoIntro": {
     "description": "First line of the Trufi Planner info card"
   },
-  "trufiPlannerInfoLocalBody": "On mobile it runs 100% offline, using the GTFS data bundled with the app — results may differ from online engines.",
+  "trufiPlannerInfoLocalBody": "It does not call a route server. The map and place search do need internet. The trip comes from the file shipped inside the app.",
   "@trufiPlannerInfoLocalBody": {
     "description": "Info card body for the offline variant"
   },
-  "trufiPlannerInfoRemoteBody": "This web version queries our server; results may differ from OTP because it uses a different algorithm and data.",
+  "trufiPlannerInfoRemoteBody": "This variant would call a server. DiabRuta does not use it.",
   "@trufiPlannerInfoRemoteBody": {
     "description": "Info card body for the server-backed variant"
   },

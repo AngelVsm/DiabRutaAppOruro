@@ -27,7 +27,7 @@ class CoreLocalizationsEs extends CoreLocalizations {
   String get navSettings => 'Configuración';
 
   @override
-  String get navAbout => 'Acerca de';
+  String get navAbout => 'Sobre nosotros';
 
   @override
   String get actionSave => 'Guardar';

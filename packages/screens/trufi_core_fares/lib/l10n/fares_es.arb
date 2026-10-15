@@ -8,7 +8,7 @@
   "@faresTitle": {
     "description": "Title on fares screen"
   },
-  "faresSubtitle": "Precios actuales del transporte público",
+  "faresSubtitle": "Decreto Municipal N.° 408, del 26 de diciembre de 2025. Tarifas transitorias por 6 meses.",
   "@faresSubtitle": {
     "description": "Subtitle explaining the fares screen"
   },

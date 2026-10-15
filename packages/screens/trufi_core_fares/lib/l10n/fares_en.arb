@@ -8,7 +8,7 @@
   "@faresTitle": {
     "description": "Title on fares screen"
   },
-  "faresSubtitle": "Current prices for public transportation",
+  "faresSubtitle": "Municipal Decree No. 408, 26 December 2025. Transitory fares for 6 months.",
   "@faresSubtitle": {
     "description": "Subtitle explaining the fares screen"
   },

@@ -24,6 +24,11 @@ import 'package:trufi_core_utils/trufi_core_utils.dart' show OverlayManager;
 
 import 'marca.dart';
 
+String _esEn(BuildContext context, String es, String en) {
+  final codigo = Localizations.localeOf(context).languageCode;
+  return codigo == 'en' ? en : es;
+}
+
 // ============ CONFIGURATION ============
 const _photonUrl = 'https://photon.trufi.app';
 const _defaultCenter = LatLng(-17.9604176, -67.1106498);
@@ -40,33 +45,33 @@ final List<IRoutingProvider> _routingEngines = [
   ),
 ];
 
-// Worldwide vector styles. The Trufi tile server only covers Cochabamba.
+// Estilos del mundo. Solo se descarga el sector visible.
 final List<ITrufiMapEngine> _mapEngines = [
   MapLibreEngine(
     engineId: 'osm_bright',
     styleString: 'https://tiles.openfreemap.org/styles/bright',
-    displayName: 'OSM Bright',
+    displayName: 'Claro',
     descriptionBuilder: (context) =>
         MapsLocalizations.of(context).mapStyleLightDescription,
   ),
   MapLibreEngine(
     engineId: 'osm_liberty',
     styleString: 'https://tiles.openfreemap.org/styles/liberty',
-    displayName: 'OSM Liberty',
+    displayName: 'Estándar',
     descriptionBuilder: (context) =>
         MapsLocalizations.of(context).mapStyleStandardDescription,
   ),
   MapLibreEngine(
     engineId: 'dark_matter',
     styleString: 'https://tiles.openfreemap.org/styles/dark',
-    displayName: 'Dark Matter',
+    displayName: 'Oscuro',
     descriptionBuilder: (context) =>
         MapsLocalizations.of(context).mapStyleDarkDescription,
   ),
   MapLibreEngine(
     engineId: 'fiord_color',
     styleString: 'https://tiles.openfreemap.org/styles/fiord',
-    displayName: 'Fiord Color',
+    displayName: 'Colorido',
     descriptionBuilder: (context) =>
         MapsLocalizations.of(context).mapStyleColorfulDescription,
   ),
@@ -78,15 +83,9 @@ void main() {
     AppConfiguration(
       appName: appName,
       deepLinkScheme: _deepLinkScheme,
-      defaultLocale: Locale('es'),
+      defaultLocale: const Locale('es'),
       localeConfig: const TrufiLocaleConfig(
-        supportedLocales: [
-          Locale('es'),
-          Locale('en'),
-          Locale('de'),
-          Locale('qu'),
-        ],
-        languageNames: {'qu': 'Runasimi'},
+        supportedLocales: [Locale('es'), Locale('en')],
       ),
       themeConfig: TrufiThemeConfig(
         theme: temaClaro(),
@@ -117,12 +116,6 @@ void main() {
             overlayBuilder: (onComplete) =>
                 OnboardingSheet(onComplete: onComplete),
           ),
-          PrivacyConsentManager(
-            overlayBuilder: (onAccept, onDecline) => PrivacyConsentSheet(
-              onAccept: onAccept,
-              onDecline: onDecline,
-            ),
-          ),
         ],
       ),
       providers: [
@@ -134,8 +127,8 @@ void main() {
         ),
         ),
         ChangeNotifierProvider(
-          // 15 (not the default 5) so near-duplicate itineraries from the
-          // local planner can be grouped; the visible list stays short.
+          // 15, y no 5, para poder agrupar recorridos casi iguales
+          // del cálculo local. La lista que se ve sigue siendo corta.
           create: (_) => RoutingEngineManager(
             engines: _routingEngines,
             maxItineraries: 15,
@@ -175,80 +168,65 @@ void main() {
         FaresTrufiScreen(
           config: FaresConfig(
             currency: 'Bs.',
-            additionalNotes:
-                'Estos montos salen de un ejemplo y todavía no están confirmados para Oruro. Si conoces la tarifa real, escríbeme por WhatsApp.',
+            lastUpdated: DateTime(2025, 12, 26),
+            externalFareUrl:
+                'https://lapatria.bo/enfoque-nacional/alcaldia-de-oruro-fija-nuevas-tarifas-transitorias-para-el-transporte-urbano/',
             fares: [
               FareInfo(
-                title: 'Trufi',
-                icon: Icons.directions_bus,
-                primary: FareCategory(
-                  label: 'Regular',
-                  labelBuilder: (context) =>
-                      FaresLocalizations.of(context).fareCategoryRegular,
-                  price: '2.00',
-                  icon: Icons.person_rounded,
-                ),
-                additional: [
-                  FareCategory(
-                    label: 'Student',
-                    labelBuilder: (context) =>
-                        FaresLocalizations.of(context).fareCategoryStudent,
-                    price: '1.50',
-                    icon: Icons.school_rounded,
-                  ),
-                  FareCategory(
-                    label: 'Senior',
-                    labelBuilder: (context) =>
-                        FaresLocalizations.of(context).fareCategorySenior,
-                    price: '1.00',
-                    icon: Icons.elderly_rounded,
-                  ),
-                ],
-              ),
-              FareInfo(
-                title: 'Micro',
-                icon: Icons.airport_shuttle,
-                primary: FareCategory(
-                  label: 'Regular',
-                  labelBuilder: (context) =>
-                      FaresLocalizations.of(context).fareCategoryRegular,
-                  price: '1.50',
-                  icon: Icons.person_rounded,
-                ),
-                additional: [
-                  FareCategory(
-                    label: 'Student',
-                    labelBuilder: (context) =>
-                        FaresLocalizations.of(context).fareCategoryStudent,
-                    price: '1.00',
-                    icon: Icons.school_rounded,
-                  ),
-                  FareCategory(
-                    label: 'Senior',
-                    labelBuilder: (context) =>
-                        FaresLocalizations.of(context).fareCategorySenior,
-                    price: '0.75',
-                    icon: Icons.elderly_rounded,
-                  ),
-                ],
-              ),
-              FareInfo(
-                title: 'Minibus',
+                title: 'Minibús',
+                titleBuilder: (context) => _esEn(context, 'Minibús', 'Minibus'),
                 icon: Icons.directions_bus_filled,
                 primary: FareCategory(
-                  label: 'Regular',
-                  labelBuilder: (context) =>
-                      FaresLocalizations.of(context).fareCategoryRegular,
+                  label: 'Adulto',
+                  labelBuilder: (context) => _esEn(context, 'Adulto', 'Adult'),
                   price: '2.50',
                   icon: Icons.person_rounded,
                 ),
                 additional: [
                   FareCategory(
-                    label: 'Student',
+                    label: 'Adulto mayor',
                     labelBuilder: (context) =>
-                        FaresLocalizations.of(context).fareCategoryStudent,
+                        _esEn(context, 'Adulto mayor', 'Senior'),
                     price: '2.00',
+                    icon: Icons.elderly_rounded,
+                  ),
+                ],
+              ),
+              FareInfo(
+                title: 'Microbús',
+                titleBuilder: (context) =>
+                    _esEn(context, 'Microbús', 'Microbus'),
+                icon: Icons.airport_shuttle,
+                primary: FareCategory(
+                  label: 'Adulto',
+                  labelBuilder: (context) => _esEn(context, 'Adulto', 'Adult'),
+                  price: '2.20',
+                  icon: Icons.person_rounded,
+                ),
+                additional: [
+                  FareCategory(
+                    label: 'Adulto mayor',
+                    labelBuilder: (context) =>
+                        _esEn(context, 'Adulto mayor', 'Senior'),
+                    price: '1.50',
+                    icon: Icons.elderly_rounded,
+                  ),
+                  FareCategory(
+                    label: 'Universitario',
+                    labelBuilder: (context) =>
+                        _esEn(context, 'Universitario', 'University student'),
+                    price: '1.50',
                     icon: Icons.school_rounded,
+                  ),
+                  FareCategory(
+                    label: 'Secundaria y escolar',
+                    labelBuilder: (context) => _esEn(
+                      context,
+                      'Secundaria y escolar',
+                      'Secondary and school',
+                    ),
+                    price: '1.00',
+                    icon: Icons.school_outlined,
                   ),
                 ],
               ),
