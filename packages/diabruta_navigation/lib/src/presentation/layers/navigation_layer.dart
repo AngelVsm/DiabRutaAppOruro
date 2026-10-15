@@ -1,8 +1,37 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:latlong2/latlong.dart' hide Path;
 import 'package:diabruta_maps/diabruta_maps.dart';
+import 'package:diabruta_utils/diabruta_utils.dart';
 
 import '../../models/navigation_state.dart';
+
+/// Degrees clockwise from north along the route, looking a short distance
+/// ahead of [user] so a sharp corner does not spin the map on every point.
+double? routeHeadingDegrees(LatLng user, List<LatLng> points) {
+  if (points.length < 2) return null;
+  const distance = Distance();
+  var closest = 0;
+  var min = double.infinity;
+  for (var i = 0; i < points.length; i++) {
+    final meters = distance.as(LengthUnit.Meter, user, points[i]);
+    if (meters < min) {
+      min = meters;
+      closest = i;
+    }
+  }
+
+  var ahead = closest;
+  var walked = 0.0;
+  while (ahead < points.length - 1 && walked < 40) {
+    walked += distance.as(LengthUnit.Meter, points[ahead], points[ahead + 1]);
+    ahead++;
+  }
+  if (ahead == closest) return null;
+  final bearing = distance.bearing(points[closest], points[ahead]);
+  return bearing < 0 ? bearing + 360 : bearing;
+}
 
 /// Produces navigation markers and lines for the map.
 ///
@@ -68,7 +97,12 @@ class NavigationLayer {
         state.currentLocation!.latitude,
         state.currentLocation!.longitude,
       );
-      cameraPosition = DiabRutaCameraPosition(target: userPos, zoom: 16);
+      final heading = routeHeadingDegrees(userPos, route.geometry);
+      cameraPosition = DiabRutaCameraPosition(
+        target: userPos,
+        zoom: 17,
+        bearing: heading == null ? 0 : cameraBearingForHeading(heading),
+      );
     }
 
     return (markers: markers, lines: lines, cameraPosition: cameraPosition);
@@ -87,7 +121,7 @@ class NavigationLayer {
         widget: _UserLocationMarker(isGpsWeak: state.isGpsWeak),
         size: const Size(48, 48),
         layerLevel: 100,
-        imageCacheKey: 'nav_user_location_${state.isGpsWeak}',
+        imageCacheKey: 'nav_user_heading_${state.isGpsWeak}',
       ),
     );
   }
@@ -370,49 +404,66 @@ class _UserLocationMarker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        // Outer pulse ring (accuracy indicator)
-        Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            color: Colors.blue.withValues(alpha: isGpsWeak ? 0.15 : 0.1),
-            shape: BoxShape.circle,
+    final color = isGpsWeak ? Colors.orange : const Color(0xFF4285F4);
+    return SizedBox(
+      width: 48,
+      height: 48,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          CustomPaint(size: const Size(48, 48), painter: _RouteConePainter(color)),
+          Container(
+            width: 22,
+            height: 22,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 3),
+            ),
           ),
-        ),
-        // Middle ring
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            color: Colors.blue.withValues(alpha: 0.2),
-            shape: BoxShape.circle,
-          ),
-        ),
-        // Inner dot (user position)
-        Container(
-          width: 20,
-          height: 20,
-          decoration: BoxDecoration(
-            color: isGpsWeak ? Colors.orange : Colors.blue,
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 3),
-            boxShadow: [
-              BoxShadow(
-                color: (isGpsWeak ? Colors.orange : Colors.blue).withValues(
-                  alpha: 0.4,
-                ),
-                blurRadius: 8,
-                spreadRadius: 2,
-              ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
+}
+
+class _RouteConePainter extends CustomPainter {
+  const _RouteConePainter(this.color);
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width * 0.48;
+    const halfAngle = 38 * math.pi / 180;
+    const start = -math.pi / 2 - halfAngle;
+
+    final path = Path()
+      ..moveTo(center.dx, center.dy)
+      ..arcTo(
+        Rect.fromCircle(center: center, radius: radius),
+        start,
+        halfAngle * 2,
+        false,
+      )
+      ..close();
+
+    final paint = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          color.withValues(alpha: 0.42),
+          color.withValues(alpha: 0.18),
+          color.withValues(alpha: 0.0),
+        ],
+        stops: const [0.0, 0.45, 1.0],
+      ).createShader(Rect.fromCircle(center: center, radius: radius));
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _RouteConePainter oldDelegate) =>
+      oldDelegate.color != color;
 }
 
 /// Origin marker - green circle (matches home screen style).

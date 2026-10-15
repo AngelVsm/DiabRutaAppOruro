@@ -34,6 +34,9 @@ class NavigationScreen extends StatefulWidget {
   /// Location service to use for tracking.
   final LocationService locationService;
 
+  /// Moves the camera while the trip is running.
+  final DiabRutaMapController? mapController;
+
   /// Optional navigation configuration.
   final NavigationConfig config;
 
@@ -45,6 +48,7 @@ class NavigationScreen extends StatefulWidget {
     required this.route,
     required this.mapBuilder,
     required this.locationService,
+    this.mapController,
     this.config = const NavigationConfig(),
     this.modeIcon,
   });
@@ -60,6 +64,7 @@ class NavigationScreen extends StatefulWidget {
     )
     mapBuilder,
     required LocationService locationService,
+    DiabRutaMapController? mapController,
     NavigationConfig config = const NavigationConfig(),
     Widget? modeIcon,
   }) {
@@ -70,6 +75,7 @@ class NavigationScreen extends StatefulWidget {
               route: route,
               mapBuilder: mapBuilder,
               locationService: locationService,
+              mapController: mapController,
               config: config,
               modeIcon: modeIcon,
             ),
@@ -111,22 +117,28 @@ class NavigationScreen extends StatefulWidget {
     final fallbackCenter = route.geometry.isNotEmpty
         ? route.geometry.first
         : const LatLng(0, 0);
+    final start = currentLocation != null
+        ? LatLng(currentLocation.latitude, currentLocation.longitude)
+        : fallbackCenter;
+    final heading = nav.routeHeadingDegrees(start, route.geometry);
+    final mapController = DiabRutaMapController();
 
     final initialCamera = DiabRutaCameraPosition(
-      target: currentLocation != null
-          ? LatLng(currentLocation.latitude, currentLocation.longitude)
-          : fallbackCenter,
-      zoom: 16,
+      target: start,
+      zoom: 17,
+      bearing: heading == null ? 0 : cameraBearingForHeading(heading),
     );
 
     return show(
       context,
       route: route,
       locationService: locationService,
+      mapController: mapController,
       config: config,
       modeIcon: modeIcon,
       mapBuilder: (ctx, state, navigationLayers) {
         return mapEngineManager.currentEngine.buildMap(
+          controller: mapController,
           initialCamera: initialCamera,
           layers: navigationLayers,
         );
@@ -183,7 +195,17 @@ class _NavigationScreenState extends State<NavigationScreen>
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: _cubit,
-      child: BlocBuilder<NavigationCubit, NavigationState>(
+      child: BlocConsumer<NavigationCubit, NavigationState>(
+        listenWhen: (previous, next) =>
+            next.isMapFollowingUser && next.currentLocation != null,
+        listener: (context, state) {
+          final camera = _navLayerBuilder
+              .buildLayerData(state)
+              .cameraPosition;
+          if (camera != null) {
+            widget.mapController?.moveCamera(camera);
+          }
+        },
         builder: (context, state) {
           // Build navigation layers from current state
           final layerData = _navLayerBuilder.buildLayerData(state);

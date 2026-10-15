@@ -3,10 +3,11 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:latlong2/latlong.dart' hide Path;
 import 'package:provider/provider.dart';
 import 'package:diabruta_base_widgets/diabruta_base_widgets.dart';
 import 'package:diabruta_interfaces/diabruta_interfaces.dart'
@@ -95,7 +96,14 @@ class _HomeScreenState extends State<HomeScreen>
 
   // GPS location service
   final LocationService _locationService = LocationService();
+  final DeviceHeading _deviceHeading = DeviceHeading();
   bool _isLocating = false;
+  /// When true the map rotates with the phone (Google Maps compass mode).
+  /// When false the map stays north-up and only the location cone turns.
+  bool _compassMode = false;
+  /// Drives map bearing on every display frame (60 / 120 / 144 Hz).
+  Ticker? _compassTicker;
+  DateTime? _lastConeMarkerUpdate;
 
   final DraggableScrollableController _sheetController =
       DraggableScrollableController();
@@ -128,6 +136,7 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     // Listen to location updates
     _locationService.addListener(_onLocationUpdate);
+    _deviceHeading.addListener(_onDeviceHeading);
     // Listen to POI selection changes
     widget.config.poiLayersManager?.addListener(_onPOISelectionChanged);
     // Deploy-chosen initial state, set BEFORE the listener is attached so it
@@ -473,6 +482,7 @@ class _HomeScreenState extends State<HomeScreen>
     if (status == LocationPermissionStatus.granted) {
       final started = await _locationService.startTracking();
       if (started && mounted) {
+        _ensureHeadingListening();
         // Get initial location to show marker immediately
         final location = _locationService.currentLocation;
         if (location != null) {
@@ -527,6 +537,9 @@ class _HomeScreenState extends State<HomeScreen>
   void dispose() {
     _sharedRouteNotifier?.removeListener(_onSharedRouteChanged);
     _locationService.removeListener(_onLocationUpdate);
+    _deviceHeading.removeListener(_onDeviceHeading);
+    _deviceHeading.dispose();
+    _stopCompassTicker();
     widget.config.poiLayersManager?.removeListener(_onPOISelectionChanged);
     _routingEngineManager?.removeListener(_onRoutingEngineChanged);
     _liveVehiclesEnabled.removeListener(_onLiveVehiclesEnabledChanged);
@@ -544,19 +557,100 @@ class _HomeScreenState extends State<HomeScreen>
 
     final location = _locationService.currentLocation;
     if (location != null) {
+      _ensureHeadingListening();
       final position = LatLng(location.latitude, location.longitude);
-
-      // Update my location marker on map
       _updateMyLocationMarkers(position, location.accuracy);
-
-      // Force rebuild to update UI (e.g., location button icon)
-      setState(() {});
     }
+  }
+
+  void _onDeviceHeading() {
+    if (!mounted) return;
+    // Compass mode: the vsync ticker rotates the map; the cone stays fixed
+    // pointing up, so skip marker rebuilds here (they were killing the fps).
+    if (_compassMode) return;
+
+    final now = DateTime.now();
+    final last = _lastConeMarkerUpdate;
+    if (last != null &&
+        now.difference(last) < const Duration(milliseconds: 16)) {
+      return;
+    }
+    _lastConeMarkerUpdate = now;
+
+    final location = _locationService.currentLocation;
+    if (location != null) {
+      _updateMyLocationMarkers(
+        LatLng(location.latitude, location.longitude),
+        location.accuracy,
+      );
+    }
+  }
+
+  void _ensureHeadingListening() {
+    if (_locationService.isTracking) {
+      _deviceHeading.start();
+      _syncCompassTicker();
+    }
+  }
+
+  void _syncCompassTicker() {
+    final want = _compassMode && _deviceHeading.isActive;
+    if (want) {
+      _compassTicker ??= createTicker(_onCompassFrame);
+      if (!(_compassTicker!.isActive)) {
+        _compassTicker!.start();
+      }
+    } else {
+      _stopCompassTicker();
+    }
+  }
+
+  void _stopCompassTicker() {
+    _compassTicker?.stop();
+    _compassTicker?.dispose();
+    _compassTicker = null;
+  }
+
+  /// Runs once per display refresh so map bearing matches 60 / 120 / 144 Hz.
+  void _onCompassFrame(Duration _) {
+    if (!_compassMode || !mounted) return;
+    final location = _locationService.currentLocation;
+    final heading = _deviceHeading.heading;
+    if (location == null || heading == null) return;
+    _moveCameraTracked(
+      DiabRutaCameraPosition(
+        target: LatLng(location.latitude, location.longitude),
+        zoom: _currentCamera?.zoom ?? 16,
+        bearing: cameraBearingForHeading(heading),
+      ),
+    );
+  }
+
+  void _aimAtUser({required bool compass, bool resetZoom = false}) {
+    final location = _locationService.currentLocation;
+    if (location == null) return;
+    final heading = _deviceHeading.heading;
+    final bearing = compass && heading != null
+        ? cameraBearingForHeading(heading)
+        : 0.0;
+    _moveCameraTracked(
+      DiabRutaCameraPosition(
+        target: LatLng(location.latitude, location.longitude),
+        zoom: resetZoom ? 16 : (_currentCamera?.zoom ?? 16),
+        bearing: bearing,
+      ),
+    );
   }
 
   /// Updates my-location markers declaratively.
   void _updateMyLocationMarkers(LatLng position, double? accuracy) {
     final markers = <DiabRutaMarker>[];
+    final heading = _deviceHeading.heading;
+    final showCone = heading != null;
+    // Viewport-aligned icons: in compass mode the map already faces the
+    // phone, so the cone must stay at 0° (straight up). In north-up mode
+    // the map stays fixed and the cone rotates with [heading].
+    final coneRotation = _compassMode ? 0.0 : (heading ?? 0);
 
     // Add accuracy circle if available (scales with zoom using metersRadius)
     if (accuracy != null && accuracy > 0) {
@@ -570,15 +664,20 @@ class _HomeScreenState extends State<HomeScreen>
       );
     }
 
-    // Add the blue dot marker (fixed size in pixels)
     markers.add(
       DiabRutaMarker(
         id: 'my-location-dot',
         position: position,
-        widget: const _MyLocationMarker(),
-        size: const Size(24, 24),
+        widget: showCone
+            ? const _HeadingLocationMarker()
+            : const _MyLocationMarker(),
+        size: showCone ? const Size(72, 72) : const Size(24, 24),
+        rotation: coneRotation,
         layerLevel: 1,
         allowOverlap: true,
+        imageCacheKey: showCone
+            ? 'my-location-heading-cone'
+            : 'my-location-dot',
       ),
     );
 
@@ -1090,18 +1189,25 @@ class _HomeScreenState extends State<HomeScreen>
     _mapController?.moveCamera(position);
   }
 
+  void _onCompassModePressed() {
+    if (!_locationService.isTracking) return;
+    _ensureHeadingListening();
+    setState(() => _compassMode = !_compassMode);
+    _syncCompassTicker();
+    final location = _locationService.currentLocation;
+    if (location != null) {
+      _updateMyLocationMarkers(
+        LatLng(location.latitude, location.longitude),
+        location.accuracy,
+      );
+    }
+    _aimAtUser(compass: _compassMode, resetZoom: true);
+  }
+
   Future<void> _onMyLocationPressed() async {
-    // If already tracking, just center the map on current location
     if (_locationService.isTracking) {
-      final location = _locationService.currentLocation;
-      if (location != null) {
-        _moveCameraTracked(
-          DiabRutaCameraPosition(
-            target: LatLng(location.latitude, location.longitude),
-            zoom: 16,
-          ),
-        );
-      }
+      _ensureHeadingListening();
+      _aimAtUser(compass: _compassMode, resetZoom: true);
       return;
     }
 
@@ -1127,6 +1233,9 @@ class _HomeScreenState extends State<HomeScreen>
             DiabRutaCameraPosition(
               target: LatLng(lastKnown.latitude, lastKnown.longitude),
               zoom: 16,
+              bearing: _compassMode && _deviceHeading.heading != null
+                  ? cameraBearingForHeading(_deviceHeading.heading!)
+                  : 0,
             ),
           );
         }
@@ -1136,14 +1245,10 @@ class _HomeScreenState extends State<HomeScreen>
         final started = await _locationService.startTracking();
 
         if (started && mounted) {
+          _ensureHeadingListening();
           final location = _locationService.currentLocation;
           if (location != null) {
-            _moveCameraTracked(
-              DiabRutaCameraPosition(
-                target: LatLng(location.latitude, location.longitude),
-                zoom: 16,
-              ),
-            );
+            _aimAtUser(compass: _compassMode, resetZoom: true);
           }
         }
       } else if (status == LocationPermissionStatus.deniedForever) {
@@ -1851,15 +1956,22 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 const SizedBox(height: 8),
               ],
-              // My location button
+              // My location button (recenter only)
               _MapControlButton(
                 icon: _locationService.isTracking
-                    ? Icons
-                          .my_location_rounded // Filled when tracking
-                    : Icons.my_location_outlined, // Outlined when not tracking
+                    ? Icons.my_location_rounded
+                    : Icons.my_location_outlined,
                 onPressed: _onMyLocationPressed,
                 isLoading: _isLocating,
               ),
+              // North-up / compass mode, Google Maps style
+              if (_locationService.isTracking) ...[
+                const SizedBox(height: 8),
+                _MapCompassButton(
+                  compassMode: _compassMode,
+                  onPressed: _onCompassModePressed,
+                ),
+              ],
               const SizedBox(height: 8),
               // Recenter button (only visible when route is out of focus)
               AnimatedOpacity(
@@ -2925,6 +3037,48 @@ class _MapControlButton extends StatelessWidget {
   }
 }
 
+/// Small circular toggle: north-up vs compass (map rotates with the phone).
+class _MapCompassButton extends StatelessWidget {
+  final bool compassMode;
+  final VoidCallback onPressed;
+
+  const _MapCompassButton({
+    required this.compassMode,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final active = compassMode;
+
+    return Material(
+      color: active ? theme.colorScheme.primary : theme.cardColor,
+      shape: const CircleBorder(),
+      elevation: 4,
+      shadowColor: Colors.black.withValues(alpha: 0.2),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: () {
+          HapticFeedback.lightImpact();
+          onPressed();
+        },
+        child: SizedBox(
+          width: 40,
+          height: 40,
+          child: Icon(
+            active ? Icons.explore_rounded : Icons.navigation_rounded,
+            size: 22,
+            color: active
+                ? theme.colorScheme.onPrimary
+                : theme.colorScheme.primary,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Blue dot marker for current location (Google Maps style)
 class _MyLocationMarker extends StatelessWidget {
   const _MyLocationMarker();
@@ -2941,6 +3095,63 @@ class _MyLocationMarker extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Blue dot with a facing cone/aura. The image points up; north-up mode
+/// rotates the marker with the phone, compass mode keeps rotation at 0.
+class _HeadingLocationMarker extends StatelessWidget {
+  const _HeadingLocationMarker();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      width: 72,
+      height: 72,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          CustomPaint(size: Size(72, 72), painter: _HeadingConePainter()),
+          _MyLocationMarker(),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeadingConePainter extends CustomPainter {
+  const _HeadingConePainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width * 0.48;
+    const halfAngle = 38 * math.pi / 180;
+    const start = -math.pi / 2 - halfAngle;
+
+    final path = Path()
+      ..moveTo(center.dx, center.dy)
+      ..arcTo(
+        Rect.fromCircle(center: center, radius: radius),
+        start,
+        halfAngle * 2,
+        false,
+      )
+      ..close();
+
+    final paint = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          const Color(0xFF4285F4).withValues(alpha: 0.42),
+          const Color(0xFF4285F4).withValues(alpha: 0.18),
+          const Color(0xFF4285F4).withValues(alpha: 0.0),
+        ],
+        stops: const [0.0, 0.45, 1.0],
+      ).createShader(Rect.fromCircle(center: center, radius: radius));
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 /// Accuracy circle around the location marker.

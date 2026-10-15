@@ -9,6 +9,7 @@ export './src/storage/shared_preferences_storage.dart';
 
 // Location
 export './src/location_service.dart';
+export './src/device_heading.dart';
 
 // Device
 export './src/device/shared_preferences_device_id_service.dart';
