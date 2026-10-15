@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
-import 'package:trufi_core_about/trufi_core_about.dart';
-import 'package:trufi_core_fares/trufi_core_fares.dart';
-import 'package:trufi_core_feedback/trufi_core_feedback.dart';
-import 'package:trufi_core_home_screen/trufi_core_home_screen.dart';
-import 'package:trufi_core_maps/trufi_core_maps.dart';
-import 'package:trufi_core_navigation/trufi_core_navigation.dart';
-import 'package:trufi_core_routing/trufi_core_routing.dart'
+import 'package:diabruta_about/diabruta_about.dart';
+import 'package:diabruta_fares/diabruta_fares.dart';
+import 'package:diabruta_feedback/diabruta_feedback.dart';
+import 'package:diabruta_home_screen/diabruta_home_screen.dart';
+import 'package:diabruta_maps/diabruta_maps.dart';
+import 'package:diabruta_navigation/diabruta_navigation.dart';
+import 'package:diabruta_routing/diabruta_routing.dart'
     show
         RoutingEngineManager,
         IRoutingProvider,
-        TrufiPlannerProvider,
-        TrufiPlannerConfig;
-import 'package:trufi_core_saved_places/trufi_core_saved_places.dart';
-import 'package:trufi_core_search_locations/trufi_core_search_locations.dart';
-import 'package:trufi_core_settings/trufi_core_settings.dart';
-import 'package:trufi_core_transport_list/trufi_core_transport_list.dart';
-import 'package:trufi_core_ui/trufi_core_ui.dart';
-import 'package:trufi_core_utils/trufi_core_utils.dart' show OverlayManager;
+        DiabRutaPlannerProvider,
+        DiabRutaPlannerConfig;
+import 'package:diabruta_saved_places/diabruta_saved_places.dart';
+import 'package:diabruta_search_locations/diabruta_search_locations.dart';
+import 'package:diabruta_settings/diabruta_settings.dart';
+import 'package:diabruta_transport_list/diabruta_transport_list.dart';
+import 'package:diabruta_ui/diabruta_ui.dart';
+import 'package:diabruta_utils/diabruta_utils.dart' show OverlayManager;
 
 import 'marca.dart';
 
@@ -29,15 +29,15 @@ String _esEn(BuildContext context, String es, String en) {
 }
 
 // ============ CONFIGURATION ============
-const _photonUrl = 'https://photon.trufi.app';
+const _photonUrl = 'https://photon.komoot.io';
 const _defaultCenter = LatLng(-17.9604176, -67.1106498);
 const _deepLinkScheme = 'diabruta';
 
 // Rutas de Oruro, empaquetadas en la app. Los servidores OTP de ejemplo
 // planifican otra ciudad y no se ofrecen.
 final List<IRoutingProvider> _routingEngines = [
-  TrufiPlannerProvider(
-    config: const TrufiPlannerConfig.local(
+  DiabRutaPlannerProvider(
+    config: const DiabRutaPlannerConfig.local(
       gtfsAsset: 'assets/routing/oruro.gtfs.zip',
       displayName: 'Rutas de Oruro',
     ),
@@ -45,7 +45,7 @@ final List<IRoutingProvider> _routingEngines = [
 ];
 
 // Estilos del mundo. Solo se descarga el sector visible.
-final List<ITrufiMapEngine> _mapEngines = [
+final List<IDiabRutaMapEngine> _mapEngines = [
   MapLibreEngine(
     engineId: 'osm_bright',
     styleString: 'https://tiles.openfreemap.org/styles/bright',
@@ -78,15 +78,15 @@ final List<ITrufiMapEngine> _mapEngines = [
 // ========================================
 
 void main() {
-  runTrufiApp(
+  runDiabRutaApp(
     AppConfiguration(
       appName: appName,
       deepLinkScheme: _deepLinkScheme,
       defaultLocale: const Locale('es'),
-      localeConfig: const TrufiLocaleConfig(
+      localeConfig: const DiabRutaLocaleConfig(
         supportedLocales: [Locale('es'), Locale('en')],
       ),
-      themeConfig: TrufiThemeConfig(
+      themeConfig: DiabRutaThemeConfig(
         theme: temaClaro(),
         darkTheme: temaOscuro(),
         themeMode: ThemeMode.system,
@@ -144,7 +144,7 @@ void main() {
         ),
       ],
       screens: [
-        HomeScreenTrufiScreen(
+        HomeScreenDiabRutaScreen(
           config: HomeScreenConfig(
             appName: appName,
             deepLinkScheme: _deepLinkScheme,
@@ -161,9 +161,9 @@ void main() {
             TransportDetailScreen.show(context, routeCode: routeCode);
           },
         ),
-        SavedPlacesTrufiScreen(),
-        TransportListTrufiScreen(),
-        FaresTrufiScreen(
+        SavedPlacesDiabRutaScreen(),
+        TransportListDiabRutaScreen(),
+        FaresDiabRutaScreen(
           config: FaresConfig(
             currency: 'Bs.',
             lastUpdated: DateTime(2025, 12, 26),
@@ -231,11 +231,11 @@ void main() {
             ],
           ),
         ),
-        FeedbackTrufiScreen(
+        FeedbackDiabRutaScreen(
           config: FeedbackConfig(feedbackUrl: whatsappSugerenciaUrl),
         ),
-        SettingsTrufiScreen(),
-        AboutTrufiScreen(
+        SettingsDiabRutaScreen(),
+        AboutDiabRutaScreen(
           config: AboutScreenConfig(
             appName: appName,
             cityName: cityName,

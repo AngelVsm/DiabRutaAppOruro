@@ -1,0 +1,82 @@
+{
+  "@@locale": "en",
+  "aboutCollapseContent": "DiabRuta shows Oruro's routes. You pick where you are going and the app builds the trip with the lines stored in the phone.",
+  "@aboutCollapseContent": {
+    "description": "A short marketing sentence that describes the app"
+  },
+  "aboutCollapseContentFoot": "If a route is wrong, message me on WhatsApp.",
+  "@aboutCollapseContentFoot": {
+    "description": "Call to action for volunteers"
+  },
+  "aboutCollapseTitle": "About DiabRuta",
+  "@aboutCollapseTitle": {
+    "description": "Title for expandable section about DiabRuta"
+  },
+  "aboutContact": "Contact",
+  "@aboutContact": {
+    "description": "Title for the contact section"
+  },
+  "aboutContent": "I am Angel Vargas. I made {appName} because {city} did not have an app to find which line to take. You pick a destination and I show the trip.",
+  "@aboutContent": {
+    "description": "Text displayed on the about page",
+    "placeholders": {
+      "appName": {
+        "type": "String",
+        "example": "DiabRuta App"
+      },
+      "city": {
+        "type": "String",
+        "example": "Trujillo"
+      }
+    }
+  },
+  "aboutLicenses": "Licenses",
+  "@aboutLicenses": {
+    "description": "Button label to show licenses"
+  },
+  "aboutOpenSource": "This app is released as open source on GitHub. Feel free to contribute to the code, or bring an app to your own city.",
+  "@aboutOpenSource": {
+    "description": "A note about open source"
+  },
+  "aboutOpenSourceTitle": "Open Source",
+  "@aboutOpenSourceTitle": {
+    "description": "Title for the open source section"
+  },
+  "aboutSendFeedback": "Send us feedback",
+  "@aboutSendFeedback": {
+    "description": "Subtitle for the contact email link"
+  },
+  "menuAbout": "About us",
+  "@menuAbout": {
+    "description": "Menu item that shows the about page"
+  },
+  "tagline": "Public transportation in {city}",
+  "@tagline": {
+    "description": "A short marketing sentence that describes the app",
+    "placeholders": {
+      "city": {
+        "type": "String",
+        "example": "Trujillo"
+      }
+    }
+  },
+  "diabrutaWebsite": "DiabRuta on GitHub",
+  "@diabrutaWebsite": {
+    "description": "Link text to DiabRuta website"
+  },
+  "version": "Version {version}",
+  "@version": {
+    "description": "The application's version",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "1.0.0"
+      }
+    }
+  },
+  "volunteerDiabRuta": "Open source",
+  "@volunteerDiabRuta": {
+    "description": "Link text to volunteer page"
+  }
+}
+

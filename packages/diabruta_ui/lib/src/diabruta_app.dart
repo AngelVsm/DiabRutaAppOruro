@@ -1,0 +1,237 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:provider/provider.dart';
+import 'package:diabruta_interfaces/diabruta_interfaces.dart';
+import 'package:diabruta_utils/diabruta_utils.dart';
+
+import 'app_initializer/app_initializer.dart';
+import 'l10n/core_localizations.dart';
+import 'l10n/fallback_material_localizations.dart';
+import 'overlay/overlay_container.dart';
+import 'router/app_router.dart';
+import 'services/deep_link_service.dart';
+
+export 'package:diabruta_interfaces/diabruta_interfaces.dart'
+    show
+        AppConfiguration,
+        AppOverlayManager,
+        DiabRutaScreen,
+        ScreenMenuItem,
+        ScreenThemeData,
+        DiabRutaLocaleConfig,
+        DiabRutaThemeConfig,
+        SocialMediaLink,
+        AppInitStep,
+        AppInitScreenBuilder;
+export 'services/deep_link_service.dart' show SharedRoute, SharedRouteNotifier;
+
+/// Run the DiabRuta app with the given configuration
+Future<void> runDiabRutaApp(AppConfiguration config) async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Use path URL strategy for web (removes # from URLs)
+  if (kIsWeb) {
+    usePathUrlStrategy();
+  }
+
+  // Run the app (initialization happens inside DiabRutaApp)
+  runApp(DiabRutaApp(config: config));
+}
+
+/// Main DiabRuta App widget
+class DiabRutaApp extends StatefulWidget {
+  final AppConfiguration config;
+
+  const DiabRutaApp({super.key, required this.config});
+
+  @override
+  State<DiabRutaApp> createState() => _DiabRutaAppState();
+}
+
+class _DiabRutaAppState extends State<DiabRutaApp> {
+  late final LocaleManager _localeManager;
+  late final ThemeManager _themeManager;
+  late final AppRouter _router;
+  late final SharedRouteNotifier _sharedRouteNotifier;
+  DeepLinkService? _deepLinkService;
+
+  /// The initial route from the URL (captured before MaterialApp consumes it)
+  String? _initialRoute;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Capture the initial route before it's lost during initialization
+    if (kIsWeb) {
+      _initialRoute =
+          WidgetsBinding.instance.platformDispatcher.defaultRouteName;
+      if (_initialRoute == '/' || _initialRoute == null) {
+        _initialRoute = null; // Don't need to navigate if already at root
+      }
+    }
+
+    _localeManager = LocaleManager(
+      defaultLocale:
+          widget.config.defaultLocale ??
+          widget.config.localeConfig.defaultLocale,
+      supportedLocales: widget.config.localeConfig.supportedLocales,
+      languageNames: widget.config.localeConfig.languageNames,
+    );
+    _themeManager = ThemeManager(
+      defaultThemeMode: widget.config.themeConfig.themeMode,
+    );
+    _router = AppRouter(
+      screens: widget.config.screens,
+      socialMediaLinks: widget.config.socialMediaLinks,
+      initialRoute: _initialRoute,
+      appName: widget.config.appName,
+      appTagline: widget.config.appTagline,
+      drawerFooterExtra: widget.config.drawerFooterExtra,
+      logo: widget.config.logo,
+    );
+    _sharedRouteNotifier = SharedRouteNotifier();
+
+    // Initialize deep link service if scheme is configured
+    if (widget.config.deepLinkScheme != null) {
+      _deepLinkService = DeepLinkService(
+        scheme: widget.config.deepLinkScheme,
+        onRouteReceived: (route) {
+          _sharedRouteNotifier.setPendingRoute(route);
+        },
+        onLocationReceived: _goToDeepLinkLocation,
+      );
+      _deepLinkService!.initialize();
+    }
+  }
+
+  /// Navigates to an in-app location received via deep link
+  /// (e.g. `diabruta://routes?operator=X` → `/routes?operator=X`), but only
+  /// when it targets a registered screen — unknown links stay ignored
+  /// instead of surfacing the router's error page.
+  void _goToDeepLinkLocation(String location) {
+    final path = Uri.parse(location).path;
+    final known = widget.config.screens.any(
+      (screen) => path == screen.path || path.startsWith('${screen.path}/'),
+    );
+    if (!known) {
+      debugPrint('DiabRutaApp: Ignoring deep link to unregistered path: $path');
+      return;
+    }
+    _router.router.go(location);
+  }
+
+  @override
+  void dispose() {
+    _deepLinkService?.dispose();
+    _sharedRouteNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final themeConfig = widget.config.themeConfig;
+
+    final screenDelegates = widget.config.screens
+        .expand((s) => s.localizationsDelegates)
+        .toList();
+    final screenProviders = widget.config.screens
+        .expand((s) => s.providers)
+        .toList();
+
+    // Layer 1: Inject all providers (without initializing yet).
+    // The `AppConfiguration` itself is exposed via Provider so deep
+    // widgets (home_screen, itinerary cards, routing engines wired
+    // up later) can read app-wide flags like `routingTimeOverride`
+    // without threading them through every constructor.
+    return MultiProvider(
+      providers: [
+        Provider<AppConfiguration>.value(value: widget.config),
+        ChangeNotifierProvider.value(value: _localeManager),
+        ChangeNotifierProvider.value(value: _themeManager),
+        ChangeNotifierProvider.value(value: _sharedRouteNotifier),
+        ...?widget.config.overlayManager?.providers,
+        ...widget.config.providers,
+        ...screenProviders,
+      ],
+      // Layer 2: Initialize screens and managers with loading screen
+      child: AppInitializer(
+        screens: widget.config.screens,
+        screenBuilder: widget.config.initScreenBuilder,
+        theme: themeConfig.theme,
+        minSplashDuration: widget.config.minSplashDuration,
+        supportedLocales: widget.config.localeConfig.supportedLocales,
+        extraLocalizationsDelegates: widget.config.extraLocalizationsDelegates,
+        // Layer 3: Show the actual app once initialized
+        child: _DiabRutaMaterialApp(
+          config: widget.config,
+          router: _router,
+          screenDelegates: screenDelegates,
+        ),
+      ),
+    );
+  }
+}
+
+class _DiabRutaMaterialApp extends StatelessWidget {
+  final AppConfiguration config;
+  final AppRouter router;
+  final List<LocalizationsDelegate> screenDelegates;
+
+  const _DiabRutaMaterialApp({
+    required this.config,
+    required this.router,
+    required this.screenDelegates,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final localeManager = LocaleManager.watch(context);
+    final themeManager = ThemeManager.watch(context);
+
+    // Language used to fill the gaps for city languages that core (or the
+    // app itself) hasn't translated yet.
+    final fallbackLocale = config.localeConfig.supportedLocales.isEmpty
+        ? const Locale('en')
+        : config.localeConfig.defaultLocale;
+
+    return MaterialApp.router(
+      title: config.appName,
+      debugShowCheckedModeBanner: false,
+      theme: config.themeConfig.theme,
+      darkTheme: config.themeConfig.darkTheme,
+      themeMode: themeManager.themeMode,
+      routerConfig: router.router,
+      locale: localeManager.currentLocale,
+      supportedLocales: config.localeConfig.supportedLocales,
+      localizationsDelegates: [
+        // App-provided translations first (gen_extra_l10n output for the
+        // city's own languages), then core's, then a fallback layer so a
+        // partially translated language degrades to the default one instead
+        // of crashing on a null lookup.
+        ...config.extraLocalizationsDelegates,
+        CoreLocalizations.delegate,
+        ...screenDelegates,
+        ...fallbackLocalizationsDelegates([
+          CoreLocalizations.delegate,
+          ...screenDelegates,
+        ], fallbackLocale: fallbackLocale),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        // Last resort for city languages Flutter itself doesn't ship
+        // (Quechua, Aymara, …): without these the tree has no
+        // MaterialLocalizations and every Scaffold asserts.
+        ...fallbackFrameworkLocalizationsDelegates(
+          fallbackLocale: fallbackLocale,
+        ),
+      ],
+      builder: (context, child) {
+        return OverlayContainer(child: child ?? const SizedBox.shrink());
+      },
+    );
+  }
+}
+

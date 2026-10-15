@@ -1,0 +1,134 @@
+import 'package:equatable/equatable.dart';
+import 'package:diabruta_interfaces/diabruta_interfaces.dart';
+import 'package:diabruta_routing/diabruta_routing.dart' as routing;
+
+/// How the departure/arrival time is configured.
+enum TimeMode { leaveNow, departAt, arriveBy }
+
+/// State for the route planner.
+class RoutePlannerState extends Equatable {
+  final DiabRutaLocation? fromPlace;
+  final DiabRutaLocation? toPlace;
+  final routing.Plan? plan;
+  final routing.Itinerary? selectedItinerary;
+  final bool isLoading;
+  final String? error;
+  final TimeMode timeMode;
+  final DateTime? dateTime;
+
+  const RoutePlannerState({
+    this.fromPlace,
+    this.toPlace,
+    this.plan,
+    this.selectedItinerary,
+    this.isLoading = false,
+    this.error,
+    this.timeMode = TimeMode.leaveNow,
+    this.dateTime,
+  });
+
+  RoutePlannerState copyWith({
+    DiabRutaLocation? fromPlace,
+    DiabRutaLocation? toPlace,
+    routing.Plan? plan,
+    routing.Itinerary? selectedItinerary,
+    bool? isLoading,
+    String? error,
+    TimeMode? timeMode,
+    DateTime? dateTime,
+  }) {
+    return RoutePlannerState(
+      fromPlace: fromPlace ?? this.fromPlace,
+      toPlace: toPlace ?? this.toPlace,
+      plan: plan ?? this.plan,
+      selectedItinerary: selectedItinerary ?? this.selectedItinerary,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
+      timeMode: timeMode ?? this.timeMode,
+      dateTime: dateTime ?? this.dateTime,
+    );
+  }
+
+  /// Copy with nullable values support
+  RoutePlannerState copyWithNullable({
+    Optional<DiabRutaLocation?>? fromPlace,
+    Optional<DiabRutaLocation?>? toPlace,
+    Optional<routing.Plan?>? plan,
+    Optional<routing.Itinerary?>? selectedItinerary,
+    bool? isLoading,
+    Optional<String?>? error,
+    TimeMode? timeMode,
+    Optional<DateTime?>? dateTime,
+  }) {
+    return RoutePlannerState(
+      fromPlace: fromPlace != null ? fromPlace.value : this.fromPlace,
+      toPlace: toPlace != null ? toPlace.value : this.toPlace,
+      plan: plan != null ? plan.value : this.plan,
+      selectedItinerary: selectedItinerary != null
+          ? selectedItinerary.value
+          : this.selectedItinerary,
+      isLoading: isLoading ?? this.isLoading,
+      error: error != null ? error.value : this.error,
+      timeMode: timeMode ?? this.timeMode,
+      dateTime: dateTime != null ? dateTime.value : this.dateTime,
+    );
+  }
+
+  /// Check if both origin and destination are defined
+  bool get isPlacesDefined => fromPlace != null && toPlace != null;
+
+  /// Check if we have a valid plan with selected itinerary
+  bool get isPlanReady =>
+      isPlacesDefined && plan != null && selectedItinerary != null;
+
+  /// Check if the plan has an error
+  bool get hasError => error != null;
+
+  // JSON serialization
+  factory RoutePlannerState.fromJson(Map<String, dynamic> json) {
+    return RoutePlannerState(
+      fromPlace: json['fromPlace'] != null
+          ? DiabRutaLocation.fromJson(json['fromPlace'] as Map<String, dynamic>)
+          : null,
+      toPlace: json['toPlace'] != null
+          ? DiabRutaLocation.fromJson(json['toPlace'] as Map<String, dynamic>)
+          : null,
+      plan: json['plan'] != null
+          ? routing.Plan.fromJson(json['plan'] as Map<String, dynamic>)
+          : null,
+      selectedItinerary: json['selectedItinerary'] != null
+          ? routing.Itinerary.fromJson(
+              json['selectedItinerary'] as Map<String, dynamic>,
+            )
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'fromPlace': fromPlace?.toJson(),
+      'toPlace': toPlace?.toJson(),
+      'plan': plan?.toJson(),
+      'selectedItinerary': selectedItinerary?.toJson(),
+    };
+  }
+
+  @override
+  List<Object?> get props => [
+    fromPlace,
+    toPlace,
+    plan,
+    selectedItinerary,
+    isLoading,
+    error,
+    timeMode,
+    dateTime,
+  ];
+}
+
+/// Helper class for nullable optional values
+class Optional<T> {
+  final T value;
+  const Optional(this.value);
+}
+

@@ -1,0 +1,304 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
+
+import 'core_localizations_en.dart';
+import 'core_localizations_es.dart';
+
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of CoreLocalizations
+/// returned by `CoreLocalizations.of(context)`.
+///
+/// Applications need to include `CoreLocalizations.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'l10n/core_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: CoreLocalizations.localizationsDelegates,
+///   supportedLocales: CoreLocalizations.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the CoreLocalizations.supportedLocales
+/// property.
+abstract class CoreLocalizations {
+  CoreLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+
+  final String localeName;
+
+  static CoreLocalizations of(BuildContext context) {
+    return Localizations.of<CoreLocalizations>(context, CoreLocalizations)!;
+  }
+
+  static const LocalizationsDelegate<CoreLocalizations> delegate =
+      _CoreLocalizationsDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('es'),
+  ];
+
+  /// The application name
+  ///
+  /// In en, this message translates to:
+  /// **'DiabRuta'**
+  String get appName;
+
+  /// Loading indicator text
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get appLoading;
+
+  /// Navigation item for Home
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// Navigation item for Search
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get navSearch;
+
+  /// Navigation item for Feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback'**
+  String get navFeedback;
+
+  /// Navigation item for Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get navSettings;
+
+  /// Navigation item for About
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get navAbout;
+
+  /// Save button text
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get actionSave;
+
+  /// Cancel button text
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get actionCancel;
+
+  /// Confirm button text
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get actionConfirm;
+
+  /// Generic error message
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get errorGeneric;
+
+  /// Network error message
+  ///
+  /// In en, this message translates to:
+  /// **'Network error. Please check your connection.'**
+  String get errorNetwork;
+
+  /// Error message when app fails to initialize
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to initialize app'**
+  String get errorInitialization;
+
+  /// Retry button text
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get actionRetry;
+
+  /// Error message for 404 pages
+  ///
+  /// In en, this message translates to:
+  /// **'Page not found'**
+  String get errorPageNotFound;
+
+  /// Shown on the default home route when the app was configured with no screens
+  ///
+  /// In en, this message translates to:
+  /// **'No screens registered'**
+  String get errorNoScreensRegistered;
+
+  /// Go to home page button
+  ///
+  /// In en, this message translates to:
+  /// **'Go Home'**
+  String get actionGoHome;
+
+  /// Generic error title
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get titleError;
+
+  /// Number of unread notifications
+  ///
+  /// In en, this message translates to:
+  /// **'{count} unread'**
+  String unreadCount(int count);
+
+  /// Button to mark all notifications as read
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as read'**
+  String get markAllAsRead;
+
+  /// Init screen step: the app is starting
+  ///
+  /// In en, this message translates to:
+  /// **'Starting'**
+  String get initStepStarting;
+
+  /// Init screen step: initializing app services
+  ///
+  /// In en, this message translates to:
+  /// **'Initializing'**
+  String get initStepInitializing;
+
+  /// Init screen step: loading map engines
+  ///
+  /// In en, this message translates to:
+  /// **'Loading maps'**
+  String get initStepLoadingMaps;
+
+  /// Init screen step: loading routing engines
+  ///
+  /// In en, this message translates to:
+  /// **'Loading routes'**
+  String get initStepLoadingRoutes;
+
+  /// Init screen step: preparing screens
+  ///
+  /// In en, this message translates to:
+  /// **'Almost ready'**
+  String get initStepAlmostReady;
+
+  /// Title shown when app initialization fails
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to start'**
+  String get errorUnableToStart;
+
+  /// Fallback message when an error has no details
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred'**
+  String get errorUnexpected;
+
+  /// Brand tagline in the drawer footer; keep identical in all languages
+  ///
+  /// In en, this message translates to:
+  /// **'Powered by Angel Vargas'**
+  String get poweredByDiabRuta;
+}
+
+class _CoreLocalizationsDelegate
+    extends LocalizationsDelegate<CoreLocalizations> {
+  const _CoreLocalizationsDelegate();
+
+  @override
+  Future<CoreLocalizations> load(Locale locale) {
+    return SynchronousFuture<CoreLocalizations>(
+      lookupCoreLocalizations(locale),
+    );
+  }
+
+  @override
+  bool isSupported(Locale locale) =>
+      <String>['en', 'es'].contains(locale.languageCode);
+
+  @override
+  bool shouldReload(_CoreLocalizationsDelegate old) => false;
+}
+
+CoreLocalizations lookupCoreLocalizations(Locale locale) {
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'en':
+      return CoreLocalizationsEn();
+    case 'es':
+      return CoreLocalizationsEs();
+  }
+
+  throw FlutterError(
+    'CoreLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
+}

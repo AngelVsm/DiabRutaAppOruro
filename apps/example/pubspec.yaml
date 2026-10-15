@@ -1,4 +1,4 @@
-name: trufi_core_example
+name: diabruta_example
 description: "DiabRuta, rutas de Oruro."
 resolution: workspace
 publish_to: 'none'
@@ -16,20 +16,20 @@ dependencies:
   flutter_bloc: ^9.1.1
   provider: ^6.1.5+1
   go_router: ^17.0.1
-  trufi_core_interfaces: ^1.0.0
-  trufi_core_utils: ^1.0.0
-  trufi_core_about: ^1.0.0
-  trufi_core_transport_list: ^1.0.0
-  trufi_core_maps: ^1.0.0
-  trufi_core_routing: ^1.0.0
-  trufi_core_saved_places: ^1.0.0
-  trufi_core_home_screen: ^1.0.0
-  trufi_core_search_locations: ^1.0.0
-  trufi_core_feedback: ^1.0.0
-  trufi_core_fares: ^1.0.0
-  trufi_core_settings: ^1.0.0
-  trufi_core_ui: ^1.0.0
-  trufi_core_navigation: ^1.0.0
+  diabruta_interfaces: ^1.0.0
+  diabruta_utils: ^1.0.0
+  diabruta_about: ^1.0.0
+  diabruta_transport_list: ^1.0.0
+  diabruta_maps: ^1.0.0
+  diabruta_routing: ^1.0.0
+  diabruta_saved_places: ^1.0.0
+  diabruta_home_screen: ^1.0.0
+  diabruta_search_locations: ^1.0.0
+  diabruta_feedback: ^1.0.0
+  diabruta_fares: ^1.0.0
+  diabruta_settings: ^1.0.0
+  diabruta_ui: ^1.0.0
+  diabruta_navigation: ^1.0.0
   latlong2: ^0.9.1
   # 0.26.2 minimum: 0.26.1 still crashes on iOS with SIGABRT
   # (std::domain_error from mbgl::LatLng) when a camera op reaches a map

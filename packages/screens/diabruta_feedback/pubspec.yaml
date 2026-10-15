@@ -1,0 +1,27 @@
+name: diabruta_feedback
+description: "Feedback screen for DiabRuta - opens external feedback URL with app context"
+version: 1.0.0
+homepage:
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.10.0
+  flutter: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+  url_launcher: ^6.3.2
+  diabruta_interfaces: ^1.0.0
+  diabruta_utils: ^1.0.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+
+flutter:
+  generate: true
+

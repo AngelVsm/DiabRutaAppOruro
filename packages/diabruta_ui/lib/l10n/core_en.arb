@@ -1,0 +1,149 @@
+{
+  "@@locale": "en",
+
+  "appName": "DiabRuta",
+  "@appName": {
+    "description": "The application name"
+  },
+
+  "appLoading": "Loading...",
+  "@appLoading": {
+    "description": "Loading indicator text"
+  },
+
+  "navHome": "Home",
+  "@navHome": {
+    "description": "Navigation item for Home"
+  },
+
+  "navSearch": "Search",
+  "@navSearch": {
+    "description": "Navigation item for Search"
+  },
+
+  "navFeedback": "Feedback",
+  "@navFeedback": {
+    "description": "Navigation item for Feedback"
+  },
+
+  "navSettings": "Settings",
+  "@navSettings": {
+    "description": "Navigation item for Settings"
+  },
+
+  "navAbout": "About",
+  "@navAbout": {
+    "description": "Navigation item for About"
+  },
+
+  "actionSave": "Save",
+  "@actionSave": {
+    "description": "Save button text"
+  },
+
+  "actionCancel": "Cancel",
+  "@actionCancel": {
+    "description": "Cancel button text"
+  },
+
+  "actionConfirm": "Confirm",
+  "@actionConfirm": {
+    "description": "Confirm button text"
+  },
+
+  "errorGeneric": "An error occurred",
+  "@errorGeneric": {
+    "description": "Generic error message"
+  },
+
+  "errorNetwork": "Network error. Please check your connection.",
+  "@errorNetwork": {
+    "description": "Network error message"
+  },
+
+  "errorInitialization": "Failed to initialize app",
+  "@errorInitialization": {
+    "description": "Error message when app fails to initialize"
+  },
+
+  "actionRetry": "Retry",
+  "@actionRetry": {
+    "description": "Retry button text"
+  },
+
+  "errorPageNotFound": "Page not found",
+  "@errorPageNotFound": {
+    "description": "Error message for 404 pages"
+  },
+  "errorNoScreensRegistered": "No screens registered",
+  "@errorNoScreensRegistered": {
+    "description": "Shown on the default home route when the app was configured with no screens"
+  },
+
+  "actionGoHome": "Go Home",
+  "@actionGoHome": {
+    "description": "Go to home page button"
+  },
+
+  "titleError": "Error",
+  "@titleError": {
+    "description": "Generic error title"
+  },
+
+  "unreadCount": "{count} unread",
+  "@unreadCount": {
+    "description": "Number of unread notifications",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+
+  "markAllAsRead": "Mark all as read",
+  "@markAllAsRead": {
+    "description": "Button to mark all notifications as read"
+  },
+
+  "initStepStarting": "Starting",
+  "@initStepStarting": {
+    "description": "Init screen step: the app is starting"
+  },
+
+  "initStepInitializing": "Initializing",
+  "@initStepInitializing": {
+    "description": "Init screen step: initializing app services"
+  },
+
+  "initStepLoadingMaps": "Loading maps",
+  "@initStepLoadingMaps": {
+    "description": "Init screen step: loading map engines"
+  },
+
+  "initStepLoadingRoutes": "Loading routes",
+  "@initStepLoadingRoutes": {
+    "description": "Init screen step: loading routing engines"
+  },
+
+  "initStepAlmostReady": "Almost ready",
+  "@initStepAlmostReady": {
+    "description": "Init screen step: preparing screens"
+  },
+
+  "errorUnableToStart": "Unable to start",
+  "@errorUnableToStart": {
+    "description": "Title shown when app initialization fails"
+  },
+
+  "errorUnexpected": "An unexpected error occurred",
+  "@errorUnexpected": {
+    "description": "Fallback message when an error has no details"
+  },
+
+  "poweredByDiabRuta": "Powered by Angel Vargas",
+  "@poweredByDiabRuta": {
+    "description": "Brand tagline in the drawer footer; keep identical in all languages"
+  }
+}
+

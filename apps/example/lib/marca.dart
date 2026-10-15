@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:trufi_core_about/trufi_core_about.dart';
+import 'package:diabruta_about/diabruta_about.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const appName = 'DiabRuta';

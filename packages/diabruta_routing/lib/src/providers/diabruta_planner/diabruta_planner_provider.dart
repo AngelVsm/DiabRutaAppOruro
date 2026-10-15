@@ -1,0 +1,857 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
+
+import '../../utils/polyline_decoder.dart';
+import '../../models/agency.dart';
+import '../../models/itinerary.dart';
+import '../../models/leg.dart';
+import '../../models/place.dart';
+import '../../models/plan.dart';
+import '../../models/plan_location.dart';
+import '../../models/route.dart' as domain;
+import '../../models/routing_location.dart';
+import '../../models/service_hours.dart';
+import '../../models/stop.dart';
+import '../../models/transit_route.dart';
+import '../../models/transport_mode.dart';
+import '../routing_provider.dart';
+import 'package:diabruta_planner/diabruta_planner.dart';
+import 'diabruta_planner_config.dart';
+import 'diabruta_planner_data_source.dart';
+import '../../../l10n/routing_localizations.dart';
+
+/// Below this straight-line distance (meters), offer a walk-only itinerary
+/// alongside transit options. The tier-ordering in the home screen lifts it
+/// to the top of the list as the preferred option.
+const double _walkOnlyThresholdMeters = 1500;
+
+/// Walking speed used to estimate walk durations (m/s). 1.2 m/s ≈ 4.3 km/h
+/// matches the existing per-leg walk timing in this provider.
+const double _walkSpeedMps = 1.2;
+
+/// Routing provider using DiabRutaPlanner.
+///
+/// Supports two modes:
+/// - **Local** (mobile): Loads GTFS ZIP from Flutter assets for offline routing
+/// - **Remote** (web): Calls diabruta-server-planner HTTP API for online routing
+///
+/// Example (mobile):
+/// ```dart
+/// DiabRutaPlannerProvider(
+///   config: DiabRutaPlannerConfig.local(
+///     gtfsAsset: 'assets/routing/gtfs.zip',
+///   ),
+/// )
+/// ```
+///
+/// Example (web):
+/// ```dart
+/// DiabRutaPlannerProvider(
+///   config: DiabRutaPlannerConfig.remote(
+///     serverUrl: 'https://planner.diabruta.dev',
+///   ),
+/// )
+/// ```
+class DiabRutaPlannerProvider extends IRoutingProvider {
+  final DiabRutaPlannerConfig config;
+  late final DiabRutaPlannerDataSource _dataSource;
+
+  DiabRutaPlannerProvider({required this.config})
+    : _dataSource = DiabRutaPlannerDataSource(config: config);
+
+  @override
+  String get id => config.providerId ?? 'diabruta_planner';
+
+  @override
+  String get name => config.displayName ?? 'DiabRuta Planner';
+
+  @override
+  String get description =>
+      config.description ??
+      (config.isLocal
+          ? 'Finds routes using the data saved on your device.'
+          : 'Finds routes through our own service. Needs a connection.');
+
+  @override
+  String localizedDescription(BuildContext context) {
+    if (config.description != null) return config.description!;
+    final l10n = RoutingLocalizations.of(context);
+    return config.isLocal
+        ? l10n.diabrutaPlannerLocalDescription
+        : l10n.diabrutaPlannerRemoteDescription;
+  }
+
+  @override
+  bool get supportsTransitRoutes => true;
+
+  @override
+  bool get requiresInternet => config.isRemote;
+
+  @override
+  Widget? buildPreferencesUI(BuildContext context) =>
+      _DiabRutaPlannerInfo(isLocal: config.isLocal);
+
+  @override
+  void resetPreferences() {}
+
+  /// Whether data is loaded and ready.
+  bool get isLoaded => _dataSource.isLoaded;
+
+  /// Whether data is currently loading.
+  bool get isLoading => _dataSource.isLoading;
+
+  /// Status of the data source.
+  DiabRutaPlannerDataStatus get status => _dataSource.status;
+
+  /// Error message if loading failed.
+  String? get errorMessage => _dataSource.errorMessage;
+
+  @override
+  Future<void> initialize() async {
+    await _dataSource.preload();
+  }
+
+  /// Access to the underlying data source for advanced queries.
+  DiabRutaPlannerDataSource get dataSource => _dataSource;
+
+  // --- Plan ---
+
+  @override
+  Future<Plan> fetchPlan({
+    required RoutingLocation from,
+    required RoutingLocation to,
+    int numItineraries = 5,
+    String? locale,
+    required DateTime dateTime,
+    bool arriveBy = false,
+  }) async {
+    if (!_dataSource.isLoaded) {
+      await _dataSource.preload();
+    }
+
+    if (!_dataSource.isLoaded) {
+      return Plan(
+        from: _createPlanLocation(from),
+        to: _createPlanLocation(to),
+        itineraries: [],
+        type: 'PLANNER_ERROR',
+      );
+    }
+
+    final sw = Stopwatch()..start();
+
+    final paths = await _dataSource.client.findRoutes(
+      origin: from.position,
+      destination: to.position,
+      maxWalkDistance: config.maxWalkingDistance,
+      maxResults: numItineraries,
+      maxStopCandidates: config.maxStopCandidates,
+      maxTransfers: config.maxTransfers,
+    );
+
+    sw.stop();
+    debugPrint(
+      'DiabRutaPlannerProvider: Found ${paths.length} paths in ${sw.elapsedMilliseconds}ms',
+    );
+
+    // Backend ranks transit paths by total distance and applies the
+    // direct-vs-transfer bucket rule. Provider only handles walk-only
+    // injection; otherwise we trust the backend order.
+    final itineraries = paths
+        .map((path) => convertToItinerary(path, from, to, dateTime))
+        .toList();
+
+    final straightDistance = _haversineMeters(from.position, to.position);
+    if (straightDistance <= _walkOnlyThresholdMeters) {
+      itineraries.insert(
+        0,
+        _buildWalkOnlyItinerary(from, to, dateTime, straightDistance),
+      );
+    }
+
+    return Plan(
+      from: _createPlanLocation(from),
+      to: _createPlanLocation(to),
+      itineraries: itineraries,
+    );
+  }
+
+  Itinerary _buildWalkOnlyItinerary(
+    RoutingLocation from,
+    RoutingLocation to,
+    DateTime startTime,
+    double distance,
+  ) {
+    final duration = Duration(seconds: (distance / _walkSpeedMps).round());
+    final points = [from.position, to.position];
+    final leg = Leg(
+      mode: 'WALK',
+      distance: distance,
+      duration: duration,
+      transitLeg: false,
+      fromPlace: Place(
+        name: from.description,
+        lat: from.position.latitude,
+        lon: from.position.longitude,
+      ),
+      toPlace: Place(
+        name: to.description,
+        lat: to.position.latitude,
+        lon: to.position.longitude,
+      ),
+      encodedPoints: PolylineCodec.encode(points),
+      decodedPoints: points,
+      startTime: startTime,
+      endTime: startTime.add(duration),
+    );
+    return Itinerary(
+      legs: [leg],
+      startTime: startTime,
+      endTime: startTime.add(duration),
+      duration: duration,
+      walkDistance: distance,
+      walkTime: duration,
+      transfers: 0,
+    );
+  }
+
+  static double _haversineMeters(LatLng a, LatLng b) {
+    const r = 6371000.0;
+    final lat1 = a.latitude * pi / 180;
+    final lat2 = b.latitude * pi / 180;
+    final dLat = (b.latitude - a.latitude) * pi / 180;
+    final dLon = (b.longitude - a.longitude) * pi / 180;
+    final h =
+        sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1) * cos(lat2) * sin(dLon / 2) * sin(dLon / 2);
+    return 2 * r * asin(sqrt(h));
+  }
+
+  /// Turns a planner [RoutingPath] into the UI's [Itinerary]: walk to the
+  /// first stop, one transit leg per segment with a walk leg between two
+  /// segments whenever the rider alights and boards at different stops,
+  /// then the walk to the destination.
+  @visibleForTesting
+  Itinerary convertToItinerary(
+    RoutingPath path,
+    RoutingLocation from,
+    RoutingLocation to,
+    DateTime startTime,
+  ) {
+    final legs = <Leg>[];
+    var currentTime = startTime;
+
+    // Walk to first stop
+    if (path.originWalkDistance > 0) {
+      final walkDuration = Duration(
+        seconds: (path.originWalkDistance / 1.2).round(),
+      );
+      final walkPoints = [from.position, path.originStop.position];
+      legs.add(
+        Leg(
+          mode: 'WALK',
+          distance: path.originWalkDistance,
+          duration: walkDuration,
+          transitLeg: false,
+          fromPlace: Place(
+            name: from.description,
+            lat: from.position.latitude,
+            lon: from.position.longitude,
+          ),
+          toPlace: Place(
+            name: path.originStop.name,
+            lat: path.originStop.lat,
+            lon: path.originStop.lon,
+            stopId: path.originStop.id,
+          ),
+          encodedPoints: PolylineCodec.encode(walkPoints),
+          decodedPoints: walkPoints,
+          startTime: currentTime,
+          endTime: currentTime.add(walkDuration),
+        ),
+      );
+      currentTime = currentTime.add(walkDuration);
+    }
+
+    // Transit segments
+    final agencyNames = _buildAgencyNameMap();
+    RoutingSegment? previous;
+    for (final segment in path.segments) {
+      // Walkable transfer: the previous leg alights at one stop and this one
+      // boards at another (two kerbs of the same street, typically). Without
+      // an explicit leg the map would draw the itinerary jumping between
+      // the two stops and the summary would hide the walk.
+      if (previous != null && previous.toStop.id != segment.fromStop.id) {
+        final walkDistance = _haversineMeters(
+          previous.toStop.position,
+          segment.fromStop.position,
+        );
+        final walkDuration = Duration(
+          seconds: (walkDistance / _walkSpeedMps).round(),
+        );
+        final walkPoints = [
+          previous.toStop.position,
+          segment.fromStop.position,
+        ];
+        legs.add(
+          Leg(
+            mode: 'WALK',
+            distance: walkDistance,
+            duration: walkDuration,
+            transitLeg: false,
+            fromPlace: Place(
+              name: previous.toStop.name,
+              lat: previous.toStop.lat,
+              lon: previous.toStop.lon,
+              stopId: previous.toStop.id,
+            ),
+            toPlace: Place(
+              name: segment.fromStop.name,
+              lat: segment.fromStop.lat,
+              lon: segment.fromStop.lon,
+              stopId: segment.fromStop.id,
+            ),
+            encodedPoints: PolylineCodec.encode(walkPoints),
+            decodedPoints: walkPoints,
+            startTime: currentTime,
+            endTime: currentTime.add(walkDuration),
+          ),
+        );
+        currentTime = currentTime.add(walkDuration);
+      }
+      previous = segment;
+
+      final points = segment.shapePoints.isNotEmpty
+          ? segment.shapePoints
+          : segment.stops.map((s) => s.position).toList();
+
+      final duration =
+          segment.scheduledDuration ?? Duration(minutes: segment.stopCount * 2);
+
+      final intermediatePlaces = segment.stops
+          .skip(1)
+          .take(segment.stops.length - 2)
+          .map(
+            (stop) => Place(
+              name: stop.name,
+              lat: stop.lat,
+              lon: stop.lon,
+              stopId: stop.id,
+            ),
+          )
+          .toList();
+
+      legs.add(
+        Leg(
+          mode: _routeTypeToMode(segment.route.type).otpName,
+          distance: _estimateDistance(points),
+          duration: duration,
+          transitLeg: true,
+          fromPlace: Place(
+            name: segment.fromStop.name,
+            lat: segment.fromStop.lat,
+            lon: segment.fromStop.lon,
+            stopId: segment.fromStop.id,
+          ),
+          toPlace: Place(
+            name: segment.toStop.name,
+            lat: segment.toStop.lat,
+            lon: segment.toStop.lon,
+            stopId: segment.toStop.id,
+          ),
+          encodedPoints: PolylineCodec.encode(points),
+          decodedPoints: points,
+          startTime: currentTime,
+          endTime: currentTime.add(duration),
+          route: domain.Route(
+            id: segment.route.id,
+            gtfsId: segment.route.id,
+            shortName: segment.route.shortName,
+            longName: segment.route.longName,
+            color: segment.route.colorHex,
+            textColor: segment.route.textColorHex,
+            type: segment.route.type.value,
+            mode: _routeTypeToMode(segment.route.type),
+          ),
+          shortName: segment.route.shortName,
+          routeLongName: segment.route.longName,
+          headsign: segment.headsign,
+          // Composite "<routeId>#<patternId>" so a tap on this leg
+          // opens the detail of the *specific* pattern variant the
+          // planner picked. Without this the detail screen falls back
+          // to `route.id`, which `getPattern(routeId)` collapses to
+          // the first pattern of the route — opening the wrong
+          // variant whenever a route has > 1 pattern.
+          tripPatternId: '${segment.route.id}#${segment.pattern.id}',
+          intermediatePlaces: intermediatePlaces,
+          serviceHours: _buildServiceHours(segment),
+          // Resolve agency from the GTFS agencies list so the leg
+          // exposes the same "operated by …" line that OTP-backed
+          // legs show. Without this, only OTP plans displayed the
+          // agency, creating a visible inconsistency.
+          agency: (segment.route.agencyId?.isNotEmpty ?? false)
+              ? Agency(
+                  gtfsId: segment.route.agencyId,
+                  name: agencyNames[segment.route.agencyId!],
+                )
+              : null,
+        ),
+      );
+
+      currentTime = currentTime.add(duration);
+    }
+
+    // Walk from last stop to destination
+    if (path.destinationWalkDistance > 0) {
+      final walkDuration = Duration(
+        seconds: (path.destinationWalkDistance / 1.2).round(),
+      );
+      final walkPoints = [path.destinationStop.position, to.position];
+      legs.add(
+        Leg(
+          mode: 'WALK',
+          distance: path.destinationWalkDistance,
+          duration: walkDuration,
+          transitLeg: false,
+          fromPlace: Place(
+            name: path.destinationStop.name,
+            lat: path.destinationStop.lat,
+            lon: path.destinationStop.lon,
+            stopId: path.destinationStop.id,
+          ),
+          toPlace: Place(
+            name: to.description,
+            lat: to.position.latitude,
+            lon: to.position.longitude,
+          ),
+          encodedPoints: PolylineCodec.encode(walkPoints),
+          decodedPoints: walkPoints,
+          startTime: currentTime,
+          endTime: currentTime.add(walkDuration),
+        ),
+      );
+    }
+
+    final totalDuration = legs.fold<Duration>(
+      Duration.zero,
+      (sum, leg) => sum + leg.duration,
+    );
+
+    final totalWalkDistance = legs
+        .where((leg) => !leg.transitLeg)
+        .fold<double>(0, (sum, leg) => sum + leg.distance);
+
+    final walkTime = Duration(seconds: (totalWalkDistance / 1.2).round());
+
+    return Itinerary(
+      legs: legs,
+      startTime: startTime,
+      endTime: startTime.add(totalDuration),
+      duration: totalDuration,
+      walkDistance: totalWalkDistance,
+      walkTime: walkTime,
+      transfers: path.transfers,
+    );
+  }
+
+  // --- Transit routes ---
+
+  @override
+  Future<List<TransitRoute>> fetchTransitRoutes() async {
+    if (!_dataSource.isLoaded) {
+      await _dataSource.preload();
+    }
+
+    if (!_dataSource.isLoaded) return [];
+
+    if (_dataSource.config.isLocal) {
+      return _fetchTransitRoutesLocal();
+    } else {
+      return _fetchTransitRoutesRemote();
+    }
+  }
+
+  Future<List<TransitRoute>> _fetchTransitRoutesLocal() async {
+    final routeIndex = _dataSource.routeIndex;
+    if (routeIndex == null) return [];
+
+    final agencyNames = _buildAgencyNameMap();
+    final patterns = <TransitRoute>[];
+
+    for (final pattern in routeIndex.patterns) {
+      final route = _dataSource.getRoute(pattern.routeId);
+      if (route == null) continue;
+
+      // Prefer the GTFS `route_long_name` (a corridor descriptor like
+      // "DiabRuta 134"). Fall back to a generated "first stop → last stop"
+      // string only when the GTFS field is empty — useful for feeds
+      // that intentionally leave route_long_name blank.
+      String? generatedLongName;
+      if (pattern.stopIds.length >= 2) {
+        final firstStop = _dataSource.getStop(pattern.stopIds.first);
+        final lastStop = _dataSource.getStop(pattern.stopIds.last);
+        if (firstStop != null && lastStop != null) {
+          generatedLongName = '${firstStop.name} → ${lastStop.name}';
+        }
+      }
+
+      final effectiveLongName = route.longName.isNotEmpty
+          ? route.longName
+          : generatedLongName;
+
+      // Use a composite id ("<routeId>#<patternId>") so each variant
+      // of a route gets its own list entry and detail page. Using just
+      // `pattern.routeId` made every variant share an identifier,
+      // collapsing the detail navigation to a single pattern.
+      final patternRouteId = '${pattern.routeId}#${pattern.id}';
+      patterns.add(
+        TransitRoute(
+          id: patternRouteId,
+          name: pattern.headsign ?? route.longName,
+          code: patternRouteId,
+          headsign: pattern.headsign,
+          route: TransitRouteInfo(
+            shortName: route.shortName,
+            longName: effectiveLongName,
+            mode: _routeTypeToMode(route.type),
+            color: route.colorHex,
+            textColor: route.textColorHex,
+            agencyName: agencyNames[route.agencyId],
+          ),
+        ),
+      );
+    }
+
+    patterns.sort(
+      (a, b) => _compareRouteNames(
+        a.route?.shortName ?? a.code,
+        b.route?.shortName ?? b.code,
+      ),
+    );
+
+    return patterns;
+  }
+
+  Future<List<TransitRoute>> _fetchTransitRoutesRemote() async {
+    // Use the enriched endpoint that returns one entry per route plus
+    // its trip patterns and resolved agency name. When the backend is
+    // older and the response has no patterns, the loop below falls
+    // back to one TransitRoute per route — matching the legacy shape.
+    final richRoutes = await (_dataSource.client as RemotePlannerClient)
+        .getRoutesWithPatterns();
+
+    final patterns = <TransitRoute>[];
+    for (final rich in richRoutes) {
+      final route = rich.route;
+
+      if (rich.patterns.isEmpty) {
+        // Backend hasn't been updated yet — keep the historical shape.
+        patterns.add(
+          TransitRoute(
+            id: route.id,
+            name: route.longName,
+            code: route.id,
+            route: TransitRouteInfo(
+              shortName: route.shortName,
+              longName: route.longName,
+              mode: _routeTypeToMode(route.type),
+              color: route.colorHex,
+              textColor: route.textColorHex,
+              agencyName: rich.agencyName,
+            ),
+          ),
+        );
+        continue;
+      }
+
+      // One TransitRoute per pattern, mirroring _fetchTransitRoutesLocal.
+      for (final p in rich.patterns) {
+        String? generatedLongName;
+        if (p.firstStop != null && p.lastStop != null) {
+          generatedLongName = '${p.firstStop} → ${p.lastStop}';
+        }
+        final effectiveLongName = route.longName.isNotEmpty
+            ? route.longName
+            : generatedLongName;
+
+        final compositeId = '${route.id}#${p.id}';
+        patterns.add(
+          TransitRoute(
+            id: compositeId,
+            name: p.headsign ?? route.longName,
+            code: compositeId,
+            headsign: p.headsign,
+            route: TransitRouteInfo(
+              shortName: route.shortName,
+              longName: effectiveLongName,
+              mode: _routeTypeToMode(route.type),
+              color: route.colorHex,
+              textColor: route.textColorHex,
+              agencyName: rich.agencyName,
+            ),
+          ),
+        );
+      }
+    }
+
+    patterns.sort(
+      (a, b) => _compareRouteNames(
+        a.route?.shortName ?? a.code,
+        b.route?.shortName ?? b.code,
+      ),
+    );
+
+    return patterns;
+  }
+
+  @override
+  Future<TransitRoute?> fetchTransitRouteById(String id) async {
+    debugPrint(
+      'DiabRutaPlannerProvider.fetchTransitRouteById: Looking for id=$id',
+    );
+
+    if (!_dataSource.isLoaded) {
+      await _dataSource.preload();
+    }
+
+    if (!_dataSource.isLoaded) {
+      throw Exception('Planner data not loaded');
+    }
+
+    if (_dataSource.config.isLocal) {
+      return _fetchTransitRouteByIdLocal(id);
+    } else {
+      return _fetchTransitRouteByIdRemote(id);
+    }
+  }
+
+  Future<TransitRoute> _fetchTransitRouteByIdLocal(String id) async {
+    final routeIndex = _dataSource.routeIndex;
+    if (routeIndex == null) throw Exception('Route index not available');
+
+    // Composite id format from `_fetchTransitRoutesLocal`:
+    // "<routeId>#<patternId>". Resolve the specific pattern variant.
+    // For backwards-compat (and external callers), fall back to the
+    // first pattern of `routeId` when the suffix is missing.
+    final hashIdx = id.indexOf('#');
+    final routeId = hashIdx >= 0 ? id.substring(0, hashIdx) : id;
+    final patternIdStr = hashIdx >= 0 ? id.substring(hashIdx + 1) : null;
+    final patternIdInt = patternIdStr != null
+        ? int.tryParse(patternIdStr)
+        : null;
+    final pattern = patternIdInt != null
+        ? routeIndex.patternById(patternIdInt)
+        : routeIndex.getPattern(routeId);
+    final route = _dataSource.getRoute(routeId);
+
+    if (pattern == null || route == null) {
+      throw Exception('Route not found: $id');
+    }
+
+    final shape = pattern.shapeId != null
+        ? _dataSource.getShape(pattern.shapeId!)
+        : null;
+
+    final stops = pattern.stopIds
+        .map((stopId) => _dataSource.getStop(stopId))
+        .whereType<GtfsStop>()
+        .map((s) => Stop(name: s.name, lat: s.lat, lon: s.lon))
+        .toList();
+
+    String? generatedLongName;
+    if (stops.length >= 2) {
+      generatedLongName = '${stops.first.name} → ${stops.last.name}';
+    }
+
+    final effectiveLongName = route.longName.isNotEmpty
+        ? route.longName
+        : generatedLongName;
+
+    // Echo back the composite id so callers (and any caching layers)
+    // keep the route_id ↔ pattern_id mapping that `id` was tagged with.
+    final patternRouteId = '${pattern.routeId}#${pattern.id}';
+    return TransitRoute(
+      id: patternRouteId,
+      name: pattern.headsign ?? route.longName,
+      code: patternRouteId,
+      headsign: pattern.headsign,
+      route: TransitRouteInfo(
+        shortName: route.shortName,
+        longName: effectiveLongName,
+        mode: _routeTypeToMode(route.type),
+        color: route.colorHex,
+        textColor: route.textColorHex,
+        agencyName: _buildAgencyNameMap()[route.agencyId],
+      ),
+      geometry: shape?.polyline,
+      stops: stops,
+    );
+  }
+
+  /// Build a [ServiceHours] for the route a [segment] belongs to,
+  /// by delegating to the data source's public lookup.
+  ServiceHours? _buildServiceHours(RoutingSegment segment) =>
+      _dataSource.serviceHoursForRouteId(segment.route.id);
+
+  Map<String, String> _buildAgencyNameMap() {
+    final agencies = _dataSource.data?.agencies ?? const [];
+    return {for (final a in agencies) a.id: a.name};
+  }
+
+  Future<TransitRoute> _fetchTransitRouteByIdRemote(String id) async {
+    final detail = await _dataSource.client.getRouteDetail(id);
+    if (detail == null) throw Exception('Route not found: $id');
+
+    final route = detail.route;
+    final stops = detail.stops
+        .map((s) => Stop(name: s.name, lat: s.lat, lon: s.lon))
+        .toList();
+
+    String? generatedLongName;
+    if (stops.length >= 2) {
+      generatedLongName = '${stops.first.name} → ${stops.last.name}';
+    }
+
+    final effectiveLongName = route.longName.isNotEmpty
+        ? route.longName
+        : generatedLongName;
+
+    return TransitRoute(
+      id: route.id,
+      name: route.longName,
+      code: route.id,
+      route: TransitRouteInfo(
+        shortName: route.shortName,
+        longName: effectiveLongName,
+        mode: _routeTypeToMode(route.type),
+        color: route.colorHex,
+        textColor: route.textColorHex,
+      ),
+      geometry: detail.geometry,
+      stops: stops,
+    );
+  }
+
+  // --- Shared helpers ---
+
+  PlanLocation _createPlanLocation(RoutingLocation location) {
+    return PlanLocation(
+      name: location.description,
+      latitude: location.position.latitude,
+      longitude: location.position.longitude,
+    );
+  }
+
+  TransportMode _routeTypeToMode(GtfsRouteType type) {
+    switch (type) {
+      case GtfsRouteType.tram:
+        return TransportMode.tram;
+      case GtfsRouteType.subway:
+        return TransportMode.subway;
+      case GtfsRouteType.rail:
+        return TransportMode.rail;
+      case GtfsRouteType.bus:
+        return TransportMode.bus;
+      case GtfsRouteType.ferry:
+        return TransportMode.ferry;
+      case GtfsRouteType.cableTram:
+        return TransportMode.cableCar;
+      case GtfsRouteType.aerialLift:
+        return TransportMode.gondola;
+      case GtfsRouteType.funicular:
+        return TransportMode.funicular;
+      case GtfsRouteType.trolleybus:
+        return TransportMode.bus;
+      case GtfsRouteType.monorail:
+        return TransportMode.rail;
+    }
+  }
+
+  double _estimateDistance(List<LatLng> points) {
+    if (points.length < 2) return 0;
+    const distance = Distance();
+    double total = 0;
+    for (var i = 0; i < points.length - 1; i++) {
+      total += distance.as(LengthUnit.Meter, points[i], points[i + 1]);
+    }
+    return total;
+  }
+
+  int _compareRouteNames(String a, String b) {
+    final numA = int.tryParse(a.replaceAll(RegExp(r'[^0-9]'), ''));
+    final numB = int.tryParse(b.replaceAll(RegExp(r'[^0-9]'), ''));
+    if (numA != null && numB != null) {
+      return numA.compareTo(numB);
+    }
+    return a.compareTo(b);
+  }
+
+  /// Clear all loaded data from memory.
+  void clear() {
+    _dataSource.clear();
+  }
+}
+
+/// Info card explaining what DiabRuta Planner is and why its results may differ
+/// from OTP-based engines. Shown in the routing settings sheet in place of
+/// configurable preferences.
+class _DiabRutaPlannerInfo extends StatelessWidget {
+  final bool isLocal;
+
+  const _DiabRutaPlannerInfo({required this.isLocal});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    final l10n = RoutingLocalizations.of(context);
+    final lines = [
+      l10n.diabrutaPlannerInfoIntro,
+      isLocal ? l10n.diabrutaPlannerInfoLocalBody : l10n.diabrutaPlannerInfoRemoteBody,
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                isLocal ? Icons.offline_bolt_rounded : Icons.cloud_rounded,
+                color: colorScheme.primary,
+                size: 22,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                l10n.diabrutaPlannerInfoTitle,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          for (final line in lines) ...[
+            Text(
+              line,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                height: 1.4,
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ],
+      ),
+    );
+  }
+}
+

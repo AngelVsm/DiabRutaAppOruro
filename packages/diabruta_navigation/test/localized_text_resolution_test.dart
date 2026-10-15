@@ -1,0 +1,80 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:diabruta_navigation/l10n/navigation_localizations_en.dart';
+import 'package:diabruta_navigation/l10n/navigation_localizations_es.dart';
+import 'package:diabruta_navigation/diabruta_navigation.dart';
+
+void main() {
+  final en = NavigationLocalizationsEn();
+  final es = NavigationLocalizationsEs();
+
+  group('NavigationError.localizedMessage', () {
+    test('resolves every error to the English message', () {
+      expect(
+        NavigationError.trackingStartFailed.localizedMessage(en),
+        'Could not start location tracking',
+      );
+      expect(
+        NavigationError.permissionDenied.localizedMessage(en),
+        'Location permission denied',
+      );
+      expect(
+        NavigationError.permissionDeniedForever.localizedMessage(en),
+        'Location permission permanently denied. Please enable in settings.',
+      );
+      expect(
+        NavigationError.serviceDisabled.localizedMessage(en),
+        'Location services are disabled. Please enable them.',
+      );
+    });
+
+    test('resolves to Spanish messages', () {
+      expect(
+        NavigationError.permissionDenied.localizedMessage(es),
+        'Permiso de ubicación denegado',
+      );
+    });
+  });
+
+  group('NavigationInstruction.resolvedPrimaryText', () {
+    test('resolves primaryTextKey per locale', () {
+      const instruction = NavigationInstruction(
+        type: InstructionType.arriveDestination,
+        primaryTextKey: InstructionTextKey.youHaveArrived,
+      );
+
+      expect(instruction.resolvedPrimaryText(en), 'You have arrived');
+      expect(instruction.resolvedPrimaryText(es), 'Has llegado');
+    });
+
+    test('resolves finalDestination key per locale', () {
+      const instruction = NavigationInstruction(
+        type: InstructionType.arriveDestination,
+        primaryTextKey: InstructionTextKey.finalDestination,
+      );
+
+      expect(instruction.resolvedPrimaryText(en), 'Final destination');
+      expect(instruction.resolvedPrimaryText(es), 'Destino final');
+    });
+
+    test('falls back to primaryText when no key is set', () {
+      const instruction = NavigationInstruction(
+        type: InstructionType.arriveStop,
+        primaryText: 'Plaza Colón',
+      );
+
+      expect(instruction.resolvedPrimaryText(en), 'Plaza Colón');
+      expect(instruction.resolvedPrimaryText(es), 'Plaza Colón');
+    });
+
+    test('primaryTextKey takes precedence over primaryText', () {
+      const instruction = NavigationInstruction(
+        type: InstructionType.arriveDestination,
+        primaryText: 'You have arrived',
+        primaryTextKey: InstructionTextKey.youHaveArrived,
+      );
+
+      expect(instruction.resolvedPrimaryText(es), 'Has llegado');
+    });
+  });
+}
+

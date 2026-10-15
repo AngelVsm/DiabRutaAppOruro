@@ -1,0 +1,139 @@
+{
+  "@@locale": "en",
+  "prefsWalkingSpeed": "Walking speed",
+  "@prefsWalkingSpeed": {
+    "description": "Title for walking speed preference section"
+  },
+  "prefsSpeedSlow": "Slow",
+  "@prefsSpeedSlow": {
+    "description": "Label for slow walking speed option"
+  },
+  "prefsSpeedNormal": "Normal",
+  "@prefsSpeedNormal": {
+    "description": "Label for normal walking speed option"
+  },
+  "prefsSpeedFast": "Fast",
+  "@prefsSpeedFast": {
+    "description": "Label for fast walking speed option"
+  },
+  "prefsMaxWalkDistance": "Maximum walking distance",
+  "@prefsMaxWalkDistance": {
+    "description": "Title for maximum walking distance preference section"
+  },
+  "prefsNoLimit": "No limit",
+  "@prefsNoLimit": {
+    "description": "Label for no walk distance limit option"
+  },
+  "prefsTransportModes": "Transport modes",
+  "@prefsTransportModes": {
+    "description": "Title for transport modes preference section"
+  },
+  "prefsModeTransit": "Transit",
+  "@prefsModeTransit": {
+    "description": "Label for transit transport mode"
+  },
+  "prefsModeWalk": "Walk",
+  "@prefsModeWalk": {
+    "description": "Label for walk transport mode"
+  },
+  "prefsModeBicycle": "Bicycle",
+  "@prefsModeBicycle": {
+    "description": "Label for bicycle transport mode"
+  },
+  "prefsWheelchairAccessible": "Wheelchair accessible",
+  "@prefsWheelchairAccessible": {
+    "description": "Label for wheelchair accessibility toggle"
+  },
+  "prefsWheelchairOn": "Routes avoid stairs and steep slopes",
+  "@prefsWheelchairOn": {
+    "description": "Description when wheelchair mode is enabled"
+  },
+  "prefsWheelchairOff": "Include all routes",
+  "@prefsWheelchairOff": {
+    "description": "Description when wheelchair mode is disabled"
+  },
+  "serviceActiveClosesAt": "Active · closes at {time}",
+  "@serviceActiveClosesAt": {
+    "description": "Service-hours indicator label when the route is currently running. {time} is the closing time, e.g. '22:00'.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceClosedOpensAt": "Closed · opens at {time}",
+  "@serviceClosedOpensAt": {
+    "description": "Service-hours indicator label when the route runs today but the current time is before its start. {time} is the opening time.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceClosedOpensDayAt": "Closed · opens {day} at {time}",
+  "@serviceClosedOpensDayAt": {
+    "description": "Service-hours indicator label when the next service is on a different weekday. {day} is the localized day name (e.g. 'tomorrow', 'Mon'), {time} is the opening time.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceClosed": "Closed",
+  "@serviceClosed": {
+    "description": "Fallback service-hours label and per-day cell when the route doesn't operate that day."
+  },
+  "serviceTomorrow": "tomorrow",
+  "@serviceTomorrow": {
+    "description": "Used inside serviceClosedOpensDayAt when the next service is on the next calendar day."
+  },
+  "diabrutaPlannerLocalDescription": "Finds routes using the data saved on your device.",
+  "@diabrutaPlannerLocalDescription": {
+    "description": "Description of the offline DiabRuta Planner engine in selectors"
+  },
+  "diabrutaPlannerRemoteDescription": "Finds routes through our own service. Needs a connection.",
+  "@diabrutaPlannerRemoteDescription": {
+    "description": "Description of the server-backed DiabRuta Planner engine in selectors"
+  },
+  "diabrutaPlannerInfoTitle": "How routes are calculated",
+  "@diabrutaPlannerInfoTitle": {
+    "description": "Title of the DiabRuta Planner info card in routing preferences"
+  },
+  "diabrutaPlannerInfoIntro": "DiabRuta plans the trip with the Oruro lines stored in the app.",
+  "@diabrutaPlannerInfoIntro": {
+    "description": "First line of the DiabRuta Planner info card"
+  },
+  "diabrutaPlannerInfoLocalBody": "It does not call a route server. The map and place search do need internet. The trip comes from the file shipped inside the app.",
+  "@diabrutaPlannerInfoLocalBody": {
+    "description": "Info card body for the offline variant"
+  },
+  "diabrutaPlannerInfoRemoteBody": "This variant would call a server. DiabRuta does not use it.",
+  "@diabrutaPlannerInfoRemoteBody": {
+    "description": "Info card body for the server-backed variant"
+  },
+  "otpOnlineDescription": "Finds routes through an online service. May have more up-to-date information.",
+  "@otpOnlineDescription": {
+    "description": "Description shown for OpenTripPlanner engines in the routing settings."
+  },
+  "distanceKilometers": "{value} km",
+  "@distanceKilometers": {
+    "description": "Distance in kilometers; {value} is already formatted with the locale's decimal separator.",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "distanceMeters": "{value} m",
+  "@distanceMeters": {
+    "description": "Distance in meters; {value} is a whole number formatted for the locale.",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  }
+}
