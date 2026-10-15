@@ -144,3 +144,4 @@ class SettingsLocalizationsEn extends SettingsLocalizations {
   @override
   String get settingsNeedsInternet => 'Needs an internet connection';
 }
+

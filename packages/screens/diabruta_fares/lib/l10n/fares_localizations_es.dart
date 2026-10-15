@@ -38,3 +38,4 @@ class FaresLocalizationsEs extends FaresLocalizations {
   @override
   String get fareCategorySenior => 'Adulto mayor';
 }
+

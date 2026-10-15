@@ -44,3 +44,4 @@ apps/*/tools/*/out/*.json
 !apps/example/assets/search/search.json
 apps/*/tools/*/package-lock.json
 
+

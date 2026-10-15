@@ -31,3 +31,4 @@ class Stop {
   int get hashCode => name.hashCode ^ lat.hashCode ^ lon.hashCode;
 }
 
+

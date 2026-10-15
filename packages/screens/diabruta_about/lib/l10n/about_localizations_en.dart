@@ -59,3 +59,4 @@ class AboutLocalizationsEn extends AboutLocalizations {
   @override
   String get volunteerDiabRuta => 'Open source';
 }
+

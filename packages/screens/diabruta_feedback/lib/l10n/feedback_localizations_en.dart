@@ -36,3 +36,4 @@ class FeedbackLocalizationsEn extends FeedbackLocalizations {
   @override
   String get feedbackSubtitle => 'Your voice matters to us';
 }
+

@@ -689,3 +689,4 @@ POILayersLocalizations lookupPOILayersLocalizations(Locale locale) {
     'that was used.',
   );
 }
+

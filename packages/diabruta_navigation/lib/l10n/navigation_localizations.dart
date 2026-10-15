@@ -335,3 +335,4 @@ NavigationLocalizations lookupNavigationLocalizations(Locale locale) {
     'that was used.',
   );
 }
+

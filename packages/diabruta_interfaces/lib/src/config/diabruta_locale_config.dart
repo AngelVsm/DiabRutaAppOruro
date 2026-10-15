@@ -18,3 +18,4 @@ class DiabRutaLocaleConfig {
   Locale get defaultLocale => supportedLocales[defaultLocaleIndex];
 }
 
+

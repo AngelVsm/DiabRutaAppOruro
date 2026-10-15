@@ -37,3 +37,4 @@ class LatLngBounds {
       'LatLngBounds(sw: ${southWest.latitude},${southWest.longitude}; ne: ${northEast.latitude},${northEast.longitude})';
 }
 
+

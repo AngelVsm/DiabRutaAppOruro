@@ -25,4 +25,3 @@ Todo está en `lib/main.dart` y `lib/marca.dart`.
 No hay servidor de rutas. El viaje sale del archivo GTFS de Oruro.
 
 Las tarifas salen del Decreto Municipal N.° 408 (26 de diciembre de 2025): minibús, adulto 2,50 Bs y adulto mayor 2 Bs; microbús, adulto 2,20 Bs, adulto mayor y universitario 1,50 Bs, secundaria y escolar 1 Bs. Son transitorias, por 6 meses.
-

@@ -47,3 +47,4 @@ jobs:
           # Fail if there are any changes in the staged area
           git diff --staged --exit-code || (echo "Error: Localization files are out of sync. Run 'melos run l10n' locally and commit the changes." && exit 1)
 
+

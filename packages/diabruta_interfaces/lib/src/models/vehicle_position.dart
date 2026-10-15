@@ -69,3 +69,4 @@ class VehiclePosition extends Equatable {
       'VehiclePosition($vehicleId, $position, heading=$heading, route=$routeId)';
 }
 
+

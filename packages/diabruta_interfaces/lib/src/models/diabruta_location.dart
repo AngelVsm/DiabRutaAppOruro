@@ -36,3 +36,4 @@ class LocationDetail implements ILocationDetail {
   });
 }
 
+

@@ -47,3 +47,4 @@ class SearchLocationsState extends Equatable {
   ];
 }
 
+

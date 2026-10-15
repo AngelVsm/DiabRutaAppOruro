@@ -5,3 +5,4 @@ output-localization-file: core_localizations.dart
 output-class: CoreLocalizations
 nullable-getter: false
 
+

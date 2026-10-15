@@ -436,5 +436,31 @@ void main() {
       expect(service.language, 'es');
     });
   });
-}
 
+  test('retries a rejected search without lang and limit', () async {
+    final client = MockHttpClient();
+    final service = PhotonSearchService(
+      baseUrl: 'https://photon.test',
+      language: 'es',
+      limit: 2,
+      client: client,
+    );
+    when(() => client.get(any())).thenAnswer((invocation) async {
+      final uri = invocation.positionalArguments.first as Uri;
+      if (uri.queryParameters.containsKey('lang') ||
+          uri.queryParameters.containsKey('limit')) {
+        return http.Response('{"message":"bad request"}', 400);
+      }
+      return http.Response(
+        '{"features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[-67.11,-17.96]},"properties":{"name":"Plaza 10 de Febrero","osm_id":1}}]}',
+        200,
+      );
+    });
+
+    final results = await service.search('plaza');
+
+    expect(results, hasLength(1));
+    expect(results.first.displayName, 'Plaza 10 de Febrero');
+    verify(() => client.get(any())).called(2);
+  });
+}

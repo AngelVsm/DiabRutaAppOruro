@@ -8,3 +8,4 @@ assignees: ''
 
 Qué falta en Oruro y cómo debería verse en la app.
 
+

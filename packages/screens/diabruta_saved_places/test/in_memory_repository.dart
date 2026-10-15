@@ -54,3 +54,4 @@ class InMemorySavedPlacesRepository implements SavedPlacesRepository {
   Future<void> addToHistory(SavedPlace place) async => savePlace(place);
 }
 
+

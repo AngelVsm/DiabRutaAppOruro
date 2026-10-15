@@ -145,3 +145,4 @@ class SettingsLocalizationsEs extends SettingsLocalizations {
   @override
   String get settingsNeedsInternet => 'Requiere conexión a internet';
 }
+

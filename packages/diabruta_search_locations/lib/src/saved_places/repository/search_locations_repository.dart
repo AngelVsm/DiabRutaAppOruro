@@ -21,3 +21,4 @@ abstract class SearchLocationsRepository {
   Future<void> saveFavoritePlaces(List<DiabRutaLocation> data);
 }
 
+

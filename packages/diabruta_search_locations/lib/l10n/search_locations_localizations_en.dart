@@ -47,3 +47,4 @@ class SearchLocationsLocalizationsEn extends SearchLocationsLocalizations {
   @override
   String get destinationFieldLabel => 'To';
 }
+

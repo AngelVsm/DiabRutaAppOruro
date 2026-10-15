@@ -4,3 +4,4 @@ output-localization-file: settings_localizations.dart
 output-class: SettingsLocalizations
 nullable-getter: false
 
+

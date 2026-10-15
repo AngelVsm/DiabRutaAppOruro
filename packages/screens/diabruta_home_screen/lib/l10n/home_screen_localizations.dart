@@ -923,3 +923,4 @@ HomeScreenLocalizations lookupHomeScreenLocalizations(Locale locale) {
     'that was used.',
   );
 }
+

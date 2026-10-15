@@ -48,3 +48,4 @@ class SearchLocation {
   String toString() => 'SearchLocation(id: $id, displayName: $displayName)';
 }
 
+

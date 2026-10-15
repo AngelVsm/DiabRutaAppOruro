@@ -30,6 +30,9 @@ String _esEn(BuildContext context, String es, String en) {
 
 // ============ CONFIGURATION ============
 const _photonUrl = 'https://photon.komoot.io';
+const _nominatimUrl = 'https://nominatim.openstreetmap.org';
+const _geocoderUserAgent =
+    'DiabRuta/1.0 (https://github.com/AngelVsm/DiabRutaAppOruro)';
 const _defaultCenter = LatLng(-17.9604176, -67.1106498);
 const _deepLinkScheme = 'diabruta';
 
@@ -135,10 +138,23 @@ void main() {
         ),
         BlocProvider(
           create: (_) => SearchLocationsCubit(
-            searchLocationService: PhotonSearchService(
-              baseUrl: _photonUrl,
-              biasLatitude: _defaultCenter.latitude,
-              biasLongitude: _defaultCenter.longitude,
+            searchLocationService: CompositeSearchLocationService(
+              timeout: const Duration(seconds: 12),
+              services: [
+                NominatimSearchService(
+                  baseUrl: _nominatimUrl,
+                  userAgent: _geocoderUserAgent,
+                  countryCodes: const ['bo'],
+                  biasLatitude: _defaultCenter.latitude,
+                  biasLongitude: _defaultCenter.longitude,
+                  biasRadius: 0.25,
+                ),
+                PhotonSearchService(
+                  baseUrl: _photonUrl,
+                  biasLatitude: _defaultCenter.latitude,
+                  biasLongitude: _defaultCenter.longitude,
+                ),
+              ],
             ),
           ),
         ),
@@ -250,4 +266,3 @@ void main() {
     ),
   );
 }
-

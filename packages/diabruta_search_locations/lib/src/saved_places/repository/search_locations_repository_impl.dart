@@ -115,3 +115,4 @@ class SearchLocationsRepositoryImpl implements SearchLocationsRepository {
   }
 }
 
+

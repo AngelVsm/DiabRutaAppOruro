@@ -94,3 +94,4 @@ class ItineraryGroup extends Equatable {
   ];
 }
 
+

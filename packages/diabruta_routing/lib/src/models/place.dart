@@ -72,3 +72,4 @@ class Place {
   int get hashCode => Object.hash(lat, lon);
 }
 
+

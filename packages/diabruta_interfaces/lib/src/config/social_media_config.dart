@@ -14,3 +14,4 @@ class SocialMediaLink {
   const SocialMediaLink({required this.url, required this.icon, this.label});
 }
 
+

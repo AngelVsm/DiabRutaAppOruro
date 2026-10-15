@@ -69,3 +69,4 @@ class MapsLocalizationsEn extends MapsLocalizations {
   @override
   String get mapStyleColorfulDescription => 'Colorful map';
 }
+

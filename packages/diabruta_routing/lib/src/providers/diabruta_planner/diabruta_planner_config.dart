@@ -187,3 +187,4 @@ class DiabRutaPlannerConfig {
            GtfsRoutingService.defaultFallbackVehicleSpeedKmh;
 }
 
+

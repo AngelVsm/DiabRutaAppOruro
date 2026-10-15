@@ -4,3 +4,4 @@ output-localization-file: maps_localizations.dart
 output-class: MapsLocalizations
 nullable-getter: false
 
+

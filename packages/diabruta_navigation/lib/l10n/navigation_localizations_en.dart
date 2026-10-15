@@ -130,3 +130,4 @@ class NavigationLocalizationsEn extends NavigationLocalizations {
     return '${hours}h ${minutes}m';
   }
 }
+

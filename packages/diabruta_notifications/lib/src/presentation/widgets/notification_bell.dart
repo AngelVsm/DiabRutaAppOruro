@@ -117,3 +117,4 @@ class _NotificationBadge extends StatelessWidget {
   }
 }
 
+

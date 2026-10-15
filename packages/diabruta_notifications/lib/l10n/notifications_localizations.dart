@@ -227,3 +227,4 @@ NotificationsLocalizations lookupNotificationsLocalizations(Locale locale) {
     'that was used.',
   );
 }
+

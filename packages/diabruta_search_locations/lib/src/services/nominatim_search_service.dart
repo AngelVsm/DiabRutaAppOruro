@@ -181,8 +181,8 @@ class NominatimSearchService
   }
 
   SearchLocation _parseResult(Map<String, dynamic> result) {
-    final lat = double.parse(result['lat'] as String);
-    final lon = double.parse(result['lon'] as String);
+    final lat = double.parse(result['lat'].toString());
+    final lon = double.parse(result['lon'].toString());
     final displayName = result['display_name'] as String? ?? '';
     final osmId = result['osm_id'];
     final osmType = result['osm_type'] as String?;
@@ -249,4 +249,3 @@ class NominatimSearchService
     _client.close();
   }
 }
-

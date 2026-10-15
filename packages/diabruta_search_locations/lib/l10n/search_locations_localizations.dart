@@ -215,3 +215,4 @@ SearchLocationsLocalizations lookupSearchLocationsLocalizations(Locale locale) {
     'that was used.',
   );
 }
+

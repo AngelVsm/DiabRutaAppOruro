@@ -201,3 +201,4 @@ class DiabRutaNotification {
       'DiabRutaNotification(id: $id, title: $title, isRead: $isRead)';
 }
 
+

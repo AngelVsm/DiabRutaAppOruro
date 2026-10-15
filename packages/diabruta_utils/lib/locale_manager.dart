@@ -89,3 +89,4 @@ class LocaleManager extends ChangeNotifier {
       context.watch<LocaleManager>();
 }
 
+

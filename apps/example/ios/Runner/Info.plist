@@ -50,7 +50,7 @@
   		<string>location</string>
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open.</string>
+	<string>DiabRuta usa tu ubicación mientras la app está abierta para mostrarte en el mapa.</string>
 	<key>CFBundleURLTypes</key>
 <array>
     <dict>
@@ -81,4 +81,3 @@
 <false/>
 </dict>
 </plist>
-

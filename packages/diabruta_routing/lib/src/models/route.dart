@@ -104,3 +104,4 @@ class Route {
   int get hashCode => Object.hash(id, gtfsId);
 }
 
+

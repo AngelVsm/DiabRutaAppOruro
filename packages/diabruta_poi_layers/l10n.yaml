@@ -4,3 +4,4 @@ output-localization-file: poi_layers_localizations.dart
 output-class: POILayersLocalizations
 nullable-getter: false
 
+

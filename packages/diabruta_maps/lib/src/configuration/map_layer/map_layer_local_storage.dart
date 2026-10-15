@@ -13,3 +13,4 @@ abstract class MapLayerLocalStorage {
   Future<Map<String, bool>> load();
 }
 
+

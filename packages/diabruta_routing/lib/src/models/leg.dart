@@ -255,3 +255,4 @@ class Leg extends Equatable {
 @Deprecated('Use Leg instead')
 typedef ItineraryLeg = Leg;
 
+

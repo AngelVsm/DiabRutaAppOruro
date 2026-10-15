@@ -3,7 +3,7 @@ description: "DiabRuta, rutas de Oruro."
 resolution: workspace
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ^3.10.0
@@ -52,4 +52,3 @@ flutter:
   assets:
     - assets/branding/
     - assets/routing/
-

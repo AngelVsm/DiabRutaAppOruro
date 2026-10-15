@@ -68,3 +68,4 @@ class LegUtils {
       sumDurations(legs.where(isBikingLeg).toList());
 }
 
+

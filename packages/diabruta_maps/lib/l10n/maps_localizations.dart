@@ -254,3 +254,4 @@ MapsLocalizations lookupMapsLocalizations(Locale locale) {
     'that was used.',
   );
 }
+

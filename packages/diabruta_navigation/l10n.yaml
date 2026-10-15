@@ -4,3 +4,4 @@ output-localization-file: navigation_localizations.dart
 output-class: NavigationLocalizations
 nullable-getter: false
 
+

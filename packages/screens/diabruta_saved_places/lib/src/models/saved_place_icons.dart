@@ -79,3 +79,4 @@ IconData savedPlaceRoundedIcon(String? name) {
   return Icons.place_rounded;
 }
 
+

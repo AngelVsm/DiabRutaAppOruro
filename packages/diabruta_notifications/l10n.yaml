@@ -4,3 +4,4 @@ output-localization-file: notifications_localizations.dart
 output-class: NotificationsLocalizations
 nullable-getter: false
 
+

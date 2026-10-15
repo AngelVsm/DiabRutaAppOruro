@@ -395,3 +395,4 @@ TransportListLocalizations lookupTransportListLocalizations(Locale locale) {
     'that was used.',
   );
 }
+

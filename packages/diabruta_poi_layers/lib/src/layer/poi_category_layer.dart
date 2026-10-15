@@ -203,3 +203,4 @@ class POICategoryLayer {
   List<POI> get pois => _pois;
 }
 
+

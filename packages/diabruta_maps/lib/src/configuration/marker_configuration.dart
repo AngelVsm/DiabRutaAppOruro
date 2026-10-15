@@ -25,3 +25,4 @@ class DefaultMarkerConfiguration implements MarkerConfiguration {
   Widget get yourLocationMarker => const MyLocationMarker();
 }
 
+

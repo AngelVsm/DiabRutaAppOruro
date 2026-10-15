@@ -4,3 +4,4 @@ DiabRuta es el proyecto de Angel Vargas para Oruro. Si quieres proponer un cambi
 
 Las rutas de la app están en `apps/example/assets/routing/oruro.gtfs.zip`. El mapa y la búsqueda de lugares usan internet. El viaje se calcula en el teléfono.
 
+

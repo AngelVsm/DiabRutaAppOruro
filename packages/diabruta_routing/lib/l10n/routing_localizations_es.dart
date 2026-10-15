@@ -106,3 +106,4 @@ class RoutingLocalizationsEs extends RoutingLocalizations {
     return '$value m';
   }
 }
+

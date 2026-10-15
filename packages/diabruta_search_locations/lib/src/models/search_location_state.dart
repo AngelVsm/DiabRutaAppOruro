@@ -56,3 +56,4 @@ class SearchLocationState {
       'SearchLocationState(origin: $origin, destination: $destination)';
 }
 
+

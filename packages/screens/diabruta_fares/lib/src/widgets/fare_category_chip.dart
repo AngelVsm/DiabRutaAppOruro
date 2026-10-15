@@ -78,3 +78,4 @@ class FareCategoryChip extends StatelessWidget {
   }
 }
 
+

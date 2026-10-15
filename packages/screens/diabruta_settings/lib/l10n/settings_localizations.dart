@@ -395,3 +395,4 @@ SettingsLocalizations lookupSettingsLocalizations(Locale locale) {
     'that was used.',
   );
 }
+

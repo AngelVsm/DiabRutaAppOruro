@@ -66,3 +66,4 @@ extension RealtimeVehiclesProviderQueries on RealtimeVehiclesProvider {
   }
 }
 
+

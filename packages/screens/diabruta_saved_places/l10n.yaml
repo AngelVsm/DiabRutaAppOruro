@@ -4,3 +4,4 @@ output-localization-file: saved_places_localizations.dart
 output-class: SavedPlacesLocalizations
 nullable-getter: false
 
+

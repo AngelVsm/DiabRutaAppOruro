@@ -170,3 +170,4 @@ class SavedPlace extends Equatable {
   ];
 }
 
+

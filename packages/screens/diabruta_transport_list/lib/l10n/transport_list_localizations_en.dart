@@ -154,3 +154,4 @@ class TransportListLocalizationsEn extends TransportListLocalizations {
   @override
   String get copiedToClipboard => 'Copied';
 }
+

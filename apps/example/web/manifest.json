@@ -1,11 +1,11 @@
 {
-    "name": "diabruta_example",
-    "short_name": "diabruta_example",
+    "name": "DiabRuta",
+    "short_name": "DiabRuta",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#000000",
+    "theme_color": "#D01218",
+    "description": "Transporte público de Oruro, Bolivia.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
@@ -33,4 +33,3 @@
         }
     ]
 }
-

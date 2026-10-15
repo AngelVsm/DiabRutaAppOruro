@@ -359,3 +359,4 @@ SavedPlacesLocalizations lookupSavedPlacesLocalizations(Locale locale) {
     'that was used.',
   );
 }
+

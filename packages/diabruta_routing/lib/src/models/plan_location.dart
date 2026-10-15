@@ -41,3 +41,4 @@ class PlanLocation {
   int get hashCode => Object.hash(name, latitude, longitude);
 }
 
+

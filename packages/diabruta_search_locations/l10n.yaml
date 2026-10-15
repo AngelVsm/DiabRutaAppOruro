@@ -4,3 +4,4 @@ output-localization-file: search_locations_localizations.dart
 output-class: SearchLocationsLocalizations
 nullable-getter: false
 
+

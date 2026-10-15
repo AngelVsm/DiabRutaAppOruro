@@ -428,3 +428,4 @@ class _ThrowingPathProvider extends PathProviderPlatform {
       throw MissingPluginException('no path_provider here');
 }
 
+

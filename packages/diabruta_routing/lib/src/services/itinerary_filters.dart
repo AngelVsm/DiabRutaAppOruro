@@ -27,3 +27,4 @@ List<Itinerary> filterMaxTransitLegs(
   return kept.isEmpty || droppedAllTransit ? itineraries : kept;
 }
 
+

@@ -4,7 +4,11 @@ App de transporte público para Oruro, Bolivia. La desarrolla [Angel Vargas](htt
 
 ## Descargar
 
-La app para Android está en [Releases](https://github.com/AngelVsm/DiabRutaAppOruro/releases).
+Las versiones están en [Releases](https://github.com/AngelVsm/DiabRutaAppOruro/releases).
+
+- Android: `DiabRuta-android.apk`
+- Windows: `DiabRuta-windows.zip`
+- Web: `DiabRuta-web.zip`, se abre en el navegador
 
 ## Qué hace
 
@@ -29,3 +33,4 @@ La app está en `apps/example`. En el teléfono se llama DiabRuta. Los idiomas s
 DiabRuta — Angel Vargas.
 
 El programa se puede copiar y modificar bajo la [Licencia Pública General de GNU, versión 3](./LICENSE). Se entrega tal cual, sin garantía. El texto legal está en `LICENSE`.
+

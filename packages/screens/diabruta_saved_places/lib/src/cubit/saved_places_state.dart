@@ -67,3 +67,4 @@ class SavedPlacesState extends Equatable {
   ];
 }
 
+

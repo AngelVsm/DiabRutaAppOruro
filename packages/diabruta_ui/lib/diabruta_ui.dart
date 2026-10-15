@@ -15,3 +15,4 @@ export 'package:diabruta_interfaces/diabruta_interfaces.dart'
         DiabRutaThemeConfig;
 export 'src/l10n/fallback_material_localizations.dart';
 
+

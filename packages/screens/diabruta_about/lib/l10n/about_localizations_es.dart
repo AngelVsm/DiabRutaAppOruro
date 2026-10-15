@@ -59,3 +59,4 @@ class AboutLocalizationsEs extends AboutLocalizations {
   @override
   String get volunteerDiabRuta => 'Código abierto';
 }
+

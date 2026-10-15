@@ -123,3 +123,4 @@ class SavedPlacesLocalizationsEn extends SavedPlacesLocalizations {
   @override
   String get copiedToClipboard => 'Copied';
 }
+

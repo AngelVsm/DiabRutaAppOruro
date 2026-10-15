@@ -4,3 +4,4 @@
 
 DiabRuta para Oruro. Rutas locales, español e inglés, y las tarifas transitorias del Decreto Municipal N.° 408.
 
+

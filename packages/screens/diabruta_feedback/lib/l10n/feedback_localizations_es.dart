@@ -36,3 +36,4 @@ class FeedbackLocalizationsEs extends FeedbackLocalizations {
   @override
   String get feedbackSubtitle => 'Si algo no cuadra, escríbeme';
 }
+

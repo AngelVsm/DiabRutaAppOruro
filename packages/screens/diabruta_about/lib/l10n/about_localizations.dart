@@ -218,3 +218,4 @@ AboutLocalizations lookupAboutLocalizations(Locale locale) {
     'that was used.',
   );
 }
+

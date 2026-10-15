@@ -43,3 +43,4 @@ class DiabRutaLatLng extends Equatable {
   String toString() => 'DiabRutaLatLng($latitude, $longitude)';
 }
 
+

@@ -69,3 +69,4 @@ class NotificationsLocalizationsEs extends NotificationsLocalizations {
     return '$_temp0';
   }
 }
+

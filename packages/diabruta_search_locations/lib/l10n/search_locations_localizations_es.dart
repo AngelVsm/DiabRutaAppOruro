@@ -47,3 +47,4 @@ class SearchLocationsLocalizationsEs extends SearchLocationsLocalizations {
   @override
   String get destinationFieldLabel => 'Hasta';
 }
+

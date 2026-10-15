@@ -56,3 +56,4 @@ class Agency {
   int get hashCode => Object.hash(id, gtfsId);
 }
 
+

@@ -87,3 +87,4 @@ export 'src/presentation/screens/notifications_screen.dart'
 /// outside a DiabRutaScreen must register [NotificationsLocalizations.delegate].
 export 'l10n/notifications_localizations.dart' show NotificationsLocalizations;
 
+

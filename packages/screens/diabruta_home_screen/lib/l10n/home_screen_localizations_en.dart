@@ -477,3 +477,4 @@ class HomeScreenLocalizationsEn extends HomeScreenLocalizations {
   @override
   String get copiedToClipboard => 'Copied';
 }
+

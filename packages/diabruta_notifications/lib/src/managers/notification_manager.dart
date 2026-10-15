@@ -389,3 +389,4 @@ class NotificationManager extends ChangeNotifier {
       context.watch<NotificationManager?>();
 }
 
+

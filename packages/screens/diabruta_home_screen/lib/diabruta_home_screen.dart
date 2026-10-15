@@ -54,3 +54,4 @@ export 'src/config/home_screen_config.dart';
 // Localizations
 export 'l10n/home_screen_localizations.dart';
 
+

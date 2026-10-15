@@ -188,3 +188,4 @@ FaresLocalizations lookupFaresLocalizations(Locale locale) {
     'that was used.',
   );
 }
+

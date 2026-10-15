@@ -94,3 +94,4 @@ class CoreLocalizationsEs extends CoreLocalizations {
   @override
   String get poweredByDiabRuta => 'Powered by Angel Vargas';
 }
+

@@ -290,3 +290,4 @@ class POILayersLocalizationsEs extends POILayersLocalizations {
   @override
   String get copiedToClipboard => 'Copiado';
 }
+

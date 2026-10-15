@@ -299,3 +299,4 @@ RoutingLocalizations lookupRoutingLocalizations(Locale locale) {
     'that was used.',
   );
 }
+

@@ -108,7 +108,22 @@ class PhotonSearchService
     ).replace(queryParameters: queryParams);
 
     try {
-      final response = await _client.get(uri, headers: await _buildHeaders());
+      var response = await _client.get(uri, headers: await _buildHeaders());
+
+      // The public server answers 400 when `lang` is not one of
+      // default/en/de/fr, and some deployments also reject `limit`.
+      // A second request without those parameters still returns places.
+      if (response.statusCode == 400 &&
+          (queryParams.containsKey('lang') ||
+              queryParams.containsKey('limit'))) {
+        final relaxed = Map<String, String>.from(queryParams)
+          ..remove('lang')
+          ..remove('limit');
+        final retryUri = Uri.parse(
+          '$baseUrl/api/',
+        ).replace(queryParameters: relaxed);
+        response = await _client.get(retryUri, headers: await _buildHeaders());
+      }
 
       if (response.statusCode != 200) {
         throw SearchLocationException(
@@ -120,7 +135,11 @@ class PhotonSearchService
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       final features = json['features'] as List<dynamic>? ?? [];
 
-      return features.map((feature) => _parseFeature(feature)).toList();
+      final results = features.map((feature) => _parseFeature(feature)).toList();
+      if (results.length > limit) {
+        return results.sublist(0, limit);
+      }
+      return results;
     } catch (e) {
       if (e is SearchLocationException) rethrow;
       throw SearchLocationException(
@@ -146,7 +165,15 @@ class PhotonSearchService
     ).replace(queryParameters: queryParams);
 
     try {
-      final response = await _client.get(uri, headers: await _buildHeaders());
+      var response = await _client.get(uri, headers: await _buildHeaders());
+
+      if (response.statusCode == 400 && queryParams.containsKey('lang')) {
+        final relaxed = Map<String, String>.from(queryParams)..remove('lang');
+        final retryUri = Uri.parse(
+          '$baseUrl/reverse',
+        ).replace(queryParameters: relaxed);
+        response = await _client.get(retryUri, headers: await _buildHeaders());
+      }
 
       if (response.statusCode != 200) {
         return null;
@@ -223,4 +250,3 @@ class PhotonSearchService
     _client.close();
   }
 }
-

@@ -45,3 +45,4 @@ abstract class SavedPlacesRepository {
   Future<void> addToHistory(SavedPlace place);
 }
 
+
