@@ -30,3 +30,4 @@ class MyLocationMarker extends StatelessWidget {
     );
   }
 }
+

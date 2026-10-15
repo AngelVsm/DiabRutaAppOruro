@@ -309,3 +309,4 @@ class POI extends Equatable {
   @override
   List<Object?> get props => [id, position, name, category.name, subcategory];
 }
+

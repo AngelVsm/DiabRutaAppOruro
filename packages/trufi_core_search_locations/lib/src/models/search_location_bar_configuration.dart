@@ -65,3 +65,4 @@ typedef OnClearLocation = void Function({required bool isOrigin});
 
 /// Callback type for opening routing settings.
 typedef OnRoutingSettings = void Function();
+

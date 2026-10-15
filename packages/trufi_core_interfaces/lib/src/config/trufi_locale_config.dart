@@ -10,10 +10,11 @@ class TrufiLocaleConfig {
   final Map<String, String> languageNames;
 
   const TrufiLocaleConfig({
-    this.supportedLocales = const [Locale('en'), Locale('es'), Locale('de')],
+    this.supportedLocales = const [Locale('en'), Locale('es')],
     this.defaultLocaleIndex = 0,
     this.languageNames = const {},
   });
 
   Locale get defaultLocale => supportedLocales[defaultLocaleIndex];
 }
+

@@ -171,3 +171,4 @@ abstract class TransportListDataProvider extends ChangeNotifier {
   /// Get route details by code
   Future<TransportRouteDetails?> getRouteDetails(String code);
 }
+

@@ -30,3 +30,4 @@ Future<void> writePlannerIndex(String path, Uint8List bytes) =>
 
 /// Removes the snapshot if present. Never throws.
 Future<void> deletePlannerIndex(String path) => impl.deletePlannerIndex(path);
+

@@ -379,3 +379,4 @@ class _SavedPlacesHeader extends StatelessWidget {
     );
   }
 }
+

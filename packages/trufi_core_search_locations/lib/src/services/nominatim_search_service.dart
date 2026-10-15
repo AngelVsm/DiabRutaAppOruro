@@ -249,3 +249,4 @@ class NominatimSearchService
     _client.close();
   }
 }
+

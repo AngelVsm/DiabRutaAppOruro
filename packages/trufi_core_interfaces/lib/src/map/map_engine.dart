@@ -44,3 +44,4 @@ abstract class ITrufiMapController {
   /// Clean the map (remove markers, routes, etc)
   void cleanMap();
 }
+

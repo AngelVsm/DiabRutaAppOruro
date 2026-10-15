@@ -57,3 +57,4 @@ Color? _colorFromHex(String? hex) {
   if (parsed == null) return null;
   return clean.length == 6 ? Color(0xFF000000 | parsed) : Color(parsed);
 }
+

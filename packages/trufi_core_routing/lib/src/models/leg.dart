@@ -254,3 +254,4 @@ class Leg extends Equatable {
 /// Backwards compatibility alias.
 @Deprecated('Use Leg instead')
 typedef ItineraryLeg = Leg;
+

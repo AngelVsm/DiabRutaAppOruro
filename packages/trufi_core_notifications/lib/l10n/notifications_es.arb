@@ -16,3 +16,4 @@
   "daysAgo": "hace {days} días",
   "unreadCount": "{count, plural, =1{1 sin leer} other{{count} sin leer}}"
 }
+

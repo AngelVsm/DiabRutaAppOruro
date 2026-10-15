@@ -3,3 +3,4 @@ template-arb-file: routing_en.arb
 output-localization-file: routing_localizations.dart
 output-class: RoutingLocalizations
 nullable-getter: false
+

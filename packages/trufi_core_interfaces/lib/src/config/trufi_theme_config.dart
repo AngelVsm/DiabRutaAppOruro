@@ -30,3 +30,4 @@ class TrufiThemeConfig {
         useMaterial3: true,
       );
 }
+

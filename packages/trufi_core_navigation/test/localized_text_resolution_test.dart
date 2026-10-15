@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:trufi_core_navigation/l10n/navigation_localizations_de.dart';
 import 'package:trufi_core_navigation/l10n/navigation_localizations_en.dart';
 import 'package:trufi_core_navigation/l10n/navigation_localizations_es.dart';
 import 'package:trufi_core_navigation/trufi_core_navigation.dart';
@@ -7,7 +6,6 @@ import 'package:trufi_core_navigation/trufi_core_navigation.dart';
 void main() {
   final en = NavigationLocalizationsEn();
   final es = NavigationLocalizationsEs();
-  final de = NavigationLocalizationsDe();
 
   group('NavigationError.localizedMessage', () {
     test('resolves every error to the English message', () {
@@ -29,17 +27,6 @@ void main() {
       );
     });
 
-    test('resolves to German messages for German users', () {
-      expect(
-        NavigationError.permissionDenied.localizedMessage(de),
-        'Standortberechtigung verweigert',
-      );
-      expect(
-        NavigationError.trackingStartFailed.localizedMessage(de),
-        'Standortverfolgung konnte nicht gestartet werden',
-      );
-    });
-
     test('resolves to Spanish messages', () {
       expect(
         NavigationError.permissionDenied.localizedMessage(es),
@@ -57,7 +44,6 @@ void main() {
 
       expect(instruction.resolvedPrimaryText(en), 'You have arrived');
       expect(instruction.resolvedPrimaryText(es), 'Has llegado');
-      expect(instruction.resolvedPrimaryText(de), 'Sie sind angekommen');
     });
 
     test('resolves finalDestination key per locale', () {
@@ -68,7 +54,6 @@ void main() {
 
       expect(instruction.resolvedPrimaryText(en), 'Final destination');
       expect(instruction.resolvedPrimaryText(es), 'Destino final');
-      expect(instruction.resolvedPrimaryText(de), 'Endziel');
     });
 
     test('falls back to primaryText when no key is set', () {
@@ -78,7 +63,7 @@ void main() {
       );
 
       expect(instruction.resolvedPrimaryText(en), 'Plaza Colón');
-      expect(instruction.resolvedPrimaryText(de), 'Plaza Colón');
+      expect(instruction.resolvedPrimaryText(es), 'Plaza Colón');
     });
 
     test('primaryTextKey takes precedence over primaryText', () {
@@ -88,7 +73,8 @@ void main() {
         primaryTextKey: InstructionTextKey.youHaveArrived,
       );
 
-      expect(instruction.resolvedPrimaryText(de), 'Sie sind angekommen');
+      expect(instruction.resolvedPrimaryText(es), 'Has llegado');
     });
   });
 }
+

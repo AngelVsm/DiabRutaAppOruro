@@ -196,3 +196,4 @@ class _AppInitializerState extends State<AppInitializer> {
     );
   }
 }
+

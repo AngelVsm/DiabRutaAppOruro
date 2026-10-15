@@ -32,3 +32,4 @@ abstract class StorageService {
   Future<bool> containsKey(String key);
   Future<Set<String>> getKeys();
 }
+

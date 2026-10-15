@@ -158,3 +158,4 @@ LocationSearchScreen(
 ```
 
 The UI doesn't care where places come from - use what fits your app.
+

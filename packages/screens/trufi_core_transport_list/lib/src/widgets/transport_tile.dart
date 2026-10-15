@@ -244,3 +244,4 @@ class _RouteBadge extends StatelessWidget {
     return luminance > 0.5 ? Colors.black87 : Colors.white;
   }
 }
+

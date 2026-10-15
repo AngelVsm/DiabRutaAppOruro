@@ -541,3 +541,4 @@ class POILayersManager extends ChangeNotifier {
     super.dispose();
   }
 }
+

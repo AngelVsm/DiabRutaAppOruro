@@ -261,3 +261,4 @@ class SavedPlacesRepositoryImpl implements SavedPlacesRepository {
     }
   }
 }
+

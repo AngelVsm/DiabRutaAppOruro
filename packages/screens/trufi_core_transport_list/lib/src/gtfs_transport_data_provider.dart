@@ -288,3 +288,4 @@ class GtfsTransportDataProvider extends TransportListDataProvider {
     return Icon(iconData, size: 16);
   }
 }
+

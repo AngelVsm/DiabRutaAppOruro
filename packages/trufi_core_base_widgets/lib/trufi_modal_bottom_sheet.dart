@@ -94,3 +94,4 @@ class _TrufiModalBottomSheetRoute<T> extends ModalBottomSheetRoute<T> {
     return PointerInterceptor(child: super.buildModalBarrier());
   }
 }
+

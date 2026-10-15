@@ -3,3 +3,4 @@ template-arb-file: about_en.arb
 output-localization-file: about_localizations.dart
 output-class: AboutLocalizations
 nullable-getter: false
+

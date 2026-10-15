@@ -8,7 +8,6 @@ import 'package:trufi_core_feedback/trufi_core_feedback.dart';
 import 'package:trufi_core_home_screen/trufi_core_home_screen.dart';
 import 'package:trufi_core_maps/trufi_core_maps.dart';
 import 'package:trufi_core_navigation/trufi_core_navigation.dart';
-import 'package:trufi_core_poi_layers/trufi_core_poi_layers.dart';
 import 'package:trufi_core_routing/trufi_core_routing.dart'
     show
         RoutingEngineManager,
@@ -149,7 +148,6 @@ void main() {
           config: HomeScreenConfig(
             appName: appName,
             deepLinkScheme: _deepLinkScheme,
-            poiLayersManager: POILayersManager(assetsBasePath: 'assets/pois'),
           ),
           onStartNavigation: (context, itinerary, locationService) {
             NavigationScreen.showFromItinerary(
@@ -252,3 +250,4 @@ void main() {
     ),
   );
 }
+

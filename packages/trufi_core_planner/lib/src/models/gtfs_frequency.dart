@@ -55,3 +55,4 @@ class GtfsFrequency {
     return Duration(hours: hours, minutes: minutes, seconds: seconds);
   }
 }
+

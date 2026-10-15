@@ -6,3 +6,4 @@ abstract class TrufiModule {
   Future<void> initialize(ServiceLocator locator);
   List<TrufiModule> get dependencies => [];
 }
+

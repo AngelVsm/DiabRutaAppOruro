@@ -132,3 +132,4 @@ enum GtfsExceptionType {
     );
   }
 }
+

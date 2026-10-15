@@ -234,3 +234,4 @@ class NotificationBannerHelper {
     Future.delayed(autoDismissDuration, dismiss);
   }
 }
+

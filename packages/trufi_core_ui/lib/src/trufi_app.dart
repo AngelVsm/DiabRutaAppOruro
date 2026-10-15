@@ -234,3 +234,4 @@ class _TrufiMaterialApp extends StatelessWidget {
     );
   }
 }
+

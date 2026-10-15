@@ -432,3 +432,4 @@ class OtpTransportDataProvider extends TransportListDataProvider {
     return Icon(iconData, size: 16);
   }
 }
+

@@ -86,3 +86,4 @@ export 'src/presentation/screens/notifications_screen.dart'
 /// Localizations for the notifications UI. Apps embedding these widgets
 /// outside a TrufiScreen must register [NotificationsLocalizations.delegate].
 export 'l10n/notifications_localizations.dart' show NotificationsLocalizations;
+

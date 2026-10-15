@@ -20,3 +20,4 @@ class TrufiLine {
   final bool activeDots;
   final bool visible;
 }
+

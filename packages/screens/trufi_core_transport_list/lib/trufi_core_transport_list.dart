@@ -24,3 +24,4 @@ export 'src/widgets/transport_detail_sheet.dart';
 
 // Localizations
 export 'l10n/transport_list_localizations.dart';
+

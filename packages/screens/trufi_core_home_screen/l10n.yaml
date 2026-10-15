@@ -4,3 +4,4 @@ output-localization-file: home_screen_localizations.dart
 output-class: HomeScreenLocalizations
 nullable-getter: false
 
+

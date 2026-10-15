@@ -200,3 +200,4 @@ class TrufiNotification {
   String toString() =>
       'TrufiNotification(id: $id, title: $title, isRead: $isRead)';
 }
+

@@ -142,3 +142,4 @@ class LiveVehicleInfoPanel extends StatelessWidget {
     );
   }
 }
+

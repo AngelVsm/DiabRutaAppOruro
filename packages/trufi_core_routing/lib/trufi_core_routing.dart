@@ -1,7 +1,4 @@
-/// A Flutter package for route planning with OTP (OpenTripPlanner) integration.
-///
-/// This is a pure routing package without UI dependencies.
-/// For map visualization, use this package with trufi_core_maps separately.
+/// Route planning for DiabRuta. Trips are calculated on the phone from the GTFS file.
 library;
 
 // ============================================
@@ -28,7 +25,6 @@ export 'src/models/vertex_type.dart';
 // ============================================
 // Utilities
 // ============================================
-export 'src/providers/otp_2_4/graphql_client_factory.dart';
 export 'src/utils/polyline_decoder.dart';
 
 // ============================================
@@ -38,32 +34,8 @@ export 'src/routing_engine_manager.dart';
 export 'src/providers/routing_provider.dart';
 
 // ============================================
-// ROUTING PROVIDERS - OTP 1.5 (REST API)
-// ============================================
-export 'src/providers/otp_1_5/otp_15_routing_provider.dart';
-export 'src/providers/otp_1_5/otp_1_5_response_parser.dart';
-
-// ============================================
-// ROUTING PROVIDERS - OTP 2.4 (GraphQL)
-// ============================================
-export 'src/providers/otp_2_4/otp_24_routing_provider.dart';
-export 'src/providers/otp_2_4/otp_2_4_queries.dart';
-export 'src/providers/otp_2_4/otp_2_4_pattern_queries.dart';
-export 'src/providers/otp_2_4/otp_2_4_response_parser.dart';
-
-// ============================================
-// ROUTING PROVIDERS - OTP 2.8 (GraphQL)
-// ============================================
-export 'src/providers/otp_2_8/otp_28_routing_provider.dart';
-export 'src/providers/otp_2_8/otp_2_8_queries.dart';
-export 'src/providers/otp_2_8/otp_2_8_response_parser.dart';
-
-// ============================================
 // SERVICES
 // ============================================
-// `VehiclePositionsService` is a deprecated typedef for
-// `OtpVehiclePositionsProvider` — both are exported for compatibility.
-export 'src/services/vehicle_positions_service.dart';
 export 'src/services/itinerary_grouper.dart';
 export 'src/services/itinerary_filters.dart';
 
@@ -83,3 +55,4 @@ export 'l10n/routing_localizations.dart';
 export 'src/providers/trufi_planner/trufi_planner_provider.dart';
 export 'src/providers/trufi_planner/trufi_planner_config.dart';
 export 'src/providers/trufi_planner/trufi_planner_data_source.dart';
+

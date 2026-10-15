@@ -3,3 +3,4 @@ template-arb-file: maps_en.arb
 output-localization-file: maps_localizations.dart
 output-class: MapsLocalizations
 nullable-getter: false
+

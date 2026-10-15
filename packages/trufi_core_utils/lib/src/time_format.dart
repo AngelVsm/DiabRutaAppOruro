@@ -15,3 +15,4 @@ String formatClockTime(BuildContext context, DateTime time) {
     alwaysUse24HourFormat: MediaQuery.alwaysUse24HourFormatOf(context),
   );
 }
+

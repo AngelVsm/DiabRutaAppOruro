@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'navigation_localizations_de.dart';
 import 'navigation_localizations_en.dart';
 import 'navigation_localizations_es.dart';
 
@@ -98,7 +97,6 @@ abstract class NavigationLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
-    Locale('de'),
     Locale('en'),
     Locale('es'),
   ];
@@ -315,7 +313,7 @@ class _NavigationLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'es'].contains(locale.languageCode);
+      <String>['en', 'es'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_NavigationLocalizationsDelegate old) => false;
@@ -324,8 +322,6 @@ class _NavigationLocalizationsDelegate
 NavigationLocalizations lookupNavigationLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'de':
-      return NavigationLocalizationsDe();
     case 'en':
       return NavigationLocalizationsEn();
     case 'es':

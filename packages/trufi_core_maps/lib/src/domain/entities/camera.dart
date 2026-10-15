@@ -55,3 +55,4 @@ class TrufiCameraPosition {
       'viewportSize: $viewportSize, '
       'visibleRegion: $visibleRegion)';
 }
+

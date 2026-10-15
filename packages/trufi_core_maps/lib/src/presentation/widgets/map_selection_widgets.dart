@@ -76,3 +76,4 @@ class MapOnlineOfflineToggle extends StatelessWidget {
     );
   }
 }
+

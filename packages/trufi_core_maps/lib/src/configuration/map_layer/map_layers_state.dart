@@ -20,3 +20,4 @@ class MapLayersState extends Equatable {
   @override
   List<Object?> get props => [layersSatus, layers];
 }
+

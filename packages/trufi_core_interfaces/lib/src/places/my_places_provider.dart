@@ -71,3 +71,4 @@ abstract class MyPlacesProvider {
   /// Gets all places to show in search (home, work, and other places).
   Future<List<MyPlace>> getMyPlaces();
 }
+

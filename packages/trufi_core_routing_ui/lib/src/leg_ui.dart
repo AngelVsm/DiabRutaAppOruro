@@ -67,3 +67,4 @@ class LegUtils {
   static Duration getTotalBikingDuration(List<Leg> legs) =>
       sumDurations(legs.where(isBikingLeg).toList());
 }
+

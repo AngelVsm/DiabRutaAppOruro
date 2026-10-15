@@ -45,3 +45,4 @@ Future<void> copyToClipboard(
       ),
     );
 }
+

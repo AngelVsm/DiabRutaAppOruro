@@ -76,3 +76,4 @@ extension JsonMapExtension on Map<String, dynamic> {
     return Duration(seconds: seconds);
   }
 }
+

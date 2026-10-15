@@ -719,3 +719,4 @@ class TrufiPopupMenuButtonState<T> extends State<TrufiPopupMenuButton<T>> {
     );
   }
 }
+

@@ -192,3 +192,4 @@ extension RoutingProviderListExtension on List<IRoutingProvider> {
     return where((p) => p.requiresInternet).toList();
   }
 }
+

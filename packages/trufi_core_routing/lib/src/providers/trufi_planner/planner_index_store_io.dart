@@ -96,3 +96,4 @@ Future<void> deletePlannerIndex(String path) async {
     // Best effort: a stale file is rejected by its header on the next read.
   }
 }
+

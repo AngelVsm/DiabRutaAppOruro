@@ -1,9 +1,4 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-name: Flutter PR analyze
+name: DiabRuta analyze
 
 on:
   push:
@@ -51,3 +46,4 @@ jobs:
           git add -A
           # Fail if there are any changes in the staged area
           git diff --staged --exit-code || (echo "Error: Localization files are out of sync. Run 'melos run l10n' locally and commit the changes." && exit 1)
+

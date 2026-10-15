@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'fares_localizations_de.dart';
 import 'fares_localizations_en.dart';
 import 'fares_localizations_es.dart';
 
@@ -95,7 +94,6 @@ abstract class FaresLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
-    Locale('de'),
     Locale('en'),
     Locale('es'),
   ];
@@ -115,7 +113,7 @@ abstract class FaresLocalizations {
   /// Subtitle explaining the fares screen
   ///
   /// In en, this message translates to:
-  /// **'Current prices for public transportation'**
+  /// **'Municipal Decree No. 408, 26 December 2025. Transitory fares for 6 months.'**
   String get faresSubtitle;
 
   /// Shows when fare info was last updated
@@ -168,7 +166,7 @@ class _FaresLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'es'].contains(locale.languageCode);
+      <String>['en', 'es'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_FaresLocalizationsDelegate old) => false;
@@ -177,8 +175,6 @@ class _FaresLocalizationsDelegate
 FaresLocalizations lookupFaresLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'de':
-      return FaresLocalizationsDe();
     case 'en':
       return FaresLocalizationsEn();
     case 'es':

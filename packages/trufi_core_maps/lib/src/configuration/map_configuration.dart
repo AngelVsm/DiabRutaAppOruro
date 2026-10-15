@@ -54,3 +54,4 @@ class MapConfiguration {
 class MapConfigurationCubit extends Cubit<MapConfiguration> {
   MapConfigurationCubit(super.initialState);
 }
+

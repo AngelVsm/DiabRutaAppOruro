@@ -566,3 +566,4 @@ class _OfflineMapWrapperState extends State<_OfflineMapWrapper> {
     );
   }
 }
+

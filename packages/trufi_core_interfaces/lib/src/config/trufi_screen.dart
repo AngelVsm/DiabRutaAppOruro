@@ -83,3 +83,4 @@ abstract class TrufiScreen {
   /// Get localized title for this screen (override for translations)
   String getLocalizedTitle(BuildContext context);
 }
+

@@ -102,3 +102,4 @@ class SearchLocationField extends StatelessWidget {
     );
   }
 }
+

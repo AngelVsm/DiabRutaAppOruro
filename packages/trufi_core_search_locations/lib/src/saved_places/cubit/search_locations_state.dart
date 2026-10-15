@@ -46,3 +46,4 @@ class SearchLocationsState extends Equatable {
     isLoading,
   ];
 }
+

@@ -498,3 +498,4 @@ class NavigationCubit extends Cubit<NavigationState> {
     return super.close();
   }
 }
+

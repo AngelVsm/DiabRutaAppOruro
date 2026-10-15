@@ -5,3 +5,4 @@ export 'package:trufi_core_maps/trufi_core_maps.dart'
         ChooseOnMapConfiguration,
         MapCenter,
         MapLocationResult;
+

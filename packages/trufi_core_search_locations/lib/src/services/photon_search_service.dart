@@ -223,3 +223,4 @@ class PhotonSearchService
     _client.close();
   }
 }
+

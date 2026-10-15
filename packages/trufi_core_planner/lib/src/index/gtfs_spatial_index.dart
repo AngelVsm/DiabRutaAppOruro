@@ -336,3 +336,4 @@ class _NearestResult {
 
   _NearestResult({required this.stop, required this.distance});
 }
+

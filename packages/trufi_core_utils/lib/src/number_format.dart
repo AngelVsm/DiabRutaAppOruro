@@ -14,3 +14,4 @@ NumberFormat safeNumberFormat(String pattern, String locale) {
     return NumberFormat(pattern);
   }
 }
+

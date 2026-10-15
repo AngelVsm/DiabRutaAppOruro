@@ -225,3 +225,4 @@ class SavedPlacesContent extends StatelessWidget {
     );
   }
 }
+

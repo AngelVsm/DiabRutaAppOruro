@@ -53,3 +53,4 @@ export 'src/saved_places_trufi_screen.dart';
 
 // Localizations
 export 'l10n/saved_places_localizations.dart';
+

@@ -3,3 +3,4 @@
 //
 // If you were importing TrufiMapLibreMap, use TrufiMap directly instead.
 export 'trufi_map.dart' show TrufiMap;
+

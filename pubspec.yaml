@@ -84,3 +84,4 @@ melos:
         concurrency: 1
       packageFilters:
         dependsOn: flutter_localizations
+

@@ -51,3 +51,4 @@ class ThemeManager extends ChangeNotifier {
   static ThemeManager watch(BuildContext context) =>
       context.watch<ThemeManager>();
 }
+

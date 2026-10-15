@@ -163,3 +163,4 @@ class _ReactiveLiveBusBadgeState extends State<_ReactiveLiveBusBadge> {
     );
   }
 }
+

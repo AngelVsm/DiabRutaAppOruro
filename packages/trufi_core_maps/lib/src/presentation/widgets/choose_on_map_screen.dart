@@ -425,3 +425,4 @@ class _CoordinatesCard extends StatelessWidget {
     );
   }
 }
+

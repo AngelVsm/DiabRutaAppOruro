@@ -44,3 +44,4 @@ abstract class IPlan {
   bool get hasError;
   String? get errorMessage;
 }
+

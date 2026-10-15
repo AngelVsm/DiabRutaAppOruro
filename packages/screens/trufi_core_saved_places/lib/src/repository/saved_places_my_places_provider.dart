@@ -58,3 +58,4 @@ class SavedPlacesMyPlacesProvider implements MyPlacesProvider {
     return places;
   }
 }
+

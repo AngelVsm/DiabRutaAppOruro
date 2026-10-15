@@ -185,3 +185,4 @@ class Itinerary extends Equatable {
     legs,
   ];
 }
+

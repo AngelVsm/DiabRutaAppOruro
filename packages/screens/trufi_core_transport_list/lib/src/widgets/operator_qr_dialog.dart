@@ -291,3 +291,4 @@ class _OperatorQrSheetState extends State<_OperatorQrSheet> {
     );
   }
 }
+

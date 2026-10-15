@@ -72,3 +72,4 @@ extension MapEngineListExtension on List<ITrufiMapEngine> {
     return map((e) => e.toMapTypeOption(context)).toList();
   }
 }
+

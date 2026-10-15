@@ -4,3 +4,4 @@ output-dir: lib/src/l10n
 output-localization-file: core_localizations.dart
 output-class: CoreLocalizations
 nullable-getter: false
+

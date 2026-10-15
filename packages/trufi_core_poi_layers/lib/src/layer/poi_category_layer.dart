@@ -202,3 +202,4 @@ class POICategoryLayer {
   /// Get all POIs in this layer
   List<POI> get pois => _pois;
 }
+

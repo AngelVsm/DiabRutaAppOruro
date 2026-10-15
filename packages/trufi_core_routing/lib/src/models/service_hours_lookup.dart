@@ -5,7 +5,7 @@ import 'service_hours.dart';
 ///
 /// OTP's REST/GraphQL APIs don't expose calendar+frequencies in a
 /// shape we can use to derive operating hours per route, so providers
-/// like [Otp15RoutingProvider] / [Otp28RoutingProvider] return [Leg]s
+/// The local planner returns [Leg]s
 /// with `serviceHours == null`. The [RoutePlannerCubit] takes an
 /// optional [ServiceHoursLookup] and uses it as a side-channel to
 /// enrich those legs after the parse — typically backed by the same
@@ -19,3 +19,4 @@ abstract class ServiceHoursLookup {
   /// uses bare `routeId`, so a robust implementation tries both.
   ServiceHours? serviceHoursForRouteId(String routeId);
 }
+

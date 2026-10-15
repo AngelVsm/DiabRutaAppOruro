@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'feedback_localizations_de.dart';
 import 'feedback_localizations_en.dart';
 import 'feedback_localizations_es.dart';
 
@@ -98,7 +97,6 @@ abstract class FeedbackLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
-    Locale('de'),
     Locale('en'),
     Locale('es'),
   ];
@@ -148,7 +146,7 @@ abstract class FeedbackLocalizations {
   /// Button to open feedback form
   ///
   /// In en, this message translates to:
-  /// **'Send Feedback'**
+  /// **'Message on WhatsApp'**
   String get feedbackSend;
 
   /// Subtitle on feedback hero card
@@ -171,7 +169,7 @@ class _FeedbackLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'es'].contains(locale.languageCode);
+      <String>['en', 'es'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_FeedbackLocalizationsDelegate old) => false;
@@ -180,8 +178,6 @@ class _FeedbackLocalizationsDelegate
 FeedbackLocalizations lookupFeedbackLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'de':
-      return FeedbackLocalizationsDe();
     case 'en':
       return FeedbackLocalizationsEn();
     case 'es':

@@ -42,3 +42,4 @@ class TrufiLatLng extends Equatable {
   @override
   String toString() => 'TrufiLatLng($latitude, $longitude)';
 }
+

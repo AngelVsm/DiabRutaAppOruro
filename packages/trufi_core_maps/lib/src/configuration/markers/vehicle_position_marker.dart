@@ -111,3 +111,4 @@ class _ChevronPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _ChevronPainter old) => old.color != color;
 }
+

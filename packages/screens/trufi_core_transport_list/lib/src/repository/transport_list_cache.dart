@@ -331,3 +331,4 @@ class CachedStop {
     return {'id': id, 'name': name, 'lat': latitude, 'lng': longitude};
   }
 }
+

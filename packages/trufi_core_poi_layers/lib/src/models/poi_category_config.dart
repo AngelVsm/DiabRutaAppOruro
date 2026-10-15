@@ -317,3 +317,4 @@ const Map<String, IconData> _categoryFallbackIcons = {
   'emergency': Icons.emergency_rounded,
   'accommodation': Icons.hotel_rounded,
 };
+

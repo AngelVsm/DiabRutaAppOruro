@@ -28,7 +28,7 @@ class LocaleManager extends ChangeNotifier {
 
   LocaleManager({
     required Locale defaultLocale,
-    this.supportedLocales = const [Locale('en'), Locale('es'), Locale('de')],
+    this.supportedLocales = const [Locale('en'), Locale('es')],
     this.languageNames = const {},
   }) : _currentLocale = defaultLocale {
     _loadSavedLocale();
@@ -88,3 +88,4 @@ class LocaleManager extends ChangeNotifier {
   static LocaleManager watch(BuildContext context) =>
       context.watch<LocaleManager>();
 }
+

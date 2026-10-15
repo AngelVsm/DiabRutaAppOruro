@@ -22,10 +22,7 @@ Todo está en `lib/main.dart` y `lib/marca.dart`.
 | Comentarios | WhatsApp |
 | Enlace interno | `diabruta://` |
 
-No hay servidor OTP. El viaje no sale de internet: sale del archivo GTFS de Oruro.
-
-## Qué no es la app de Oruro
-
-En `assets/` quedan muestras de la librería (puntos de interés, mapa sin conexión y una búsqueda de calles). Son de Cochabamba y **no** alimentan las rutas de DiabRuta. Las líneas que se usan están solo en `assets/routing/oruro.gtfs.zip`.
+No hay servidor de rutas. El viaje sale del archivo GTFS de Oruro.
 
 Las tarifas salen del Decreto Municipal N.° 408 (26 de diciembre de 2025): minibús, adulto 2,50 Bs y adulto mayor 2 Bs; microbús, adulto 2,20 Bs, adulto mayor y universitario 1,50 Bs, secundaria y escolar 1 Bs. Son transitorias, por 6 meses.
+

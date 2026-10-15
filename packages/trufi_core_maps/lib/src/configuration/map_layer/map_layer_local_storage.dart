@@ -12,3 +12,4 @@ abstract class MapLayerLocalStorage {
   /// Load the saved layer visibility states.
   Future<Map<String, bool>> load();
 }
+

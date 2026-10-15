@@ -169,3 +169,4 @@ class NavigationTopBar extends StatelessWidget {
     );
   }
 }
+

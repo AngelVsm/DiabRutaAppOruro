@@ -96,3 +96,4 @@ enum GtfsBikesAllowed {
     );
   }
 }
+

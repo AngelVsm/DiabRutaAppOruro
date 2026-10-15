@@ -228,3 +228,4 @@ This will add POI layers configuration to the map type settings modal, allowing 
 - `trufi_core_maps` - Map functionality
 - `trufi_core_routing` - Routing service
 - `share_plus` - Native share functionality
+

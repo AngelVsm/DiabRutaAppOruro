@@ -75,3 +75,4 @@ class Plan {
     return itineraries?.where((i) => !i.isWalkOnly).toList() ?? [];
   }
 }
+

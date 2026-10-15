@@ -12,3 +12,4 @@ abstract class RequestPlanService {
     bool arriveBy = false,
   });
 }
+

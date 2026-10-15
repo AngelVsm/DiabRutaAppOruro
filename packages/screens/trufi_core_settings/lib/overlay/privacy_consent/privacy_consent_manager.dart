@@ -149,3 +149,4 @@ class PrivacyConsentManager extends AppOverlayManager {
   static PrivacyConsentManager? maybeRead(BuildContext context) =>
       context.read<PrivacyConsentManager?>();
 }
+

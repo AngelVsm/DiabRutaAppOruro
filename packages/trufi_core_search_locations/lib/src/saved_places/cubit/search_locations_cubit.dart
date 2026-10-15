@@ -242,3 +242,4 @@ class SearchLocationsCubit extends Cubit<SearchLocationsState> {
     return super.close();
   }
 }
+

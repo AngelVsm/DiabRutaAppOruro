@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'maps_localizations_de.dart';
 import 'maps_localizations_en.dart';
 import 'maps_localizations_es.dart';
 
@@ -95,7 +94,6 @@ abstract class MapsLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
-    Locale('de'),
     Locale('en'),
     Locale('es'),
   ];
@@ -234,7 +232,7 @@ class _MapsLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'es'].contains(locale.languageCode);
+      <String>['en', 'es'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_MapsLocalizationsDelegate old) => false;
@@ -243,8 +241,6 @@ class _MapsLocalizationsDelegate
 MapsLocalizations lookupMapsLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'de':
-      return MapsLocalizationsDe();
     case 'en':
       return MapsLocalizationsEn();
     case 'es':

@@ -64,3 +64,4 @@ class SearchLocationException implements Exception {
   @override
   String toString() => 'SearchLocationException: $message';
 }
+

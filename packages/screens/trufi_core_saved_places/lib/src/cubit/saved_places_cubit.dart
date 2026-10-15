@@ -351,3 +351,4 @@ class SavedPlacesCubit extends Cubit<SavedPlacesState> {
     return super.close();
   }
 }
+

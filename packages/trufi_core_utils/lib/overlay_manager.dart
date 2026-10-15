@@ -247,3 +247,4 @@ class OverlayManager extends ChangeNotifier implements OverlayService {
     ..._managers.map((m) => m.asProvider()),
   ];
 }
+

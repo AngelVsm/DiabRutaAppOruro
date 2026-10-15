@@ -111,3 +111,4 @@ class FaresConfig {
     this.additionalNotes,
   });
 }
+

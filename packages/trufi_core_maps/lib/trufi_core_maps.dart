@@ -102,3 +102,4 @@ export 'src/data/utils/sorted_list.dart';
 // LOCALIZATIONS
 // ============================================
 export 'l10n/maps_localizations.dart';
+

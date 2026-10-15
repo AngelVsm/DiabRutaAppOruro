@@ -123,3 +123,4 @@ double hitboxPxToMeters({
       (256.0 * math.pow(2.0, zoomMapLibre));
   return metersPerPixel * (hitboxPx * 0.5);
 }
+

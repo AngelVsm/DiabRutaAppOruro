@@ -137,3 +137,4 @@ void main() {
     expect(ar.copyButtonLabel, 'نسخ');
   });
 }
+

@@ -14,3 +14,4 @@ class ScreenMenuItem {
     this.showDividerBefore = false,
   });
 }
+

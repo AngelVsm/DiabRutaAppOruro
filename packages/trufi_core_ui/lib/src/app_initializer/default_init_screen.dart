@@ -474,3 +474,4 @@ class _DottedCirclePainter extends CustomPainter {
     return oldDelegate.color != color || oldDelegate.dotCount != dotCount;
   }
 }
+

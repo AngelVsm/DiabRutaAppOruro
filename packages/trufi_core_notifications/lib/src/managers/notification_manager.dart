@@ -388,3 +388,4 @@ class NotificationManager extends ChangeNotifier {
   static NotificationManager? maybeWatch(BuildContext context) =>
       context.watch<NotificationManager?>();
 }
+

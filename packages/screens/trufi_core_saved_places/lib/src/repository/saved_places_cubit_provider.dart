@@ -57,3 +57,4 @@ class SavedPlacesCubitProvider implements MyPlacesProvider {
     return places;
   }
 }
+

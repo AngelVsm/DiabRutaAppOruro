@@ -36,3 +36,4 @@ abstract class HomeScreenRepository {
   /// Clear all saved data.
   Future<void> clear();
 }
+

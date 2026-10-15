@@ -12,7 +12,7 @@ App de transporte público para Oruro, Bolivia. La desarrolla [Angel Vargas](htt
 - Los comentarios abren WhatsApp con un mensaje listo.
 - Las tarifas son las del Decreto Municipal N.° 408, publicadas el 26 de diciembre de 2025: transitorias, por 6 meses.
 
-DiabRuta **no usa OpenTripPlanner (OTP)**. Las librerías traen un cliente OTP para otras ciudades. Esos servidores de ejemplo planifican otra ciudad, por eso esta app no los conecta. Si más adelante se quiere un OTP de Oruro, hay que levantar un servidor propio con las rutas de Oruro y las calles. Hoy el viaje sale del archivo que va dentro de la app.
+DiabRuta no consulta un servidor de rutas. El viaje sale del archivo que va dentro de la app.
 
 ## Cómo correrla
 
@@ -35,7 +35,7 @@ La app, las rutas de Oruro, el nombre, los colores y los textos de presentación
 | `apps/example` | DiabRuta, la app que se corre |
 | `packages/trufi_core_maps` | Mapa |
 | `packages/trufi_core_planner` | Lectura del GTFS y cálculo en el teléfono |
-| `packages/trufi_core_routing` | Conexión de ese cálculo con la pantalla. También trae el cliente OTP, que esta app no activa |
+| `packages/trufi_core_routing` | Conexión de ese cálculo con la pantalla |
 | `packages/screens` | Pantallas: inicio, rutas, tarifas, comentarios, ajustes y sobre nosotros |
 
 ## Licencia
@@ -45,3 +45,4 @@ DiabRuta, adaptación para Oruro — Angel Vargas.
 El código base es Trufi Core. Copyright 2020-present — [Trufi Association](https://www.trufi-association.org/).
 
 El programa se puede copiar y modificar bajo la [Licencia Pública General de GNU, versión 3](./LICENSE). Se entrega tal cual, sin garantía. El texto legal completo está en `LICENSE`.
+

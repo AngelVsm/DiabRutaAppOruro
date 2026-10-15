@@ -174,3 +174,4 @@ class NotificationList extends StatelessWidget {
     );
   }
 }
+

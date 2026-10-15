@@ -427,3 +427,4 @@ class _ThrowingPathProvider extends PathProviderPlatform {
   Future<String?> getApplicationCachePath() async =>
       throw MissingPluginException('no path_provider here');
 }
+

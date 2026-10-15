@@ -1535,3 +1535,4 @@ class _ChainCandidate {
     required this.score,
   });
 }
+

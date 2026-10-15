@@ -66,3 +66,4 @@ class SavedPlacesState extends Equatable {
     errorMessage,
   ];
 }
+

@@ -103,3 +103,4 @@ void main() {
     expect(find.byIcon(Icons.place_rounded), findsOneWidget);
   });
 }
+

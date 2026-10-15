@@ -358,3 +358,4 @@ class _TransitProfile {
     return _distance.as(LengthUnit.Meter, fromA, fromB) <= toleranceMeters;
   }
 }
+

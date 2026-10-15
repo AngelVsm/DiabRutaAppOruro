@@ -340,3 +340,4 @@ class _SearchData {
     return 2 + math.min(candidate.indexOf(query), 100);
   }
 }
+

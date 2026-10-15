@@ -7,3 +7,4 @@ analyzer:
     dangling_library_doc_comments: false
   exclude:
     - build/**
+

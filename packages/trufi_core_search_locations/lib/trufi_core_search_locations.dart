@@ -62,3 +62,4 @@ export 'src/saved_places/cubit/search_locations_cubit.dart';
 
 // Localizations
 export 'l10n/search_locations_localizations.dart';
+

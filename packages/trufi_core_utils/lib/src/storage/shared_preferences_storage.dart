@@ -124,3 +124,4 @@ class SharedPreferencesStorage implements StorageService {
     }
   }
 }
+

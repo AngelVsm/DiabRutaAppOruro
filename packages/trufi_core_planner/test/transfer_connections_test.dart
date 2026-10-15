@@ -484,3 +484,4 @@ class _IsSorted extends Matcher {
   Description describe(Description description) =>
       description.add('sorted ascending');
 }
+

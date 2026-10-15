@@ -1439,3 +1439,4 @@ class ItineraryDetailScreen extends StatelessWidget {
     return l10n.distanceKilometers(km);
   }
 }
+

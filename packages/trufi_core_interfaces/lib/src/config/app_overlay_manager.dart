@@ -91,3 +91,4 @@ abstract class AppOverlayManager extends ChangeNotifier {
   /// with its concrete runtime type, so consumers can use `context.watch<T>()`.
   SingleChildWidget asProvider();
 }
+

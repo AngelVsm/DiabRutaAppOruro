@@ -309,3 +309,4 @@ class _FakeLanguageAwareService extends _FakeService with LanguageAwareSearch {
   @override
   set searchLanguage(String? languageCode) => received = languageCode;
 }
+

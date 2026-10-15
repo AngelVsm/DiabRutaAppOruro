@@ -36,3 +36,4 @@ class LatLngBounds {
   String toString() =>
       'LatLngBounds(sw: ${southWest.latitude},${southWest.longitude}; ne: ${northEast.latitude},${northEast.longitude})';
 }
+

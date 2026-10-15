@@ -186,3 +186,4 @@ class POICompactCard extends StatelessWidget {
     );
   }
 }
+

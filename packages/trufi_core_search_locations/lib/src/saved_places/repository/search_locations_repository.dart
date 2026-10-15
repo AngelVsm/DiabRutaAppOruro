@@ -20,3 +20,4 @@ abstract class SearchLocationsRepository {
   Future<List<TrufiLocation>> getFavoritePlaces();
   Future<void> saveFavoritePlaces(List<TrufiLocation> data);
 }
+

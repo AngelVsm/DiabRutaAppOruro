@@ -71,3 +71,4 @@ class Place {
   @override
   int get hashCode => Object.hash(lat, lon);
 }
+

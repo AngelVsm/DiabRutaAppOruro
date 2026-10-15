@@ -240,3 +240,4 @@ extension DefaultLocationExtension on DefaultLocation {
 
   String get keyLocation => keys[this] ?? 'Key-Default-Home';
 }
+

@@ -134,3 +134,4 @@ class _FitResult {
   final double zoom;
   const _FitResult(this.target, this.zoom);
 }
+

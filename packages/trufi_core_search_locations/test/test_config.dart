@@ -54,3 +54,4 @@ class TestConfig {
   /// Bounding box for Bolivia
   static const boliviaBoundingBox = [-69.6, -22.9, -57.5, -9.7];
 }
+

@@ -43,3 +43,4 @@ apps/*/tools/*/out/*.json
 # but the small committed sample the example ships is not generated data
 !apps/example/assets/search/search.json
 apps/*/tools/*/package-lock.json
+

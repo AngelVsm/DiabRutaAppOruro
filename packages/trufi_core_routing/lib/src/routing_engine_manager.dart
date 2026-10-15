@@ -17,8 +17,7 @@ import 'providers/routing_provider.dart';
 /// // Create the manager
 /// final routingEngineManager = RoutingEngineManager(
 ///   engines: [
-///     Otp28RoutingProvider(endpoint: 'https://otp.trufi.app'),
-///     TrufiPlannerProvider(config: TrufiPlannerConfig.local(gtfsAsset: 'assets/gtfs.zip')),
+///     TrufiPlannerProvider(config: TrufiPlannerConfig.local(gtfsAsset: 'assets/routing/oruro.gtfs.zip')),
 ///   ],
 /// );
 ///
@@ -239,3 +238,4 @@ class RoutingEngineManager extends ChangeNotifier {
     }
   }
 }
+

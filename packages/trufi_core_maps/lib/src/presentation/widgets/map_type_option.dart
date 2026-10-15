@@ -25,3 +25,4 @@ class MapTypeOption {
     this.isOffline = false,
   });
 }
+

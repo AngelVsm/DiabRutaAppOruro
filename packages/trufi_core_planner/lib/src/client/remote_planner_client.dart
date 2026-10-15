@@ -288,3 +288,4 @@ class RouteWithPatterns {
     required this.patterns,
   });
 }
+

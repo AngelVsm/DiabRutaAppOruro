@@ -312,3 +312,4 @@ class _NavigationScreenState extends State<NavigationScreen>
     Navigator.of(context).pop();
   }
 }
+

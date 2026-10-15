@@ -73,3 +73,4 @@ class FaresHero extends StatelessWidget {
     );
   }
 }
+

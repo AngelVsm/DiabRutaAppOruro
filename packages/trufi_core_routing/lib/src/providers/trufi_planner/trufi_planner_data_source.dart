@@ -494,3 +494,4 @@ class TrufiPlannerDataSource implements ServiceHoursLookup {
     _pendingSnapshotWrite = null;
   }
 }
+

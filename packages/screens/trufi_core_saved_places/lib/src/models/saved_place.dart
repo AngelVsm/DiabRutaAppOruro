@@ -169,3 +169,4 @@ class SavedPlace extends Equatable {
     lastUsedAt,
   ];
 }
+

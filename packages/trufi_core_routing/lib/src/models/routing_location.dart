@@ -57,3 +57,4 @@ class RoutingLocation {
   @override
   String toString() => '${position.latitude},${position.longitude}';
 }
+

@@ -132,3 +132,4 @@ screens: [
 Default menu item:
 - Icon: `Icons.payments_outlined`
 - Order: 150
+

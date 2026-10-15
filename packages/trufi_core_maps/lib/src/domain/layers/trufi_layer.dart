@@ -48,3 +48,4 @@ class TrufiLayer {
         parentId: parentId ?? this.parentId,
       );
 }
+

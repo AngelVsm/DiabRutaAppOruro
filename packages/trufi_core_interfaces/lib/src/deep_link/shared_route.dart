@@ -100,3 +100,4 @@ class SharedRouteNotifier extends ChangeNotifier {
     return Provider.of<SharedRouteNotifier>(context);
   }
 }
+

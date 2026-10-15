@@ -47,3 +47,4 @@ class SearchLocation {
   @override
   String toString() => 'SearchLocation(id: $id, displayName: $displayName)';
 }
+

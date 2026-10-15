@@ -396,3 +396,4 @@ class NavigationState extends Equatable {
     isInBackground,
   ];
 }
+

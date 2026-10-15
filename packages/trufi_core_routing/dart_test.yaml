@@ -12,3 +12,4 @@ timeout: 30s
 # Platform-specific configuration
 platforms:
   - vm
+

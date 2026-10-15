@@ -35,3 +35,4 @@ class LocationDetail implements ILocationDetail {
     required this.position,
   });
 }
+

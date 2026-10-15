@@ -506,3 +506,4 @@ class _InfoChip extends StatelessWidget {
     );
   }
 }
+

@@ -55,3 +55,4 @@ class Agency {
   @override
   int get hashCode => Object.hash(id, gtfsId);
 }
+

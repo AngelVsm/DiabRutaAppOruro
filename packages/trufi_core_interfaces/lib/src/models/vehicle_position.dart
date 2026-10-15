@@ -68,3 +68,4 @@ class VehiclePosition extends Equatable {
   String toString() =>
       'VehiclePosition($vehicleId, $position, heading=$heading, route=$routeId)';
 }
+

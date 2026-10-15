@@ -167,3 +167,4 @@ class CompositeSearchLocationService
     return -1;
   }
 }
+

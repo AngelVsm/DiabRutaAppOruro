@@ -186,3 +186,4 @@ class TrufiPlannerConfig {
        fallbackVehicleSpeedKmh =
            GtfsRoutingService.defaultFallbackVehicleSpeedKmh;
 }
+

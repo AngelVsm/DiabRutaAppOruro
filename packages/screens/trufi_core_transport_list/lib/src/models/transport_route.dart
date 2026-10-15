@@ -107,3 +107,4 @@ class TransportRouteDetails extends TransportRoute {
     this.modeName,
   });
 }
+

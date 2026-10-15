@@ -67,3 +67,4 @@ class HomeScreenConfig {
     this.liveVehiclesInitiallyEnabled = false,
   });
 }
+

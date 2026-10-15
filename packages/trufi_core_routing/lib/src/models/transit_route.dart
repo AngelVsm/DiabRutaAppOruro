@@ -174,3 +174,4 @@ class TransitRouteInfo {
       color.hashCode ^
       textColor.hashCode;
 }
+

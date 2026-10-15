@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'about_localizations_de.dart';
 import 'about_localizations_en.dart';
 import 'about_localizations_es.dart';
 
@@ -95,7 +94,6 @@ abstract class AboutLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
-    Locale('de'),
     Locale('en'),
     Locale('es'),
   ];
@@ -198,7 +196,7 @@ class _AboutLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'es'].contains(locale.languageCode);
+      <String>['en', 'es'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AboutLocalizationsDelegate old) => false;
@@ -207,8 +205,6 @@ class _AboutLocalizationsDelegate
 AboutLocalizations lookupAboutLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'de':
-      return AboutLocalizationsDe();
     case 'en':
       return AboutLocalizationsEn();
     case 'es':

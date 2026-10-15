@@ -91,3 +91,4 @@ class PolylineDecoder {
     return points;
   }
 }
+

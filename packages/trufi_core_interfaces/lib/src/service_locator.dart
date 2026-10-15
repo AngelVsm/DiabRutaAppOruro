@@ -16,3 +16,4 @@ abstract class ServiceLocator {
   Future<void> allReady();
   Future<void> reset();
 }
+

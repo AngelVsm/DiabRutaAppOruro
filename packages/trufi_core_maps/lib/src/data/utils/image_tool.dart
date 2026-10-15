@@ -95,3 +95,4 @@ abstract class ImageTool {
     return byteData!.buffer.asUint8List();
   }
 }
+

@@ -120,3 +120,4 @@ class LiveVehiclesSettingsSection extends StatelessWidget {
     );
   }
 }
+

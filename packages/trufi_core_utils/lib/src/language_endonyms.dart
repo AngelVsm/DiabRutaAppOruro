@@ -193,3 +193,4 @@ const Map<String, String> languageEndonyms = {
   'zh': '中文 (Zhōngwén)',
   'zu': 'isiZulu',
 };
+

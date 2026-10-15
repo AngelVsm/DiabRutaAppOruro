@@ -3,3 +3,4 @@ template-arb-file: navigation_en.arb
 output-localization-file: navigation_localizations.dart
 output-class: NavigationLocalizations
 nullable-getter: false
+

@@ -57,3 +57,4 @@ with `android/app/src/main/res/xml/provider_paths.xml`:
 app's internal cache. (The plugin's own README documents only
 `external-path`, which leaves copying failing with *"Failed to find
 configured root that contains /data/data/&lt;pkg&gt;/cache/…"*.)
+

@@ -12,3 +12,4 @@ extension VertexTypeExtension on VertexType {
     );
   }
 }
+

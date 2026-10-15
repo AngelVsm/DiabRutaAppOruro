@@ -4,3 +4,4 @@ output-localization-file: transport_list_localizations.dart
 output-class: TransportListLocalizations
 nullable-getter: false
 
+

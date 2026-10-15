@@ -40,3 +40,4 @@ class PlanLocation {
   @override
   int get hashCode => Object.hash(name, latitude, longitude);
 }
+

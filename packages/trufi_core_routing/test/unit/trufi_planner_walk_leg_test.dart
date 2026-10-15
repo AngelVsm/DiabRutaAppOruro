@@ -113,3 +113,4 @@ void main() {
     expect(itinerary.legs[2].startTime, itinerary.legs[1].endTime);
   });
 }
+

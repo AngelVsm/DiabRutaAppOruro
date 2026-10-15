@@ -26,3 +26,4 @@ abstract class OverlayService {
   /// managers. Spread these into a MultiProvider.providers list.
   List<SingleChildWidget> get providers;
 }
+

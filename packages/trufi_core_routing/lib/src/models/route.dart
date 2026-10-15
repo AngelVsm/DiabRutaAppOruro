@@ -103,3 +103,4 @@ class Route {
   @override
   int get hashCode => Object.hash(id, gtfsId);
 }
+

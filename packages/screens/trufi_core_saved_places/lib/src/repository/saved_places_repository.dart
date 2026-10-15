@@ -44,3 +44,4 @@ abstract class SavedPlacesRepository {
   /// Adds a place to history.
   Future<void> addToHistory(SavedPlace place);
 }
+

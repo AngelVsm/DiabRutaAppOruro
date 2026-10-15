@@ -3,3 +3,4 @@ template-arb-file: saved_places_en.arb
 output-localization-file: saved_places_localizations.dart
 output-class: SavedPlacesLocalizations
 nullable-getter: false
+

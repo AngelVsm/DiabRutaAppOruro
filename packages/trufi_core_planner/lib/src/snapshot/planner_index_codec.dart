@@ -1443,3 +1443,4 @@ class _Reader {
 
   Int32List intColumn(int expected) => _column(expected);
 }
+

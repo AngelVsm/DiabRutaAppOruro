@@ -68,3 +68,4 @@ class MapLayerStorageImpl implements MapLayerLocalStorage {
     }
   }
 }
+

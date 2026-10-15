@@ -93,3 +93,4 @@ class ItineraryGroup extends Equatable {
     slotRoutes,
   ];
 }
+

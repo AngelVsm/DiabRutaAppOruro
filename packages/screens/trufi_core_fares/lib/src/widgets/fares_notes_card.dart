@@ -68,3 +68,4 @@ class FaresNotesCard extends StatelessWidget {
     );
   }
 }
+

@@ -24,3 +24,4 @@ class DefaultMarkerConfiguration implements MarkerConfiguration {
   @override
   Widget get yourLocationMarker => const MyLocationMarker();
 }
+

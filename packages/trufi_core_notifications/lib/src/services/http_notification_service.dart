@@ -228,3 +228,4 @@ class HttpNotificationService implements NotificationService {
     _client.close();
   }
 }
+

@@ -30,3 +30,4 @@ class PackageInfoPlatform {
     return '${info.version}+${info.buildNumber}';
   }
 }
+

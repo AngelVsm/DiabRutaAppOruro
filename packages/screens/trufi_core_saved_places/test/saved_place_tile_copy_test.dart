@@ -102,3 +102,4 @@ void main() {
     expect(find.text('Copiado'), findsOneWidget);
   });
 }
+

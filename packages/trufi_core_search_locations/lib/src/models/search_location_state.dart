@@ -55,3 +55,4 @@ class SearchLocationState {
   String toString() =>
       'SearchLocationState(origin: $origin, destination: $destination)';
 }
+

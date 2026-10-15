@@ -62,7 +62,7 @@ void main() {
     testWidgets('the registered delegate wins', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          locale: const Locale('de'),
+          locale: const Locale('en'),
           supportedLocales: CoreLocalizations.supportedLocales,
           localizationsDelegates: CoreLocalizations.localizationsDelegates,
           home: DefaultInitScreen(onRetry: () {}),
@@ -70,7 +70,8 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.text('Laden...'), findsOneWidget);
+      expect(find.text('Loading...'), findsOneWidget);
     });
   });
 }
+

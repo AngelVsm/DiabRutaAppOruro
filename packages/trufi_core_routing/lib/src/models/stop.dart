@@ -30,3 +30,4 @@ class Stop {
   @override
   int get hashCode => name.hashCode ^ lat.hashCode ^ lon.hashCode;
 }
+

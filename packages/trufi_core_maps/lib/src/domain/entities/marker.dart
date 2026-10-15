@@ -104,3 +104,4 @@ class TrufiMarker {
     return copyWith(widgetBytes: bytes);
   }
 }
+

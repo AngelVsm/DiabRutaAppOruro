@@ -30,7 +30,6 @@ dependencies:
   trufi_core_settings: ^1.0.0
   trufi_core_ui: ^1.0.0
   trufi_core_navigation: ^1.0.0
-  trufi_core_poi_layers: ^1.0.0
   latlong2: ^0.9.1
   # 0.26.2 minimum: 0.26.1 still crashes on iOS with SIGABRT
   # (std::domain_error from mbgl::LatLng) when a camera op reaches a map
@@ -50,30 +49,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # POI Layers assets
   assets:
     - assets/branding/
-    - assets/pois/
-    # Muestra de calles que no usa DiabRuta. Las rutas de Oruro
-    # están en assets/routing/oruro.gtfs.zip.
-    - assets/search/
-    # Offline maps assets
-    - assets/offline/
-    - assets/offline/styles/osm-bright/
-    - assets/offline/styles/osm-liberty/
-    - assets/offline/styles/dark-matter/
-    - assets/offline/styles/fiord-color/
-    - assets/offline/fonts/OpenSansRegular/
-    - assets/offline/fonts/OpenSansBold/
-    - assets/offline/fonts/OpenSansItalic/
-    - assets/offline/fonts/RobotoRegular/
-    - assets/offline/fonts/RobotoMedium/
-    - assets/offline/fonts/RobotoCondensedItalic/
-    - assets/offline/fonts/MetropolisLight/
-    - assets/offline/fonts/MetropolisLightItalic/
-    - assets/offline/fonts/MetropolisRegular/
-    - assets/offline/fonts/MetropolisMediumItalic/
-    - assets/offline/fonts/NotoSansRegular/
-    - assets/offline/fonts/NotoSansItalic/
-    # Offline routing data (GTFS)
     - assets/routing/
+

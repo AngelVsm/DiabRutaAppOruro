@@ -1,7 +1,7 @@
 name: trufi_core_planner
 description: Core GTFS parsing and routing algorithms for Trufi (Dart only, no Flutter dependencies)
 version: 1.0.0
-homepage: https://github.com/trufi-association/trufi-core
+homepage: https://github.com/AngelVsm/DiabRutaAppOruro
 publish_to: none
 resolution: workspace
 
@@ -16,3 +16,4 @@ dependencies:
 dev_dependencies:
   test: ^1.25.0
   lints: ^6.0.0
+

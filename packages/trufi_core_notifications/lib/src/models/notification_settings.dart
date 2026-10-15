@@ -123,3 +123,4 @@ class NotificationSettings {
     if (quietHoursEnd != null) 'quietHoursEnd': quietHoursEnd!.inMinutes,
   };
 }
+

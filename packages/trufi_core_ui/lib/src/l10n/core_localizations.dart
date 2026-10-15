@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'core_localizations_de.dart';
 import 'core_localizations_en.dart';
 import 'core_localizations_es.dart';
 
@@ -95,7 +94,6 @@ abstract class CoreLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
-    Locale('de'),
     Locale('en'),
     Locale('es'),
   ];
@@ -103,7 +101,7 @@ abstract class CoreLocalizations {
   /// The application name
   ///
   /// In en, this message translates to:
-  /// **'Trufi App'**
+  /// **'DiabRuta'**
   String get appName;
 
   /// Loading indicator text
@@ -265,7 +263,7 @@ abstract class CoreLocalizations {
   /// Brand tagline in the drawer footer; keep identical in all languages
   ///
   /// In en, this message translates to:
-  /// **'Powered by Trufi Association'**
+  /// **'Powered by Angel Vargas'**
   String get poweredByTrufi;
 }
 
@@ -282,7 +280,7 @@ class _CoreLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'es'].contains(locale.languageCode);
+      <String>['en', 'es'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_CoreLocalizationsDelegate old) => false;
@@ -291,8 +289,6 @@ class _CoreLocalizationsDelegate
 CoreLocalizations lookupCoreLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'de':
-      return CoreLocalizationsDe();
     case 'en':
       return CoreLocalizationsEn();
     case 'es':

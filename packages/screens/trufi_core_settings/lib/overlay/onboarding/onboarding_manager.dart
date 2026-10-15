@@ -97,3 +97,4 @@ class OnboardingManager extends AppOverlayManager {
   SingleChildWidget asProvider() =>
       ChangeNotifierProvider<OnboardingManager>.value(value: this);
 }
+

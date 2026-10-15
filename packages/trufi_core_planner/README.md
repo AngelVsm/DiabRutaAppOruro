@@ -60,3 +60,4 @@ for (final path in paths) {
 ## License
 
 MIT
+

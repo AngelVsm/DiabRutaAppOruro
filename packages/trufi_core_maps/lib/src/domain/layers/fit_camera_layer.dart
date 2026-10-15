@@ -412,3 +412,4 @@ class _FitBounds {
   final List<latlng.LatLng> corners;
   const _FitBounds(this.cx, this.cy, this.dx, this.dy, this.corners);
 }
+

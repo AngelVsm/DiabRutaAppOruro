@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'routing_localizations_de.dart';
 import 'routing_localizations_en.dart';
 import 'routing_localizations_es.dart';
 
@@ -98,7 +97,6 @@ abstract class RoutingLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
-    Locale('de'),
     Locale('en'),
     Locale('es'),
   ];
@@ -226,25 +224,25 @@ abstract class RoutingLocalizations {
   /// Title of the Trufi Planner info card in routing preferences
   ///
   /// In en, this message translates to:
-  /// **'About Trufi Planner'**
+  /// **'How routes are calculated'**
   String get trufiPlannerInfoTitle;
 
   /// First line of the Trufi Planner info card
   ///
   /// In en, this message translates to:
-  /// **'Trufi Planner is our own routing engine (not OTP).'**
+  /// **'DiabRuta plans the trip with the Oruro lines stored in the app.'**
   String get trufiPlannerInfoIntro;
 
   /// Info card body for the offline variant
   ///
   /// In en, this message translates to:
-  /// **'On mobile it runs 100% offline, using the GTFS data bundled with the app — results may differ from online engines.'**
+  /// **'It does not call a route server. The map and place search do need internet. The trip comes from the file shipped inside the app.'**
   String get trufiPlannerInfoLocalBody;
 
   /// Info card body for the server-backed variant
   ///
   /// In en, this message translates to:
-  /// **'This web version queries our server; results may differ from OTP because it uses a different algorithm and data.'**
+  /// **'This variant would call a server. DiabRuta does not use it.'**
   String get trufiPlannerInfoRemoteBody;
 
   /// Description shown for OpenTripPlanner engines in the routing settings.
@@ -279,7 +277,7 @@ class _RoutingLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'es'].contains(locale.languageCode);
+      <String>['en', 'es'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_RoutingLocalizationsDelegate old) => false;
@@ -288,8 +286,6 @@ class _RoutingLocalizationsDelegate
 RoutingLocalizations lookupRoutingLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'de':
-      return RoutingLocalizationsDe();
     case 'en':
       return RoutingLocalizationsEn();
     case 'es':

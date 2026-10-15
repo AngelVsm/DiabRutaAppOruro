@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'poi_layers_localizations_de.dart';
 import 'poi_layers_localizations_en.dart';
 import 'poi_layers_localizations_es.dart';
 
@@ -98,7 +97,6 @@ abstract class POILayersLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
-    Locale('de'),
     Locale('en'),
     Locale('es'),
   ];
@@ -669,7 +667,7 @@ class _POILayersLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'es'].contains(locale.languageCode);
+      <String>['en', 'es'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_POILayersLocalizationsDelegate old) => false;
@@ -678,8 +676,6 @@ class _POILayersLocalizationsDelegate
 POILayersLocalizations lookupPOILayersLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'de':
-      return POILayersLocalizationsDe();
     case 'en':
       return POILayersLocalizationsEn();
     case 'es':

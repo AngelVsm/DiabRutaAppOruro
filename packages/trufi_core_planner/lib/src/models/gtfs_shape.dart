@@ -46,3 +46,4 @@ class GtfsShape {
     return points.last.distTraveled;
   }
 }
+

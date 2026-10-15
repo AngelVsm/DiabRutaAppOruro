@@ -4,3 +4,4 @@ output-localization-file: feedback_localizations.dart
 output-class: FeedbackLocalizations
 nullable-getter: false
 
+

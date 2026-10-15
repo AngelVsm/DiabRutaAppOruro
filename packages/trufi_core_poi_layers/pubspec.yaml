@@ -1,7 +1,7 @@
 name: trufi_core_poi_layers
 description: POI (Points of Interest) map layers for Trufi apps
 version: 1.0.0
-homepage: https://github.com/trufi-association/trufi-core
+homepage: https://github.com/AngelVsm/DiabRutaAppOruro
 publish_to: none
 resolution: workspace
 
@@ -33,3 +33,4 @@ dev_dependencies:
 
 flutter:
   generate: true
+

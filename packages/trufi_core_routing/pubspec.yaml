@@ -1,7 +1,7 @@
 name: trufi_core_routing
-description: A Flutter package for route planning with OTP (OpenTripPlanner) integration.
+description: Route planning for DiabRuta, calculated on the phone from a GTFS file.
 version: 1.0.0
-homepage: https://github.com/trufi-association/trufi-core
+homepage: https://github.com/AngelVsm/DiabRutaAppOruro
 publish_to: none
 resolution: workspace
 
@@ -22,9 +22,6 @@ dependencies:
   trufi_core_interfaces: ^1.0.0
   equatable: ^2.0.8
   flutter_bloc: ^9.1.1
-  graphql: ^5.2.3
-  gql: ^1.0.1-alpha+1705015029973
-  http: ^1.6.0
   latlong2: ^0.9.1
   intl: ^0.20.2
   provider: ^6.1.5+1
@@ -38,3 +35,4 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   mocktail: ^1.0.4
   path_provider_platform_interface: ^2.1.0
+

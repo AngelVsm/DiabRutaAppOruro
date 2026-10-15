@@ -8,3 +8,4 @@ abstract class DeviceIdService {
   /// Returns the stable device id, generating and persisting one on first call.
   Future<String> getDeviceId();
 }
+

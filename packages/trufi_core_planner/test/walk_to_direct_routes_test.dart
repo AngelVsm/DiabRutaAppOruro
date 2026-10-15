@@ -156,3 +156,4 @@ void main() {
     expect(paths.first.segments.length, greaterThan(1));
   });
 }
+

@@ -471,3 +471,4 @@ await mapEngineManager.initializeEngines();
 ```
 
 On first run, assets are extracted to the app cache directory. Subsequent runs reuse the cached files.
+

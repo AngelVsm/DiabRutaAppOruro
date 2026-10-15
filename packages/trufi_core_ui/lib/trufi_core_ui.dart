@@ -14,3 +14,4 @@ export 'package:trufi_core_interfaces/trufi_core_interfaces.dart'
         TrufiLocaleConfig,
         TrufiThemeConfig;
 export 'src/l10n/fallback_material_localizations.dart';
+
