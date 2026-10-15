@@ -10,21 +10,21 @@ class AboutLocalizationsEn extends AboutLocalizations {
 
   @override
   String get aboutCollapseContent =>
-      'Trufi Association is an international NGO that promotes easier access to public transport. Our apps help everyone find the best way to get from point A to point B within their cities.\n\nIn many cities there are no official maps, routes, apps or timetables. So we compile the available information, and sometimes even map routes from scratch working with local people who know the city.  An easy-to-use transportation system contributes to greater sustainability, cleaner air and a better quality of life.';
+      'DiabRuta shows Oruro\'s routes. You pick where you are going and the app builds the trip with the lines stored in the phone.';
 
   @override
   String get aboutCollapseContentFoot =>
-      'We need mappers, developers, planners, testers, and many other hands.';
+      'If a route is wrong, message me on WhatsApp.';
 
   @override
-  String get aboutCollapseTitle => 'More About Trufi Association';
+  String get aboutCollapseTitle => 'About DiabRuta';
 
   @override
   String get aboutContact => 'Contact';
 
   @override
   String aboutContent(String appName, String city) {
-    return 'Need to go somewhere and don\'t know which bus or route to take?\n$appName makes it easy!\n\nTrufi Association is an international team of volunteers. We love public transportation, that\'s why we developed this application to make getting around easy. Our goal is to provide you with a practical tool that allows you to navigate with confidence.\n\nWe are committed to the continuous improvement of $appName to offer you more and more accurate and useful information. We know that the transportation system in $city undergoes changes due to different reasons, so it is possible that some routes are not completely up to date.\n\nTo make $appName an effective tool, we rely on the collaboration of our users. If you are aware of changes in some routes or stops, we encourage you to share this information with us. Your contribution will not only help keep the app up to date, but will also benefit other users who rely on $appName.\n\nThank you for choosing $appName to move around $city, we hope you enjoy your experience with us!';
+    return 'I am Angel Vargas. I made $appName because $city did not have an app to find which line to take. You pick a destination and I show the trip.';
   }
 
   @override
@@ -49,7 +49,7 @@ class AboutLocalizationsEn extends AboutLocalizations {
   }
 
   @override
-  String get trufiWebsite => 'Trufi Association Website';
+  String get trufiWebsite => 'DiabRuta on GitHub';
 
   @override
   String version(String version) {
@@ -57,5 +57,5 @@ class AboutLocalizationsEn extends AboutLocalizations {
   }
 
   @override
-  String get volunteerTrufi => 'Volunteer For Trufi';
+  String get volunteerTrufi => 'Open source';
 }

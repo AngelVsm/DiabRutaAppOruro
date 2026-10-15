@@ -1,5 +1,5 @@
 name: trufi_core_saved_places
-description: "Saved places management for Trufi apps - manage favorite locations, history, and custom places"
+description: "Saved places management for DiabRuta - manage favorite locations, history, and custom places"
 version: 1.0.0
 homepage: https://github.com/AngelVsm/DiabRutaAppOruro
 publish_to: none

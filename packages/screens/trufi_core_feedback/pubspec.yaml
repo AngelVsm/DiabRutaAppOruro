@@ -1,5 +1,5 @@
 name: trufi_core_feedback
-description: "Feedback screen for Trufi apps - opens external feedback URL with app context"
+description: "Feedback screen for DiabRuta - opens external feedback URL with app context"
 version: 1.0.0
 homepage:
 publish_to: none

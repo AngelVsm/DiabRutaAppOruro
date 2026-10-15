@@ -1,5 +1,5 @@
 name: trufi_core_home_screen
-description: "Home screen with route planning for Trufi apps - search locations, plan routes, view itineraries"
+description: "Home screen with route planning for DiabRuta - search locations, plan routes, view itineraries"
 version: 1.0.0
 homepage: https://github.com/AngelVsm/DiabRutaAppOruro
 publish_to: none

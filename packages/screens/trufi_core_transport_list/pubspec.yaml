@@ -1,5 +1,5 @@
 name: trufi_core_transport_list
-description: "Transport list screen for Trufi apps - displays routes and route details"
+description: "Transport list screen for DiabRuta - displays routes and route details"
 version: 1.0.0
 homepage:
 publish_to: none

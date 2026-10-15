@@ -18,7 +18,7 @@ Todo está en `lib/main.dart` y `lib/marca.dart`.
 | Idioma | Español e inglés |
 | Rutas | `assets/routing/oruro.gtfs.zip`, calculadas en el teléfono |
 | Mapa | Estilos claros, estándar, oscuro y colorido de OpenFreeMap |
-| Búsqueda de lugares | `https://photon.trufi.app`, sesgada a Oruro |
+| Búsqueda de lugares | Por internet, centrada en Oruro |
 | Comentarios | WhatsApp |
 | Enlace interno | `diabruta://` |
 
