@@ -1,5 +1,5 @@
 name: trufi_core_example
-description: "Example app showcasing Trufi Core packages."
+description: "DiabRuta, rutas de Oruro."
 resolution: workspace
 publish_to: 'none'
 
@@ -39,6 +39,8 @@ dependencies:
   # (maplibre/flutter-maplibre-gl#819, PR #841); crashed a real-device
   # App Review submission on 0.25.0 (Trujillo, 2026-08-09).
   maplibre_gl: ^0.26.2
+  flutter_svg: ^2.0.0
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
@@ -50,6 +52,7 @@ flutter:
 
   # POI Layers assets
   assets:
+    - assets/branding/
     - assets/pois/
     # Offline street/junction search data (regenerate with
     # tools/search-bolivia-cochabamba; a central-Cochabamba sample is

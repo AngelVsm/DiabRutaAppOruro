@@ -31,7 +31,7 @@ class FeedbackLocalizationsEn extends FeedbackLocalizations {
   String get feedbackSuggestions => 'Ideas to improve the app';
 
   @override
-  String get feedbackSend => 'Send Feedback';
+  String get feedbackSend => 'Message on WhatsApp';
 
   @override
   String get feedbackSubtitle => 'Your voice matters to us';

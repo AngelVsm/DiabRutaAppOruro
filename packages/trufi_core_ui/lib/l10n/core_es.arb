@@ -1,7 +1,7 @@
 {
   "@@locale": "es",
 
-  "appName": "Trufi App",
+  "appName": "DiabRuta",
   "appLoading": "Cargando...",
   "navHome": "Inicio",
   "navSearch": "Buscar",
@@ -28,5 +28,5 @@
   "initStepAlmostReady": "Casi listo",
   "errorUnableToStart": "No se pudo iniciar",
   "errorUnexpected": "Ocurrió un error inesperado",
-  "poweredByTrufi": "Powered by Trufi Association"
+  "poweredByTrufi": "Powered by Angel Vargas"
 }

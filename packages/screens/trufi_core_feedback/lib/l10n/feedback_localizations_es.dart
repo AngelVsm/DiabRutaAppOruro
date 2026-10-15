@@ -16,7 +16,7 @@ class FeedbackLocalizationsEs extends FeedbackLocalizations {
 
   @override
   String get feedbackContent =>
-      'Tus comentarios nos ayudan a mejorar la aplicación y proporcionar mejor información de transporte público para todos en la ciudad.';
+      'Escríbeme por WhatsApp si falta una ruta, una parada está mal o tienes una idea para DiabRuta.';
 
   @override
   String get feedbackWhatWeWant => 'Qué nos gustaría saber';
@@ -31,7 +31,7 @@ class FeedbackLocalizationsEs extends FeedbackLocalizations {
   String get feedbackSuggestions => 'Ideas para mejorar la aplicación';
 
   @override
-  String get feedbackSend => 'Enviar Comentarios';
+  String get feedbackSend => 'Escribir por WhatsApp';
 
   @override
   String get feedbackSubtitle => 'Tu opinión nos importa';

@@ -28,7 +28,7 @@
   "@feedbackSuggestions": {
     "description": "Feedback type: suggestions"
   },
-  "feedbackSend": "Feedback senden",
+  "feedbackSend": "Per WhatsApp schreiben",
   "@feedbackSend": {
     "description": "Button to open feedback form"
   },

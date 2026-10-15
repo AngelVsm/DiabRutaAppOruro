@@ -1,21 +1,15 @@
-# Trufi Core
+# DiabRuta
+
+App de transporte público para Oruro, Bolivia. La desarrolla [Angel Vargas](https://github.com/AngelVsm), estudiante de Ingeniería de Sistemas en la UDABOL, como proyecto de Desarrollo de Aplicaciones Móviles II. Es código abierto: [AngelVsm/DiabRutaAppOruro](https://github.com/AngelVsm/DiabRutaAppOruro).
+
+DiabRuta está hecha con Flutter. El mapa, la búsqueda y el cálculo de rutas usan librerías libres de [Trufi Core](https://github.com/trufi-association/trufi-core) (GPL-3.0). Esas librerías conservan su licencia y su autoría. La app, las rutas de Oruro y esta adaptación son de Angel Vargas.
 
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
-[![style: lint](https://img.shields.io/badge/style-lint-4BC0F5.svg)](https://pub.dev/packages/lint)
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/trufi-association/trufi-app/issues)
-[![Twitter Follow](https://img.shields.io/twitter/follow/TrufiAssoc?style=social)](https://twitter.com/TrufiAssoc)
-[![Flutter Test](https://github.com/trufi-association/trufi-core/actions/workflows/flutter_test.yml/badge.svg?branch=main)](https://github.com/trufi-association/trufi-core/actions/workflows/flutter_test.yml)
-
-A cross-platform multi-modal public transport app built in [Flutter](https://flutter.dev/) by the [Trufi Association](https://www.trufi-association.org/), a social startup. Trufi Core is the foundation that powers public transport apps in cities around the world, using open data (GTFS, OSM) and open source routing engines like [OpenTripPlanner](https://github.com/opentripplanner/OpenTripPlanner).
-
-<p align="center">
-  <img src="docs/screenshots/android-route-plan.png" width="280" alt="Route planning"/>
-</p>
 
 ## Table of Contents
 
 - [Features](#features)
-- [Get the Trufi App for your city](#get-the-trufi-app-for-your-city)
+- [Esta app](#esta-app)
 - [Architecture](#architecture)
 - [Packages](#packages)
 - [Getting started](#getting-started)
@@ -36,15 +30,15 @@ A cross-platform multi-modal public transport app built in [Flutter](https://flu
 - **Push and in-app notifications** for service alerts.
 - **Localization-ready** with per-package Flutter `.arb` translations (English, Spanish and German included).
 
-## Get the Trufi App for your city
+## Esta app
 
-The mobile application is currently available for the following cities:
+DiabRuta cubre Oruro. Las rutas van dentro de la app, en `apps/example/assets/routing/oruro.gtfs.zip`. Para correrla:
 
-- Cochabamba, Bolivia — [Website](https://www.trufi.app), [Google Play](https://play.google.com/store/apps/details?id=app.trufi.navigator), [App Store](https://apps.apple.com/bo/app/trufi/id1471411924)
-- Accra, Ghana — [Website](https://www.trotro.app/), [Google Play](https://play.google.com/store/apps/details?id=com.trotro.trotro), [App Store](https://apps.apple.com/bo/app/trotro/id1478620071)
-- Addis Ababa, Ethiopia — [Website](https://addismaptransit.com/)
-
-Please [contact the Trufi Association](https://www.trufi-association.org/contact/) to get an app for your city, too. If you'd rather build it yourself, follow the [Getting started](#getting-started) section below.
+```bash
+cd apps/example
+flutter pub get
+flutter run
+```
 
 ## Architecture
 
@@ -99,8 +93,6 @@ The example in [apps/example](apps/example) is the canonical place to see how pa
 ### Run the example
 
 ```bash
-git clone https://github.com/trufi-association/trufi-core.git
-cd trufi-core
 flutter pub get
 cd apps/example
 flutter run
@@ -153,6 +145,8 @@ To add a new locale, copy an existing `.arb`, translate it, and reference it in 
 
 ## License
 
-Copyright 2020-present — [Trufi Association](https://www.trufi-association.org/)
+DiabRuta, adaptación para Oruro — Angel Vargas.
+
+El código base es Trufi Core. Copyright 2020-present — [Trufi Association](https://www.trufi-association.org/).
 
 This program is free software: you can redistribute it and/or modify it under the terms of the [GNU General Public License version 3](./LICENSE) as published by the Free Software Foundation. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.

@@ -8,7 +8,7 @@
   "@feedbackTitle": {
     "description": "Title on feedback screen"
   },
-  "feedbackContent": "Tus comentarios nos ayudan a mejorar la aplicación y proporcionar mejor información de transporte público para todos en la ciudad.",
+  "feedbackContent": "Escríbeme por WhatsApp si falta una ruta, una parada está mal o tienes una idea para DiabRuta.",
   "@feedbackContent": {
     "description": "Main content explaining feedback importance"
   },
@@ -28,7 +28,7 @@
   "@feedbackSuggestions": {
     "description": "Feedback type: suggestions"
   },
-  "feedbackSend": "Enviar Comentarios",
+  "feedbackSend": "Escribir por WhatsApp",
   "@feedbackSend": {
     "description": "Button to open feedback form"
   },

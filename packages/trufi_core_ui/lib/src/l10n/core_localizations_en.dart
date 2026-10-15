@@ -9,7 +9,7 @@ class CoreLocalizationsEn extends CoreLocalizations {
   CoreLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'Trufi App';
+  String get appName => 'DiabRuta';
 
   @override
   String get appLoading => 'Loading...';
@@ -92,5 +92,5 @@ class CoreLocalizationsEn extends CoreLocalizations {
   String get errorUnexpected => 'An unexpected error occurred';
 
   @override
-  String get poweredByTrufi => 'Powered by Trufi Association';
+  String get poweredByTrufi => 'Powered by Angel Vargas';
 }

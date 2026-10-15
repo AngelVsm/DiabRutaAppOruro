@@ -1,7 +1,7 @@
 {
   "@@locale": "en",
 
-  "appName": "Trufi App",
+  "appName": "DiabRuta",
   "@appName": {
     "description": "The application name"
   },
@@ -141,7 +141,7 @@
     "description": "Fallback message when an error has no details"
   },
 
-  "poweredByTrufi": "Powered by Trufi Association",
+  "poweredByTrufi": "Powered by Angel Vargas",
   "@poweredByTrufi": {
     "description": "Brand tagline in the drawer footer; keep identical in all languages"
   }

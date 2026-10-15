@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
@@ -14,8 +13,6 @@ import 'package:trufi_core_routing/trufi_core_routing.dart'
     show
         RoutingEngineManager,
         IRoutingProvider,
-        Otp28RoutingProvider,
-        Otp15RoutingProvider,
         TrufiPlannerProvider,
         TrufiPlannerConfig;
 import 'package:trufi_core_saved_places/trufi_core_saved_places.dart';
@@ -25,209 +22,53 @@ import 'package:trufi_core_transport_list/trufi_core_transport_list.dart';
 import 'package:trufi_core_ui/trufi_core_ui.dart';
 import 'package:trufi_core_utils/trufi_core_utils.dart' show OverlayManager;
 
-// ============ CONFIGURATION ============
-// OTP endpoints are overridable so the example runs without any Trufi
-// server: bring up local OTP instances over the bundled GTFS (see
-// tools/local-otp/README.md) and pass
-//   flutter run --dart-define=OTP28_ENDPOINT=http://10.0.2.2:8802 \
-//               --dart-define=OTP15_ENDPOINT=http://10.0.2.2:8801
-// (10.0.2.2 = host loopback from the Android emulator).
-const _otp28Endpoint = String.fromEnvironment(
-  'OTP28_ENDPOINT',
-  defaultValue: 'https://otp281.trufi.app',
-);
-const _otp15Endpoint = String.fromEnvironment(
-  'OTP15_ENDPOINT',
-  defaultValue: 'https://otp150.trufi.app',
-);
-const _photonUrl = 'https://photon.trufi.app';
-const _defaultCenter = LatLng(-17.3988354, -66.1626903);
-const _appName = 'Trufi App';
-const _deepLinkScheme = 'trufiapp';
-const _cityName = 'Cochabamba';
-const _countryName = 'Bolivia';
-const _emailContact = 'info@trufi-association.org';
-const _feedbackUrl = 'https://www.trufi-association.org/feedback/';
-const _facebookUrl = 'https://facebook.com/trufiapp';
-const _xTwitterUrl = 'https://x.com/trufiapp';
-const _instagramUrl = 'https://instagram.com/trufiapp';
+import 'marca.dart';
 
-// Routing engines (similar to map engines)
+// ============ CONFIGURATION ============
+const _photonUrl = 'https://photon.trufi.app';
+const _defaultCenter = LatLng(-17.9604176, -67.1106498);
+const _deepLinkScheme = 'diabruta';
+
+// Rutas de Oruro, empaquetadas en la app. Los servidores OTP de ejemplo
+// planifican otra ciudad y no se ofrecen.
 final List<IRoutingProvider> _routingEngines = [
-  // Offline routing via GTFS (mobile) / online via server (web)
-  if (!kIsWeb)
-    TrufiPlannerProvider(
-      config: const TrufiPlannerConfig.local(
-        gtfsAsset: 'assets/routing/cochabamba.gtfs.zip',
-      ),
+  TrufiPlannerProvider(
+    config: const TrufiPlannerConfig.local(
+      gtfsAsset: 'assets/routing/oruro.gtfs.zip',
+      displayName: 'Rutas de Oruro',
     ),
-  if (kIsWeb)
-    TrufiPlannerProvider(
-      config: const TrufiPlannerConfig.remote(
-        // The planner API lives behind the gateway's /api prefix; without
-        // it every request lands on the web app and comes back as HTML
-        // ("FormatException: Unexpected token '<'").
-        serverUrl: 'https://planner.trufi.app/api',
-      ),
-    ),
-  // Online routing via OTP (dev servers by default, local via dart-define)
-  Otp28RoutingProvider(
-    endpoint: _otp28Endpoint,
-    displayName: 'OTP 2.8.1',
-  ),
-  Otp15RoutingProvider(
-    endpoint: _otp15Endpoint,
-    displayName: 'OTP 1.5.0',
   ),
 ];
 
-// Map engines
+// Worldwide vector styles. The Trufi tile server only covers Cochabamba.
 final List<ITrufiMapEngine> _mapEngines = [
-  // Offline maps - disabled on web
-  if (!kIsWeb) ...[
-    OfflineMapLibreEngine(
-      engineId: 'offline_osm_liberty',
-      displayName: 'Offline Liberty',
-      descriptionBuilder: (context) =>
-          MapsLocalizations.of(context).mapStyleStandardDescription,
-      config: OfflineMapConfig(
-        mbtilesAsset: 'assets/offline/cochabamba.mbtiles',
-        styleAsset: 'assets/offline/styles/osm-liberty/style.json',
-        spritesAssetDir: 'assets/offline/styles/osm-liberty/',
-        fontsAssetDir: 'assets/offline/fonts/',
-        fontMapping: {
-          'RobotoRegular': 'Roboto Regular',
-          'RobotoMedium': 'Roboto Medium',
-          'RobotoCondensedItalic': 'Roboto Condensed Italic',
-        },
-        fontRanges: [
-          '0-255',
-          '256-511',
-          '512-767',
-          '768-1023',
-          '1024-1279',
-          '1280-1535',
-          '8192-8447',
-          '8448-8703',
-        ],
-      ),
-    ),
-    OfflineMapLibreEngine(
-      engineId: 'offline_osm_bright',
-      displayName: 'Offline Bright',
-      descriptionBuilder: (context) =>
-          MapsLocalizations.of(context).mapStyleLightDescription,
-      config: OfflineMapConfig(
-        mbtilesAsset: 'assets/offline/cochabamba.mbtiles',
-        styleAsset: 'assets/offline/styles/osm-bright/style.json',
-        spritesAssetDir: 'assets/offline/styles/osm-bright/',
-        fontsAssetDir: 'assets/offline/fonts/',
-        fontMapping: {
-          'OpenSansRegular': 'Open Sans Regular',
-          'OpenSansBold': 'Open Sans Bold',
-          'OpenSansItalic': 'Open Sans Italic',
-        },
-        fontRanges: [
-          '0-255',
-          '256-511',
-          '512-767',
-          '768-1023',
-          '1024-1279',
-          '1280-1535',
-          '8192-8447',
-          '8448-8703',
-        ],
-      ),
-    ),
-    OfflineMapLibreEngine(
-      engineId: 'offline_dark_matter',
-      displayName: 'Offline Dark Matter',
-      descriptionBuilder: (context) =>
-          MapsLocalizations.of(context).mapStyleDarkDescription,
-      config: OfflineMapConfig(
-        mbtilesAsset: 'assets/offline/cochabamba.mbtiles',
-        styleAsset: 'assets/offline/styles/dark-matter/style.json',
-        spritesAssetDir: 'assets/offline/styles/dark-matter/',
-        fontsAssetDir: 'assets/offline/fonts/',
-        fontMapping: {
-          'MetropolisLight': 'Metropolis Light',
-          'MetropolisLightItalic': 'Metropolis Light Italic',
-          'MetropolisRegular': 'Metropolis Regular',
-          'MetropolisMediumItalic': 'Metropolis Medium Italic',
-          'NotoSansRegular': 'Noto Sans Regular',
-          'NotoSansItalic': 'Noto Sans Italic',
-        },
-        fontRanges: [
-          '0-255',
-          '256-511',
-          '512-767',
-          '768-1023',
-          '1024-1279',
-          '1280-1535',
-          '8192-8447',
-          '8448-8703',
-        ],
-      ),
-    ),
-    OfflineMapLibreEngine(
-      engineId: 'offline_fiord_color',
-      displayName: 'Offline Fiord Color',
-      descriptionBuilder: (context) =>
-          MapsLocalizations.of(context).mapStyleColorfulDescription,
-      config: OfflineMapConfig(
-        mbtilesAsset: 'assets/offline/cochabamba.mbtiles',
-        styleAsset: 'assets/offline/styles/fiord-color/style.json',
-        spritesAssetDir: 'assets/offline/styles/fiord-color/',
-        fontsAssetDir: 'assets/offline/fonts/',
-        fontMapping: {
-          'MetropolisLight': 'Metropolis Light',
-          'MetropolisLightItalic': 'Metropolis Light Italic',
-          'MetropolisRegular': 'Metropolis Regular',
-          'MetropolisMediumItalic': 'Metropolis Medium Italic',
-          'NotoSansRegular': 'Noto Sans Regular',
-          'NotoSansItalic': 'Noto Sans Italic',
-        },
-        fontRanges: [
-          '0-255',
-          '256-511',
-          '512-767',
-          '768-1023',
-          '1024-1279',
-          '1280-1535',
-          '8192-8447',
-          '8448-8703',
-        ],
-      ),
-    ),
-  ],
-  // Online maps
   MapLibreEngine(
     engineId: 'osm_bright',
-    styleString: 'https://maps.trufi.app/styles/osm-bright/style.json',
+    styleString: 'https://tiles.openfreemap.org/styles/bright',
     displayName: 'OSM Bright',
     descriptionBuilder: (context) =>
-          MapsLocalizations.of(context).mapStyleLightDescription,
+        MapsLocalizations.of(context).mapStyleLightDescription,
   ),
   MapLibreEngine(
     engineId: 'osm_liberty',
-    styleString: 'https://maps.trufi.app/styles/osm-liberty/style.json',
+    styleString: 'https://tiles.openfreemap.org/styles/liberty',
     displayName: 'OSM Liberty',
     descriptionBuilder: (context) =>
-          MapsLocalizations.of(context).mapStyleStandardDescription,
+        MapsLocalizations.of(context).mapStyleStandardDescription,
   ),
   MapLibreEngine(
     engineId: 'dark_matter',
-    styleString: 'https://maps.trufi.app/styles/dark-matter/style.json',
+    styleString: 'https://tiles.openfreemap.org/styles/dark',
     displayName: 'Dark Matter',
     descriptionBuilder: (context) =>
-          MapsLocalizations.of(context).mapStyleDarkDescription,
+        MapsLocalizations.of(context).mapStyleDarkDescription,
   ),
   MapLibreEngine(
     engineId: 'fiord_color',
-    styleString: 'https://maps.trufi.app/styles/fiord-color/style.json',
+    styleString: 'https://tiles.openfreemap.org/styles/fiord',
     displayName: 'Fiord Color',
     descriptionBuilder: (context) =>
-          MapsLocalizations.of(context).mapStyleColorfulDescription,
+        MapsLocalizations.of(context).mapStyleColorfulDescription,
   ),
 ];
 // ========================================
@@ -235,7 +76,7 @@ final List<ITrufiMapEngine> _mapEngines = [
 void main() {
   runTrufiApp(
     AppConfiguration(
-      appName: _appName,
+      appName: appName,
       deepLinkScheme: _deepLinkScheme,
       defaultLocale: Locale('es'),
       localeConfig: const TrufiLocaleConfig(
@@ -247,22 +88,27 @@ void main() {
         ],
         languageNames: {'qu': 'Runasimi'},
       ),
-      themeConfig: const TrufiThemeConfig(),
+      themeConfig: TrufiThemeConfig(
+        theme: temaClaro(),
+        darkTheme: temaOscuro(),
+        themeMode: ThemeMode.system,
+      ),
+      logo: logoApp(),
       socialMediaLinks: [
         SocialMediaLink(
-          url: _facebookUrl,
+          url: facebookUrl,
           icon: SocialMediaPreset.facebook.icon,
           label: 'Facebook',
         ),
         SocialMediaLink(
-          url: _xTwitterUrl,
-          icon: SocialMediaPreset.twitter.icon,
-          label: 'X (Twitter)',
-        ),
-        SocialMediaLink(
-          url: _instagramUrl,
+          url: instagramUrl,
           icon: SocialMediaPreset.instagram.icon,
           label: 'Instagram',
+        ),
+        SocialMediaLink(
+          url: tiktokUrl,
+          icon: const IconoTikTok(),
+          label: 'TikTok',
         ),
       ],
       overlayManager: OverlayManager(
@@ -281,16 +127,15 @@ void main() {
       ),
       providers: [
         ChangeNotifierProvider(
-          create: (_) => MapEngineManager(
-            engines: _mapEngines,
-            defaultCenter: _defaultCenter,
-          ),
+        create: (_) => MapEngineManager(
+          engines: _mapEngines,
+          defaultCenter: _defaultCenter,
+          defaultIndex: 0,
+        ),
         ),
         ChangeNotifierProvider(
-          // 15 (not the default 5) because two of the example's engines
-          // return unfiltered near-duplicates (OTP 1.5, local planner):
-          // itinerary grouping (#737) needs the raw material, and the
-          // visible list stays short because duplicates collapse.
+          // 15 (not the default 5) so near-duplicate itineraries from the
+          // local planner can be grouped; the visible list stays short.
           create: (_) => RoutingEngineManager(
             engines: _routingEngines,
             maxItineraries: 15,
@@ -298,20 +143,10 @@ void main() {
         ),
         BlocProvider(
           create: (_) => SearchLocationsCubit(
-            // Both sources on purpose: the offline data owns streets and
-            // the corners between them ("Ayacucho y Heroínas"), which no
-            // geocoder can answer; Photon owns places and addresses and
-            // stays fresher. If either fails — no network, missing asset
-            // — the other still answers (#745).
-            searchLocationService: CompositeSearchLocationService(
-              services: [
-                OfflineSearchDataService(),
-                PhotonSearchService(
-                  baseUrl: _photonUrl,
-                  biasLatitude: _defaultCenter.latitude,
-                  biasLongitude: _defaultCenter.longitude,
-                ),
-              ],
+            searchLocationService: PhotonSearchService(
+              baseUrl: _photonUrl,
+              biasLatitude: _defaultCenter.latitude,
+              biasLongitude: _defaultCenter.longitude,
             ),
           ),
         ),
@@ -319,7 +154,7 @@ void main() {
       screens: [
         HomeScreenTrufiScreen(
           config: HomeScreenConfig(
-            appName: _appName,
+            appName: appName,
             deepLinkScheme: _deepLinkScheme,
             poiLayersManager: POILayersManager(assetsBasePath: 'assets/pois'),
           ),
@@ -340,7 +175,8 @@ void main() {
         FaresTrufiScreen(
           config: FaresConfig(
             currency: 'Bs.',
-            lastUpdated: DateTime(2024, 1, 15),
+            additionalNotes:
+                'Estos montos salen de un ejemplo y todavía no están confirmados para Oruro. Si conoces la tarifa real, escríbeme por WhatsApp.',
             fares: [
               FareInfo(
                 title: 'Trufi',
@@ -419,14 +255,19 @@ void main() {
             ],
           ),
         ),
-        FeedbackTrufiScreen(config: FeedbackConfig(feedbackUrl: _feedbackUrl)),
+        FeedbackTrufiScreen(
+          config: FeedbackConfig(feedbackUrl: whatsappSugerenciaUrl),
+        ),
         SettingsTrufiScreen(),
         AboutTrufiScreen(
           config: AboutScreenConfig(
-            appName: _appName,
-            cityName: _cityName,
-            countryName: _countryName,
-            emailContact: _emailContact,
+            appName: appName,
+            cityName: cityName,
+            countryName: countryName,
+            emailContact: facebookUrl,
+            logoAssetPath: logoAsset,
+            facebookUrl: facebookUrl,
+            sections: seccionesAcerca(),
           ),
         ),
       ],
