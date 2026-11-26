@@ -8,9 +8,9 @@ const cityName = 'Oruro';
 const countryName = 'Bolivia';
 const logoAsset = 'assets/branding/logo.png';
 
-const facebookUrl = 'https://facebook.com/angelhvm';
-const instagramUrl = 'https://instagram.com/angelhvm_';
-const tiktokUrl = 'https://www.tiktok.com/@angelhvm_';
+const facebookUrl = 'https://facebook.com/annhhelzz';
+const instagramUrl = 'https://instagram.com/annhhelz';
+const tiktokUrl = 'https://www.tiktok.com/@annhhelz';
 const githubUrl = 'https://github.com/AngelVsm/DiabRutaAppOruro';
 
 final whatsappSugerenciaUrl = Uri.https('wa.me', '/59173808629', {
@@ -123,7 +123,7 @@ List<Widget> seccionesAcerca() {
             icon: Icons.facebook_rounded,
             iconColor: const Color(0xFF1877F2),
             title: 'Facebook',
-            subtitle: 'facebook.com/angelhvm',
+            subtitle: 'facebook.com/annhhelzz',
             onTap: () => _abrir(facebookUrl),
           ),
           const SizedBox(height: 10),
@@ -131,7 +131,7 @@ List<Widget> seccionesAcerca() {
             icon: Icons.camera_alt_outlined,
             iconColor: const Color(0xFFE1306C),
             title: 'Instagram',
-            subtitle: 'instagram.com/angelhvm_',
+            subtitle: 'instagram.com/annhhelz',
             onTap: () => _abrir(instagramUrl),
           ),
           const SizedBox(height: 10),
@@ -139,7 +139,7 @@ List<Widget> seccionesAcerca() {
             icon: Icons.music_note_rounded,
             iconColor: Colors.black,
             title: 'TikTok',
-            subtitle: 'tiktok.com/@angelhvm_',
+            subtitle: 'tiktok.com/@annhhelz',
             onTap: () => _abrir(tiktokUrl),
           ),
           const SizedBox(height: 10),
