@@ -164,6 +164,7 @@ void main() {
           config: HomeScreenConfig(
             appName: appName,
             deepLinkScheme: _deepLinkScheme,
+            restoreLastPlan: false,
           ),
           onStartNavigation: (context, itinerary, locationService) {
             NavigationScreen.showFromItinerary(

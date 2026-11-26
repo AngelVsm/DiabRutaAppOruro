@@ -129,6 +129,7 @@ class HomeScreenDiabRutaScreen extends DiabRutaScreen {
         // operating hours through this lookup regardless of which
         // engine produced the plan.
         serviceHoursLookup: _findServiceHoursLookup(context),
+        restoreLastPlan: config.restoreLastPlan,
       )..initialize(),
     ),
     if (config.poiLayersManager != null)

@@ -104,8 +104,18 @@ class DeviceHeading extends ChangeNotifier {
 
   bool get isActive => _active;
 
+  /// Whether the current platform exposes native accelerometer/magnetometer/
+  /// gyroscope streams through `sensors_plus`.
+  ///
+  /// Desktop (Windows, Linux, macOS) has no `sensors_plus` implementation and
+  /// throws `MissingPluginException`; Web lacks reliable magnetometer access.
+  static bool get isSupported =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
+
   void start() {
-    if (_active) return;
+    if (_active || !isSupported) return;
     _active = true;
     // Fastest rate the platform will deliver so map rotation can track
     // 60 / 120 / 144 Hz displays instead of feeling like ~15 fps.

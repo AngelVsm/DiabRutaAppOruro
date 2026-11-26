@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart'
     show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_map/flutter_map.dart' as fm;
 import 'package:maplibre_gl/maplibre_gl.dart' hide LatLngBounds;
 import 'package:latlong2/latlong.dart' as latlng;
 
@@ -113,10 +114,21 @@ class DiabRutaMap extends StatefulWidget {
 
 class _DiabRutaMapState extends State<DiabRutaMap> implements DiabRutaMapDelegate {
   MapLibreMapController? _mapCtl;
+  fm.MapController? _desktopMapCtl;
   bool _mapReady = false;
+  bool _desktopMapReady = false;
   bool _suppressCameraCallback = false;
   bool _syncInProgress = false;
   bool _syncPending = false;
+
+  /// `maplibre_gl` only supports Android, iOS, and Web. On desktop platforms
+  /// (Windows, Linux, macOS), fall back to `flutter_map` so the map renders
+  /// and responds to gestures instead of showing an unsupported-platform text.
+  bool get _isDesktopFallback =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.linux ||
+          defaultTargetPlatform == TargetPlatform.macOS);
 
   late DiabRutaCameraPosition _currentCamera;
 
@@ -150,6 +162,10 @@ class _DiabRutaMapState extends State<DiabRutaMap> implements DiabRutaMapDelegat
       MapLibreMap.useHybridComposition = true;
     }
     _currentCamera = widget.camera ?? widget.initialCamera;
+    if (_isDesktopFallback) {
+      _desktopMapCtl = fm.MapController();
+      _rebuildDesktopMarkerIndices();
+    }
     widget.controller?.attach(this);
   }
 
@@ -167,6 +183,11 @@ class _DiabRutaMapState extends State<DiabRutaMap> implements DiabRutaMapDelegat
       _moveCameraTo(widget.camera!);
     }
 
+    if (_isDesktopFallback) {
+      _rebuildDesktopMarkerIndices();
+      return;
+    }
+
     // Always schedule sync on rebuild — internally we check if work is needed
     _scheduleSync();
   }
@@ -174,7 +195,18 @@ class _DiabRutaMapState extends State<DiabRutaMap> implements DiabRutaMapDelegat
   @override
   void dispose() {
     widget.controller?.detach(this);
+    _desktopMapCtl?.dispose();
     super.dispose();
+  }
+
+  void _rebuildDesktopMarkerIndices() {
+    _markerIndices.clear();
+    for (final layer in widget.layers) {
+      if (!layer.visible || layer.markers.isEmpty) continue;
+      final index = MarkerIndex();
+      index.rebuild(layer.markers);
+      _markerIndices[layer.id] = index;
+    }
   }
 
   // ──────────────────────────────────────────────
@@ -259,6 +291,23 @@ class _DiabRutaMapState extends State<DiabRutaMap> implements DiabRutaMapDelegat
 
   void _moveCameraTo(DiabRutaCameraPosition position) {
     _currentCamera = position;
+    if (_isDesktopFallback) {
+      if (_desktopMapReady && _desktopMapCtl != null) {
+        _suppressCameraCallback = true;
+        try {
+          _desktopMapCtl!.moveAndRotate(
+            position.target,
+            position.zoom,
+            position.bearing,
+          );
+        } finally {
+          _suppressCameraCallback = false;
+        }
+      } else {
+        _pendingCameraApply = true;
+      }
+      return;
+    }
     if (_mapReady && _mapCtl != null) {
       final target = _toCameraPosition(position);
       final native = _mapCtl!.cameraPosition;
@@ -680,12 +729,131 @@ class _DiabRutaMapState extends State<DiabRutaMap> implements DiabRutaMapDelegat
     );
   }
 
+  String _desktopTileUrl(String styleString) {
+    final lower = styleString.toLowerCase();
+    if (lower.contains('dark')) {
+      return 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
+    }
+    if (lower.contains('bright')) {
+      return 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+    }
+    if (lower.contains('fiord')) {
+      return 'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png';
+    }
+    return 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+  }
+
+  Widget _buildDesktopMap(BuildContext context) {
+    final visibleLayers = widget.layers.where((l) => l.visible).toList()
+      ..sort((a, b) => a.layerLevel.compareTo(b.layerLevel));
+
+    final polylines = <fm.Polyline>[];
+    for (final layer in visibleLayers) {
+      final sortedLines = layer.lines.where((l) => l.visible).toList()
+        ..sort((a, b) => a.layerLevel.compareTo(b.layerLevel));
+      for (final line in sortedLines) {
+        if (line.position.length < 2) continue;
+        polylines.add(
+          fm.Polyline(
+            points: line.position,
+            color: line.color,
+            strokeWidth: line.lineWidth,
+            pattern: line.activeDots
+                ? fm.StrokePattern.dotted(spacingFactor: 2.0)
+                : const fm.StrokePattern.solid(),
+          ),
+        );
+      }
+    }
+
+    final markers = <fm.Marker>[];
+    for (final layer in visibleLayers) {
+      final sortedMarkers = List<DiabRutaMarker>.of(layer.markers)
+        ..sort((a, b) => a.layerLevel.compareTo(b.layerLevel));
+      for (final marker in sortedMarkers) {
+        markers.add(
+          fm.Marker(
+            point: marker.position,
+            width: marker.size.width,
+            height: marker.size.height,
+            alignment: marker.alignment,
+            child: marker.rotation == 0
+                ? marker.widget
+                : Transform.rotate(
+                    angle: marker.rotation * math.pi / 180.0,
+                    child: marker.widget,
+                  ),
+          ),
+        );
+      }
+    }
+
+    for (final wm in widget.widgetMarkers) {
+      markers.add(
+        fm.Marker(
+          point: wm.position,
+          width: wm.size.width,
+          height: wm.size.height,
+          alignment: wm.alignment,
+          child: wm.child,
+        ),
+      );
+    }
+
+    return fm.FlutterMap(
+      mapController: _desktopMapCtl,
+      options: fm.MapOptions(
+        initialCenter: _currentCamera.target,
+        initialZoom: _currentCamera.zoom,
+        initialRotation: _currentCamera.bearing,
+        minZoom: 2.0,
+        maxZoom: 19.0,
+        onMapReady: () {
+          _desktopMapReady = true;
+          if (_pendingCameraApply) {
+            _pendingCameraApply = false;
+            _moveCameraTo(_currentCamera);
+          }
+        },
+        onTap: (tapPosition, point) {
+          widget.onMapClick?.call(point);
+        },
+        onLongPress: (tapPosition, point) {
+          widget.onMapLongClick?.call(point);
+        },
+        onPositionChanged: (camera, hasGesture) {
+          if (_suppressCameraCallback || !hasGesture) return;
+          final bounds = camera.visibleBounds;
+          final newCamera = _currentCamera.copyWith(
+            target: camera.center,
+            zoom: camera.zoom,
+            bearing: camera.rotation,
+            visibleRegion: LatLngBounds(bounds.southWest, bounds.northEast),
+          );
+          _currentCamera = newCamera;
+          widget.onCameraChanged?.call(newCamera);
+        },
+      ),
+      children: [
+        fm.TileLayer(
+          urlTemplate: _desktopTileUrl(widget.styleString),
+          userAgentPackageName: 'com.diabruta.app',
+        ),
+        if (polylines.isNotEmpty) fm.PolylineLayer(polylines: polylines),
+        if (markers.isNotEmpty) fm.MarkerLayer(markers: markers),
+      ],
+    );
+  }
+
   // ──────────────────────────────────────────────
   // Build
   // ──────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
+    if (_isDesktopFallback) {
+      return _buildDesktopMap(context);
+    }
     Widget result = MapLibreMap(
       initialCameraPosition: _toCameraPosition(_currentCamera),
       styleString: widget.styleString,

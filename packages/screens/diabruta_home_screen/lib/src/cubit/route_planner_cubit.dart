@@ -49,6 +49,7 @@ class RoutePlannerCubit extends Cubit<RoutePlannerState> {
   /// side-channel lets OTP-backed legs show the same operating-hours
   /// indicator as the local DiabRuta planner.
   final routing.ServiceHoursLookup? _serviceHoursLookup;
+  final bool _restoreLastPlan;
 
   CancelableOperation<routing.Plan>? _currentFetchOperation;
 
@@ -57,10 +58,12 @@ class RoutePlannerCubit extends Cubit<RoutePlannerState> {
     required RequestPlanService requestService,
     TimeOfDay? routingTimeOverride,
     routing.ServiceHoursLookup? serviceHoursLookup,
+    bool restoreLastPlan = true,
   }) : _repository = repository ?? HomeScreenRepositoryImpl(),
        _requestService = requestService,
        _routingTimeOverride = routingTimeOverride,
        _serviceHoursLookup = serviceHoursLookup,
+       _restoreLastPlan = restoreLastPlan,
        super(const RoutePlannerState());
 
   /// Returns [plan] with each transit leg's `serviceHours` populated
@@ -107,6 +110,11 @@ class RoutePlannerCubit extends Cubit<RoutePlannerState> {
   /// Initialize and load saved state.
   Future<void> initialize() async {
     await _repository.initialize();
+
+    if (!_restoreLastPlan) {
+      await _repository.clear();
+      return;
+    }
 
     final fromPlace = await _repository.getFromPlace();
     final toPlace = await _repository.getToPlace();

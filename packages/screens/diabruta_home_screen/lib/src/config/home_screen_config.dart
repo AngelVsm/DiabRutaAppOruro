@@ -54,6 +54,11 @@ class HomeScreenConfig {
   /// their choice is persisted and this value no longer applies.
   final bool liveVehiclesInitiallyEnabled;
 
+  /// Whether to restore the previous session's origin/destination/plan on cold
+  /// start. When `false`, closing and reopening the app starts with a clean
+  /// map while backgrounding the app still keeps the active route in memory.
+  final bool restoreLastPlan;
+
   const HomeScreenConfig({
     this.chooseLocationZoom = 16.0,
     this.searchService,
@@ -65,6 +70,7 @@ class HomeScreenConfig {
     this.poiLayersManager,
     this.extraMapLayerSettings,
     this.liveVehiclesInitiallyEnabled = false,
+    this.restoreLastPlan = true,
   });
 }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:provider/provider.dart';
 import 'package:diabruta_interfaces/diabruta_interfaces.dart';
 import 'package:diabruta_utils/diabruta_utils.dart';
@@ -31,12 +30,8 @@ export 'services/deep_link_service.dart' show SharedRoute, SharedRouteNotifier;
 Future<void> runDiabRutaApp(AppConfiguration config) async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Use path URL strategy for web (removes # from URLs)
-  if (kIsWeb) {
-    usePathUrlStrategy();
-  }
-
-  // Run the app (initialization happens inside DiabRutaApp)
+  // Keep Flutter's default hash URL strategy on web so the built bundle works
+  // at any subpath (e.g. GitHub Pages, local static servers, /index.html).
   runApp(DiabRutaApp(config: config));
 }
 
@@ -66,10 +61,16 @@ class _DiabRutaAppState extends State<DiabRutaApp> {
 
     // Capture the initial route before it's lost during initialization
     if (kIsWeb) {
-      _initialRoute =
+      final raw =
           WidgetsBinding.instance.platformDispatcher.defaultRouteName;
-      if (_initialRoute == '/' || _initialRoute == null) {
-        _initialRoute = null; // Don't need to navigate if already at root
+      final path = Uri.tryParse(raw)?.path ?? '/';
+      final known = widget.config.screens.any(
+        (screen) => path == screen.path || path.startsWith('${screen.path}/'),
+      );
+      if (raw == '/' || !known) {
+        _initialRoute = null;
+      } else {
+        _initialRoute = raw;
       }
     }
 
