@@ -105,8 +105,23 @@ jobs:
           name: DiabRuta ${{ github.ref_name }}
           files: all-artifacts/*
           body: |
-            App de transporte público para Oruro, Bolivia.
+            ## Changelog
 
+            ### Nuevo
+            - Compilación para **iOS sin firmar** (`DiabRuta-ios-unsigned.ipa`) para pruebas con Sideloadly / AltStore / SideStore
+            - Lanzador `abrir_web.bat` para abrir DiabRuta Web en Windows con servidor HTTP local automático
+
+            ### Corregido
+            - **Windows:** se corrigió el arranque y el mapa en escritorio usando `flutter_map` como respaldo nativo y protegiendo la brújula en equipos sin sensor
+            - **Web:** se corrigieron las rutas iniciales (`#/` y `/index.html`), `<base href="./">` y el error de conexión rechazada en `abrir_web.bat`
+            - **iOS:** se corrigió la calibración de la brújula/giroscopio usando el rumbo calibrado nativo de CoreLocation (`CLHeading`) en lugar del magnetómetro crudo sin calibrar
+            - **Íconos:** se actualizaron los íconos oficiales de DiabRuta en Web, Windows (`.exe`) e iOS
+
+            ### Mejorado
+            - Al cerrar y volver a abrir la app sin ruta activa, ahora inicia limpia (en segundo plano mantiene la ruta en curso)
+            - Se actualizaron los enlaces de redes sociales (Instagram: `@annhhelz`, TikTok: `@annhhelz`, Facebook: `annhhelzz`)
+
+            ### Descargas
             - Android: `DiabRuta-android.apk`
             - Windows: `DiabRuta-windows.zip`
             - Web: `DiabRuta-web.zip` (ejecuta `abrir_web.bat` en Windows o sirve la carpeta con HTTP)

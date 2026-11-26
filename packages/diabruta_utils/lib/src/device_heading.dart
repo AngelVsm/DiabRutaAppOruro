@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 /// Degrees clockwise from magnetic north, from the phone's accelerometer
@@ -87,6 +88,11 @@ class DeviceHeading extends ChangeNotifier {
 
   final double magnetometerBlend;
 
+  static const EventChannel _iosHeadingChannel = EventChannel(
+    'diabruta/ios_heading',
+  );
+
+  StreamSubscription<dynamic>? _iosHeading;
   StreamSubscription<AccelerometerEvent>? _accelerometer;
   StreamSubscription<MagnetometerEvent>? _magnetometer;
   StreamSubscription<GyroscopeEvent>? _gyroscope;
@@ -117,6 +123,41 @@ class DeviceHeading extends ChangeNotifier {
   void start() {
     if (_active || !isSupported) return;
     _active = true;
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      _startIosCalibratedHeading();
+      return;
+    }
+    _startSensorsPlus();
+  }
+
+  /// Uses iOS CoreLocation's calibrated compass (`CLHeading`), avoiding the
+  /// raw uncalibrated hard-iron bias from `CMMagnetometerData` in
+  /// `sensors_plus`. Falls back to [_startSensorsPlus] if the native channel
+  /// is not registered (e.g. in tests).
+  void _startIosCalibratedHeading() {
+    try {
+      _iosHeading = _iosHeadingChannel.receiveBroadcastStream().listen(
+        (event) {
+          if (event is! num) return;
+          final absolute = _normalizeHeading(event.toDouble());
+          final previous = _heading;
+          _heading = previous == null
+              ? absolute
+              : blendHeading(previous, absolute, alpha: 0.28);
+          notifyListeners();
+        },
+        onError: (_) {
+          _iosHeading?.cancel();
+          _iosHeading = null;
+          if (_active) _startSensorsPlus();
+        },
+      );
+    } catch (_) {
+      if (_active) _startSensorsPlus();
+    }
+  }
+
+  void _startSensorsPlus() {
     // Fastest rate the platform will deliver so map rotation can track
     // 60 / 120 / 144 Hz displays instead of feeling like ~15 fps.
     const period = SensorInterval.fastestInterval;
@@ -207,9 +248,11 @@ class DeviceHeading extends ChangeNotifier {
   }
 
   void stop() {
+    _iosHeading?.cancel();
     _accelerometer?.cancel();
     _magnetometer?.cancel();
     _gyroscope?.cancel();
+    _iosHeading = null;
     _accelerometer = null;
     _magnetometer = null;
     _gyroscope = null;
