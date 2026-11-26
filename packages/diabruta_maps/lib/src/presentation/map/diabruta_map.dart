@@ -729,18 +729,20 @@ class _DiabRutaMapState extends State<DiabRutaMap> implements DiabRutaMapDelegat
     );
   }
 
+  static const _darkMapColorFilter = ColorFilter.matrix(<double>[
+    -0.85, 0, 0, 0, 235,
+    0, -0.85, 0, 0, 235,
+    0, 0, -0.85, 0, 240,
+    0, 0, 0, 1, 0,
+  ]);
+
   String _desktopTileUrl(String styleString) {
-    final lower = styleString.toLowerCase();
-    if (lower.contains('dark')) {
-      return 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
-    }
-    if (lower.contains('bright')) {
-      return 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
-    }
-    if (lower.contains('fiord')) {
-      return 'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png';
-    }
+    // OpenStreetMap standard raster tiles: free, no API key required.
     return 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+  }
+
+  bool _isDarkDesktopStyle(String styleString) {
+    return styleString.toLowerCase().contains('dark');
   }
 
   Widget _buildDesktopMap(BuildContext context) {
@@ -838,6 +840,12 @@ class _DiabRutaMapState extends State<DiabRutaMap> implements DiabRutaMapDelegat
         fm.TileLayer(
           urlTemplate: _desktopTileUrl(widget.styleString),
           userAgentPackageName: 'com.diabruta.app',
+          tileBuilder: _isDarkDesktopStyle(widget.styleString)
+              ? (context, tileWidget, tile) => ColorFiltered(
+                    colorFilter: _darkMapColorFilter,
+                    child: tileWidget,
+                  )
+              : null,
         ),
         if (polylines.isNotEmpty) fm.PolylineLayer(polylines: polylines),
         if (markers.isNotEmpty) fm.MarkerLayer(markers: markers),
